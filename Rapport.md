@@ -5,44 +5,53 @@
 
 ### 1.1 Description du projet en bref
 
+Ce projet consiste à explorer des différents méthodes de visualisation de données reliées aux systèmes d'exploitation et de proposer une nouvelle option.
+
 ### 1.2 Contexte
 
-Grand nombre d’entreprises ont des applications en production dont la performance de celles-ci est critique. Les requis de performance de ces applications sont tels qu’une tendance actuelle est de concevoir des architectures de nature distribuées, afin que l’application soit exécutée simultanément sur plusieurs machines. Or lorsque cette application ne performe pas à la hauteur des attentes, ou qu’un problème survient en production, les administrateurs systèmes et développeurs doivent effectuer un diagnostic et localiser la source du problème.
+Grand nombre d’entreprises ont des applications en production dont la performance de celles-ci est critique. Les requis de performance de ces applications sont tels qu’une tendance actuelle est de concevoir des architectures de nature distribuées, afin que l’application soit exécutée en parallèle sur plusieurs machines. Or, lorsque cette application ne performe pas à la hauteur des attentes ou qu’un problème survient en production, les administrateurs systèmes et développeurs doivent effectuer un diagnostic et localiser la source du problème.
 
 ### 1.3 Problématique
 
-Diagnostiquer la source d’un problème de performance d’une application en production, qui est exécutée en parallèle sur différentes machines peut s’avérer une tâche ardue. D’autant plus si cette application fonctionne sur des systèmes de type UNIX, sur lesquels souvent le seul accès possible est via un simple terminal en mode texte.
+Diagnostiquer la source d’un problème de performance d’une application en production, qui est exécutée en parallèle sur différentes machines peut s’avérer une tâche ardue. D’autant plus si cette application fonctionne sur des systèmes d'exploitation (Operating system, ou OS) de type Linux, sur lesquels souvent le seul accès possible est via un simple terminal en mode texte.
 
-Plusieurs outils en ligne commande existent pour examiner l’activité d’un système UNIX, ou l’utilisation des différentes ressources de ce système, mais ceux-ci sont généralement très spécifique, c’est-à-dire qu’ils présentent l’activité en détail qu’une seule partie du système ( comme l’activité sur le réseau ) ou alors ils sont plutôt généraliste et ne présentent qu’un léger aperçu de l’activité des différentes parties du système.
+Plusieurs outils en ligne commande existent pour examiner l’activité d’un système Linux, ou l’utilisation des différentes ressources de ce système, mais ceux-ci sont généralement très spécifique, c’est-à-dire qu’ils présentent l’activité en détail qu’une seule partie du système ( comme l’activité sur le réseau ) ou alors ils sont plutôt généraliste et ne présentent qu’un léger aperçu de l’activité des différentes parties du système.
 
 ### 1.4 Objectifs
 
-L’objectif du projet est de proposer une alternative aux outils de diagnostic existants afin de faciliter l’analyse et la recherche de problèmes liés à la performance. Cette alternative devrait simplifier la tâche d’interpréter l’activité sur un ou plusieurs systèmes UNIX, notamment dans le cas où l’application d’intérêt est de nature distribuée.
+L’objectif du projet est de proposer une alternative aux outils de diagnostic existants afin de faciliter l’analyse et la recherche de problèmes liés à la performance. Cette alternative devrait simplifier la tâche d’interpréter l’activité sur un ou plusieurs systèmes Linux, notamment dans le cas où l’application d’intérêt est de nature distribuée.
 
 De plus, ce projet vise à explorer différentes techniques de visualisation de données afin de permettre à l’utilisateur d’explorer les résultats obtenus avec une interface graphique, une approche différente à la plupart des outils existants.
 
-
 ### 1.5 Résultats attendus
 
-•	Faciliter l’exploration et l’analyse des données
+* Faciliter l’exploration et l’analyse des données
 
-•	Faciliter l’analyse de l’activité d’applications sur un ou plusieurs systèmes
+* Faciliter l’analyse de l’activité d’applications sur un ou plusieurs systèmes
 
-•	Diagnostic plus rapide des problèmes liés à la performance
+* Diagnostic plus rapide des problèmes liés à la performance
 
-•	Gain de connaissances sur les applications et systèmes analysés
+* Gain de connaissances sur les applications et systèmes analysés
 
-•	Gain de productivité suite à l’amélioration de la performance
+* Gain de productivité suite à l’amélioration de la performance
 
 ## Chapitre 2 : Analyse de la performance sous Linux
 
 ### 2.1 Revue de l'architecture de Linux
 
+Pour obtenir des données sur l'activité d'une application précise il faut idéalement avoir en premier lieu une compréhension de l'environnement où est exécutée cette application, soit le système d'exploitation Dans ce projet l'emphase est mise sur les sytèmes d'exploitations UNIX de type Linux, mais les principes de base entre les différents OS.
 
-![Fig 1. Architecture Linux](img/4.png)
+De manière générale, un [système d'exploitation](http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27exploitation) sert d'interface entre l'accès au ressources d'une machine et les usagers et applications qui veulent utiliser ces ressources. Grâce à cette interface, les applications peuvent bénéficier de plusieurs services offerts par le système d'exploitation, tel l'ordonnancement, le système de fichier, la sécurité, etc.
 
+Le matériel physique de la machine est donc géré par le système d'exploitation, ou plus précisément le *Kernel* ou noyau. En pratique, pour que cette abstraction entre la matériel et les applications soit respectée, le système d'exploitation est généralement divisé en deux sections, l'espace utilisateur et l'espace Kernel. Les applications des usagers sont alors exécutées dans l'espace utilisateur, où les permissions sont restreintes, et doivent demander la permissions au Kernel pour accéder aux ressources. Ces demandes sont nommées appels systèmes, ou system calls voire syscalls. Cette architecture est souvent représentée de la manière suivante :
 
-![Fig 1. Architecture Linux](img/f2.jpg)
+![Fig 1. Architecture de Linux](figures/fig1.png)
+
+Le diagramme suivant, emprunté de [developperWorks d'IBM](http://www.ibm.com/developerworks/library/l-linuxuniversal/) illustre également cette architecture en détaillant davantage les différents modules composant le Kernel de Linux : 
+
+![Fig 2. Apperçu des différents modules de Linux ](figures/fig2.jpg)
+
+Lors d'une analyse de la performance d'une application tout doit être pris en considération, car en plus de l'application elle-même le système d'exploitation et sa configuration peuvent affecter fortement les résultats obtenus. De plus lors de problèmes de performance, si la source du problème est reliée à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne. Une analyse complète se doit de prendre en considération le système dans son entièretée, soit toutes les différents couches logicielles ainsi que le matériel.
 
 
 ### 2.2 Données et statistiques disponibles
