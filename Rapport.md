@@ -53,12 +53,10 @@ Cette architecture divisées en espaces usager/kernel est souvent représentée 
 
 ![Fig 1. Architecture de Linux](figures/fig1.png)
 
-Le diagramme suivant, emprunté de [developperWorks d'IBM](http://www.ibm.com/developerworks/library/l-linuxuniversal/) illustre également cette architecture en détaillant davantage les différents modules composant le Kernel de Linux : 
+Lors d'une analyse de la performance d'une application tout doit être pris en considération, toutes les différents couches logicielles ainsi que le matériel, vont impacter les résultats obtenus. 
 
-![Fig 2. Apperçu des différents modules de Linux ](figures/fig2.jpg)
-
-Lors d'une analyse de la performance d'une application tout doit être pris en considération, car en plus de l'application elle-même le système d'exploitation et sa configuration peuvent affecter fortement les résultats obtenus. De plus lors de problèmes de performance, si la source du problème est reliée à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne. Une analyse complète se doit de prendre en considération le système dans son entièretée, soit toutes les différents couches logicielles ainsi que le matériel.
-
+De plus lors de problèmes de performance, si la source du problème est reliée à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.
+ 
 
 ### 2.2 Données et statistiques disponibles
 
