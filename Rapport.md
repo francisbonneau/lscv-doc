@@ -55,14 +55,21 @@ Cette architecture divisées en espaces usager/kernel est souvent représentée 
 
 Lors d'une analyse de la performance d'une application tout doit être pris en considération, toutes les différents couches logicielles ainsi que le matériel, vont impacter les résultats obtenus. 
 
-De plus lors de problèmes de performance, si la source du problème est reliée à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.
- 
+De plus, lors de problèmes de performance, si la cause est due à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.
 
+ 
 ### 2.2 Données et statistiques disponibles
+
+
 
 ### 2.3 Revue des outils existants
 
+
+
 ### 2.4 Approches graphiques
+
+
+
 
 ## Chapitre 3 : Visualisation de données
 
