@@ -1,0 +1,1254 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  width: 45em;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 30px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headeranchor-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .headeranchor-link:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .headeranchor,
+.markdown-body h2 .headeranchor,
+.markdown-body h3 .headeranchor,
+.markdown-body h4 .headeranchor,
+.markdown-body h5 .headeranchor,
+.markdown-body h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .headeranchor-link,
+.markdown-body h2:hover .headeranchor-link,
+.markdown-body h3:hover .headeranchor-link,
+.markdown-body h4:hover .headeranchor-link,
+.markdown-body h5:hover .headeranchor-link,
+.markdown-body h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .headeranchor-link .headeranchor,
+.markdown-body h2:hover .headeranchor-link .headeranchor,
+.markdown-body h3:hover .headeranchor-link .headeranchor,
+.markdown-body h4:hover .headeranchor-link .headeranchor,
+.markdown-body h5:hover .headeranchor-link .headeranchor,
+.markdown-body h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding: 0.5em 1em 0.5em 1em;
+  color: #888888;
+  background-color: #F7F7F7;
+  border: 1px solid #888888;
+}
+
+.markdown-body .admonition blockquote {
+  color: rgba(136, 136, 136, 0.5);
+  border-left: 4px solid rgba(136, 136, 136, 0.5);
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+  margin: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition-icon {
+  font: normal normal 16px fontawesome-mini;
+  line-height: 1.5;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  float: left;
+}
+
+.markdown-body .attention {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+  border: 1px solid #4F8A10;
+}
+
+.markdown-body .caution {
+  color: #D63301;
+  background-color: #FFCCBA;
+  border: 1px solid #D63301;
+}
+
+.markdown-body .hint {
+  color: #00529B;
+  background-color: #BDE5F8;
+  border: 1px solid #00529B;
+}
+
+.markdown-body .danger {
+  color: #D8000C;
+  background-color: #FFBABA;
+  border: 1px solid #D8000C;
+}
+
+.markdown-body .question {
+  color: #00049b;
+  background-color: #BDC8F8;
+  border: 1px solid #00049b;
+}
+
+.markdown-body .note {
+  color: #9F6000;
+  background-color: #FEEFB3;
+  border: 1px solid #9F6000;
+}
+
+.markdown-body .attention {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+  border: 1px solid #4F8A10;
+}
+
+.markdown-body .caution blockquote {
+  color: rgba(214, 51, 1, .5);
+  border-left: 4px solid rgba(214, 51, 1, .5);
+}
+
+.markdown-body .hint blockquote {
+  color: rgba(0, 82, 155, .5);
+  border-left: 4px solid rgba(0, 82, 155, .5);
+}
+
+.markdown-body .danger blockquote {
+  color: rgba(216, 0, 12, .5);
+  border-left: 4px solid rgba(216, 0, 12, .5);
+}
+
+.markdown-body .question blockquote {
+  color: rgba(0, 4, 155, .5);
+  border-left: 4px solid rgba(0, 4, 155, .5);;
+}
+
+.markdown-body .note blockquote {
+  color: rgba(159, 96, 0, .5);
+  border-left: 4px solid rgba(159, 96, 0, .5);
+}
+
+.markdown-body .admonition-icon:before {
+  content: "\f040\00a0";
+}
+
+.markdown-body .attention > .admonition-icon:before {
+  content: "\f058\00a0";
+}
+
+.markdown-body .caution > .admonition-icon:before {
+  content: "\f06a\00a0";
+}
+
+.markdown-body .hint > .admonition-icon:before {
+  content: "\f05a\00a0";
+}
+
+.markdown-body .danger > .admonition-icon:before {
+  content: "\f056\00a0";
+}
+
+.markdown-body .question > .admonition-icon:before {
+  content: "\f059\00a0";
+}
+
+.markdown-body .note > .admonition-icon:before {
+  content: "\f040\00a0";
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #F8F8F8;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  border-right: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #34c2e3;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #1ee038;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #86e01e;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #f2d31b;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #f2b01e;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #f27011;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #f63a0f;
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset -1px 1px 0 rgba(255, 255, 255, .5),
+    inset 0 -4px 12px rgba(255, 255, 255, .7),
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05),
+    inset 1px -1px 0 rgba(255, 255, 255, .2);
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    box-shadow: none;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><title>Rapport</title></head><body><article class="markdown-body"><h1 id="visualisation-temps-reel-des-appels-systemes-linux"><a name="user-content-visualisation-temps-reel-des-appels-systemes-linux" href="#visualisation-temps-reel-des-appels-systemes-linux" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Visualisation temps réel des appels systèmes Linux</h1>
+<h2 id="chapitre-1-introduction"><a name="user-content-chapitre-1-introduction" href="#chapitre-1-introduction" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Chapitre 1 : Introduction</h2>
+<h3 id="11-description-du-projet-en-bref"><a name="user-content-11-description-du-projet-en-bref" href="#11-description-du-projet-en-bref" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>1.1 Description du projet en bref</h3>
+<p>Ce projet consiste à explorer des différents méthodes de visualisation de données reliées aux systèmes d&rsquo;exploitation et de proposer une nouvelle option.</p>
+<h3 id="12-contexte"><a name="user-content-12-contexte" href="#12-contexte" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>1.2 Contexte</h3>
+<p>Grand nombre d’entreprises ont des applications en production dont la performance de celles-ci est critique. Les requis de performance de ces applications sont tels qu’une tendance actuelle est de concevoir des architectures de nature distribuées, afin que l’application soit exécutée en parallèle sur plusieurs machines. Or, lorsque cette application ne performe pas à la hauteur des attentes ou qu’un problème survient en production, les administrateurs systèmes et développeurs doivent effectuer un diagnostic et localiser la source du problème.</p>
+<h3 id="13-problematique"><a name="user-content-13-problematique" href="#13-problematique" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>1.3 Problématique</h3>
+<p>Diagnostiquer la source d’un problème de performance d’une application en production, qui est exécutée en parallèle sur différentes machines peut s’avérer une tâche ardue. D’autant plus si cette application fonctionne sur des systèmes d&rsquo;exploitation (Operating system, ou OS) de type Linux, sur lesquels souvent le seul accès possible est via un simple terminal en mode texte.</p>
+<p>Plusieurs outils en ligne commande existent pour examiner l’activité d’un système Linux, ou l’utilisation des différentes ressources de ce système, mais ceux-ci sont généralement très spécifique, c’est-à-dire qu’ils présentent l’activité en détail qu’une seule partie du système ( comme l’activité sur le réseau ) ou alors ils sont plutôt généraliste et ne présentent qu’un léger aperçu de l’activité des différentes parties du système.</p>
+<h3 id="14-objectifs"><a name="user-content-14-objectifs" href="#14-objectifs" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>1.4 Objectifs</h3>
+<p>L’objectif du projet est de proposer une alternative aux outils de diagnostic existants afin de faciliter l’analyse et la recherche de problèmes liés à la performance. Cette alternative devrait simplifier la tâche d’interpréter l’activité sur un ou plusieurs systèmes Linux, notamment dans le cas où l’application d’intérêt est de nature distribuée.</p>
+<p>De plus, ce projet vise à explorer différentes techniques de visualisation de données afin de permettre à l’utilisateur d’explorer les résultats obtenus avec une interface graphique, une approche différente à la plupart des outils existants.</p>
+<h3 id="15-resultats-attendus"><a name="user-content-15-resultats-attendus" href="#15-resultats-attendus" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>1.5 Résultats attendus</h3>
+<ul>
+<li>
+<p>Faciliter l’exploration et l’analyse des données</p>
+</li>
+<li>
+<p>Faciliter l’analyse de l’activité d’applications sur un ou plusieurs systèmes</p>
+</li>
+<li>
+<p>Diagnostic plus rapide des problèmes liés à la performance</p>
+</li>
+<li>
+<p>Gain de connaissances sur les applications et systèmes analysés</p>
+</li>
+<li>
+<p>Gain de productivité suite à l’amélioration de la performance</p>
+</li>
+</ul>
+<h2 id="chapitre-2-analyse-de-la-performance-sous-linux"><a name="user-content-chapitre-2-analyse-de-la-performance-sous-linux" href="#chapitre-2-analyse-de-la-performance-sous-linux" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Chapitre 2 : Analyse de la performance sous Linux</h2>
+<h3 id="21-revue-de-larchitecture-de-linux"><a name="user-content-21-revue-de-larchitecture-de-linux" href="#21-revue-de-larchitecture-de-linux" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>2.1 Revue de l&rsquo;architecture de Linux</h3>
+<p>Pour obtenir des données sur l&rsquo;activité d&rsquo;une application précise il faut idéalement avoir en premier lieu une compréhension de l&rsquo;environnement où est exécutée cette application, soit le système d&rsquo;exploitation. Dans ce projet l&rsquo;emphase est mise sur les sytèmes d&rsquo;exploitations UNIX de type Linux, mais les principes de base restent les mêmes entre les différents OS.</p>
+<p>De manière générale, un <a href="http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27exploitation">système d&rsquo;exploitation</a> sert d&rsquo;interface entre l&rsquo;accès au ressources d&rsquo;une machine et les usagers et applications qui veulent utiliser ces ressources. Grâce à cette interface, les applications peuvent bénéficier de plusieurs services offerts par le système d&rsquo;exploitation, tel l&rsquo;ordonnancement, le système de fichier, la sécurité, etc.</p>
+<p>Le matériel physique de la machine est donc géré par le système d&rsquo;exploitation, ou plus précisément <a href="http://fr.wikipedia.org/wiki/Noyau_de_syst%C3%A8me_d%27exploitation">le <em>Kernel</em></a> ou noyau. En pratique, pour que cette abstraction entre la matériel et les applications soit respectée, le système d&rsquo;exploitation est généralement divisé en deux sections, l&rsquo;espace utilisateur et l&rsquo;espace Kernel. </p>
+<p>Les applications des usagers sont alors exécutées dans l&rsquo;espace utilisateur, où les permissions sont restreintes, et doivent demander la permissions au Kernel pour accéder aux ressources. Ces demandes sont nommées <a href="http://fr.wikipedia.org/wiki/Appel_syst%C3%A8me">appels systèmes</a>, ou <em>system calls</em> voire syscalls. Au débuts de UNIX il y avait approximativement 80 appels systèmes, aujourd&rsquo;hui ce nombre s&rsquo;élève à plus de 300. </p>
+<p>Parmi les appels systèmes les plus courants il y a <a href="http://linux.die.net/man/2/read"><em>read</em></a> et son équivalent <a href="http://linux.die.net/man/2/write"><em>write</em></a> qui permet de lire et d&rsquo;écrire dans un <em>file descriptor</em>, typiquement un fichier sur le disque. La liste complète est diponible sur plusieurs sites tels que <a href="http://syscalls.kernelgrok.com/">kernelgrok.com</a>, et de l&rsquo;information spécifique sur chaque appel système est disponible dans le manuel du OS (man), typiquement dans la section numéro 2. Ex : <code>man 2 read</code> </p>
+<p>Cette architecture divisées en espaces usager/kernel est souvent représentée de la manière suivante :</p>
+<p><img alt="Fig 1. Architecture de Linux" src="/home/franck/Desktop/PFE-rapport/figures/fig1.png" /></p>
+<p>Tel qu&rsquo;illustré sur la figure précédentes, les applications exécutées par les usagers d&rsquo;une machine sont le dernier maillon de la chaine, et produisent le résultat attendu. Celles-ci ne peuvent toutefois fonctionner sans l&rsquo;appui de tous les services implémentés par le système, services que l&rsquo;application utilise par le biais de librairies ou d&rsquo;appels systèmes directement. </p>
+<p>Le principal avantage d&rsquo;une telle architecture est qu&rsquo;elle permet d&rsquo;éviter ou de limiter la duplication d&rsquo;effort. En effet, les développeurs d&rsquo;applications peuvent se fier aux services offerts par le sytème d&rsquo;exploitation et n&rsquo;ont pas besoin de ce soucier de problèmes liés à la gestion du matériel par example, et éviter d&rsquo;y consacrer des efforts puisque ces problèmes sont déjà gérés par le OS. Tel que l&rsquo;a souvent répété <a href="https://en.wikipedia.org/wiki/David_Wheeler_(British_computer_scientist)">David Wheeler</a>, un éminent chercheur en informatique :</p>
+<blockquote>
+<p>All problems in computer science can be solved by another level of indirection</p>
+</blockquote>
+<p>Les couches d&rsquo;abstrations, ou d&rsquo;indirection, offertes par les OS suivent également cette idée.</p>
+<p>Or puisque qu&rsquo;en pratique les applications n&rsquo;ont pas besoin de ce soucier de l&rsquo;implémentation de ces couches sous-jacentes, pourquoi s&rsquo;y intéresser lors de l&rsquo;analyse de la performance de ces applications ? Cela dépend pricipalement du type d&rsquo;analyse considéré. Lors de l&rsquo;établisement d&rsquo;indice de références, <em>benchmarks</em>, de la performance d&rsquo;une application spécifique, le matériel et le système d&rsquo;exploitation peuvent être ignorés - à la seule condition que les autres tests comparatifs soient réalisés sur le même exact environnement, pour qu&rsquo;ils soient valides. </p>
+<p>Toutefois, lorsque l&rsquo;objectif est d&rsquo;améliorer la performance d&rsquo;une application donnée, ou de résoudre un problème lié à la performance, tout doit être pris en considération. Les résultats obtenus vont varier considérablement selon l&rsquo;environnement, qu&rsquo;il s&rsquo;agisse des différentes couches logicelles - de l&rsquo;application elle-même jusqu&rsquo;au Kernel, ou alors du matériel de la machine. De plus, lors de problèmes de performance, si la cause est due à du matériel ou des périphériques fautifs, alors c&rsquo;est au niveau du OS qu&rsquo;il faut regarder, car l&rsquo;application elle-même ne connait pas l&rsquo;état de la machine sur laquelle elle fonctionne.</p>
+<h3 id="22-methodologies-de-lanalyse-de-perfomance"><a name="user-content-22-methodologies-de-lanalyse-de-perfomance" href="#22-methodologies-de-lanalyse-de-perfomance" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>2.2 Méthodologies de l&rsquo;analyse de perfomance</h3>
+<p>Ce projet s&rsquo;intéresse principalement aux analyses de performance reliées à l&rsquo;amélioration ou la résolution de problèmes, et l&rsquo;objectif final est de permettre à l&rsquo;utilisateur d&rsquo;en apprendre plus sur son application et la façon dont elle intéragit avec le OS pour améliorer celle-ci. L&rsquo;établissement d&rsquo;indices de performances, ou <em>benchmarks</em> ne sera pas considéré. Ceci dit, explorons les différentes techniques liées à ces types d&rsquo;analyses. </p>
+<p>Dans son livre Systems Performance: Enterprise and the Cloud, Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur son site web : <a href="http://www.brendangregg.com/methodology.html">brendangregg.com/methodology.html</a>. En voici quelques unes : </p>
+<blockquote>
+<ol>
+<li>Ad Hoc Checklist Method</li>
+<li>Problem Statement Method</li>
+<li>Scientific Method</li>
+<li>Workload Characterization Method</li>
+<li>Drill-Down Analysis Method</li>
+<li>Five Whys Performance Method</li>
+<li>By-Layer Method</li>
+<li>Latency Analysis Method</li>
+<li>Tools Method</li>
+<li>USE Method<br />
+[&hellip;]</li>
+</ol>
+</blockquote>
+<h3 id="23-metriques-et-statistiques"><a name="user-content-23-metriques-et-statistiques" href="#23-metriques-et-statistiques" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>2.3 Métriques et statistiques</h3>
+<p>Processor metrics</p>
+<ul>
+<li>
+<p>CPU utilization<br />
+This is probably the most straightforward metric. It describes the overall utilization per <br />
+processor. On IBM System x architectures, if the CPU utilization exceeds 80% for a <br />
+sustained period of time, a processor bottleneck is likely.</p>
+</li>
+<li>
+<p>User time<br />
+Depicts the CPU percentage spent on user processes, including nice time. High values in <br />
+user time are generally desirable because, in this case, the system performs actual work. </p>
+</li>
+<li>
+<p>System time<br />
+Depicts the CPU percentage spent on kernel operations including IRQ and softirq time. <br />
+High and sustained system time values can point you to bottlenecks in the network and <br />
+driver stack. A system should generally spend as little time as possible in kernel time.</p>
+</li>
+<li>
+<p>Waiting<br />
+Total amount of CPU time spent waiting for an I/O operation to occur. Like the blocked <br />
+value, a system should not spend too much time waiting for I/O operations; otherwise you <br />
+should investigate the performance of the respective I/O subsystem.</p>
+</li>
+<li>
+<p>Idle time<br />
+Depicts the CPU percentage the system was idle waiting for tasks.</p>
+</li>
+<li>
+<p>Nice time<br />
+Depicts the CPU percentage spent on re-nicing processes that change the execution <br />
+order and priority of processes.</p>
+</li>
+<li>
+<p>Load average<br />
+The load average is not a percentage, but the rolling average of the sum of the following:<br />
+– The number of processes in queue waiting to be processed<br />
+– The number of processes waiting for uninterruptable task to be completed<br />
+That is, the average of the sum of TASK_RUNNING and TASK_UNINTERRUPTIBLE <br />
+processes. If processes that request CPU time are blocked (which means that the CPU <br />
+has no time to process them), the load average will increase. On the other hand, if each <br />
+process gets immediate access to CPU time and there are no CPU cycles lost, the load <br />
+will decrease. </p>
+</li>
+<li>
+<p>Runable processes<br />
+This value depicts the processes that are ready to be executed. This value should not <br />
+exceed 10 times the amount of physical processors for a sustained period of time; <br />
+otherwise a processor bottleneck is likely.</p>
+</li>
+<li>
+<p>Blocked<br />
+Processes that cannot execute while they are waiting for an I/O operation to finish. <br />
+Blocked processes can point you toward an I/O bottleneck.</p>
+</li>
+<li>
+<p>Context switch<br />
+Amount of switches between threads that occur on the system. High numbers of context <br />
+switches in connection with a large number of interrupts can signal driver or application <br />
+issues. Context switches generally are not desirable because the CPU cache is flushed <br />
+with each one, but some context switching is necessary. Refer to 1.1.5, “Context <br />
+switching” on page 5.</p>
+</li>
+<li>
+<p>Interrupts<br />
+The interrupt value contains hard interrupts and soft interrupts. Hard interrupts have a <br />
+more adverse effect on system performance. High interrupt values are an indication of a <br />
+software bottleneck, either in the kernel or a driver. Remember that the interrupt value <br />
+includes the interrupts caused by the CPU clock</p>
+</li>
+</ul>
+<p>Memory metrics</p>
+<ul>
+<li>
+<p>Free memory<br />
+Compared to most other operating systems, the free memory value in Linux should not be <br />
+a cause for concern. As explained in 1.2.2, “Virtual memory manager” on page 12, the <br />
+Linux kernel allocates most unused memory as file system cache, so subtract the amount <br />
+of buffers and cache from the used memory to determine (effectively) free memory.</p>
+</li>
+<li>
+<p>Swap usage<br />
+This value depicts the amount of swap space used. As described in 1.2.2, “Virtual memory <br />
+manager” on page 12, swap usage only tells you that Linux manages memory really <br />
+efficiently. Swap In/Out is a reliable means of identifying a memory bottleneck. Values <br />
+above 200 to 300 pages per second for a sustained period of time express a likely memory <br />
+bottleneck.</p>
+</li>
+<li>
+<p>Buffer and cache<br />
+Cache allocated as file system and block device cache.</p>
+</li>
+<li>
+<p>Slabs<br />
+Depicts the kernel usage of memory. Note that kernel pages cannot be paged out to disk.</p>
+</li>
+<li>
+<p>Active versus inactive memory<br />
+Provides you with information about the active use of the system memory. Inactive <br />
+memory is a likely candidate to be swapped out to disk by the kswapd daemon. Refer to <br />
+“Page frame reclaiming” on page 14.</p>
+</li>
+</ul>
+<p>Network interface metrics</p>
+<ul>
+<li>
+<p>Packets received and sent<br />
+This metric informs you of the quantity of packets received and sent by a given network <br />
+interface.</p>
+</li>
+<li>
+<p>Bytes received and sent<br />
+This value depicts the number of bytes received and sent by a given network interface.</p>
+</li>
+<li>
+<p>Collisions per second<br />
+This value provides an indication of the number of collisions that occur on the network that <br />
+the respective interface is connected to. Sustained values of collisions often concern a <br />
+bottleneck in the network infrastructure, not the server. On most properly configured <br />
+networks, collisions are very rare unless the network infrastructure consists of hubs.</p>
+</li>
+<li>
+<p>Packets dropped<br />
+This is a count of packets that have been dropped by the kernel, either due to a firewall <br />
+configuration or due to a lack of network buffers.</p>
+</li>
+<li>
+<p>Overruns<br />
+Overruns represent the number of times that the network interface ran out of buffer space. <br />
+This metric should be used in conjunction with the packets dropped value to identify a <br />
+possible bottleneck in network buffers or the network queue length.</p>
+</li>
+<li>
+<p>Errors<br />
+The number of frames marked as faulty. This is often caused by a network mismatch or a <br />
+partially broken network cable. Partially broken network cables can be a significant <br />
+performance issue for copper-based gigabit networks.</p>
+</li>
+</ul>
+<p>Block device metrics</p>
+<ul>
+<li>
+<p>Iowait<br />
+Time the CPU spends waiting for an I/O operation to occur. High and sustained values <br />
+most likely indicate an I/O bottleneck.</p>
+</li>
+<li>
+<p>Average queue length<br />
+Amount of outstanding I/O requests. In general, a disk queue of 2 to 3 is optimal; higher <br />
+values might point toward a disk I/O bottleneck.</p>
+</li>
+<li>
+<p>Average wait<br />
+A measurement of the average time in ms it takes for an I/O request to be serviced. The <br />
+wait time consists of the actual I/O operation and the time it waited in the I/O queue.</p>
+</li>
+<li>
+<p>Transfers per second<br />
+Depicts how many I/O operations per second are performed (reads and writes). The <br />
+transfers per second metric in conjunction with the kBytes per second value helps you to </p>
+</li>
+</ul>
+<h3 id="24-donnees-fournies-par-le-kernel"><a name="user-content-24-donnees-fournies-par-le-kernel" href="#24-donnees-fournies-par-le-kernel" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>2.4 Données fournies par le Kernel</h3>
+<h3 id="25-revue-des-outils-existants"><a name="user-content-25-revue-des-outils-existants" href="#25-revue-des-outils-existants" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>2.5 Revue des outils existants</h3>
+<h3 id="26-approches-graphiques"><a name="user-content-26-approches-graphiques" href="#26-approches-graphiques" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>2.6 Approches graphiques</h3>
+<h2 id="chapitre-3-visualisation-de-donnees"><a name="user-content-chapitre-3-visualisation-de-donnees" href="#chapitre-3-visualisation-de-donnees" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Chapitre 3 : Visualisation de données</h2>
+<h3 id="31-objectif"><a name="user-content-31-objectif" href="#31-objectif" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>3.1 Objectif</h3>
+<h3 id="32-theorie-et-bonnes-pratiques"><a name="user-content-32-theorie-et-bonnes-pratiques" href="#32-theorie-et-bonnes-pratiques" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>3.2 Théorie et bonnes pratiques</h3>
+<h3 id="33-revue-des-approches-courantes"><a name="user-content-33-revue-des-approches-courantes" href="#33-revue-des-approches-courantes" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>3.3 Revue des approches courantes</h3>
+<h3 id="34-description-de-lapproche-choisie"><a name="user-content-34-description-de-lapproche-choisie" href="#34-description-de-lapproche-choisie" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>3.4 Description de l&rsquo;approche choisie</h3>
+<h3 id="35-avantages-et-inconveniants"><a name="user-content-35-avantages-et-inconveniants" href="#35-avantages-et-inconveniants" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>3.5 Avantages et inconvéniants</h3>
+<h3 id="36-alternatives-possibles"><a name="user-content-36-alternatives-possibles" href="#36-alternatives-possibles" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>3.6 Alternatives possibles</h3>
+<h2 id="chapitre-4-conception-du-logiciel"><a name="user-content-chapitre-4-conception-du-logiciel" href="#chapitre-4-conception-du-logiciel" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Chapitre 4 : Conception du logiciel</h2>
+<h3 id="41-defis-rencontres"><a name="user-content-41-defis-rencontres" href="#41-defis-rencontres" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>4.1 Défis rencontrés</h3>
+<h3 id="42-architecture-choisie"><a name="user-content-42-architecture-choisie" href="#42-architecture-choisie" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>4.2 Architecture choisie</h3>
+<h3 id="43-diagrammes"><a name="user-content-43-diagrammes" href="#43-diagrammes" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>4.3 Diagrammes</h3>
+<h2 id="chapitre-5-implementation-du-logiciel"><a name="user-content-chapitre-5-implementation-du-logiciel" href="#chapitre-5-implementation-du-logiciel" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Chapitre 5 : Implémentation du logiciel</h2>
+<h3 id="51-outils-utilises"><a name="user-content-51-outils-utilises" href="#51-outils-utilises" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>5.1 Outils utilisés</h3>
+<h3 id="52-methodologie"><a name="user-content-52-methodologie" href="#52-methodologie" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>5.2 Méthodologie</h3>
+<h3 id="53-problemes-rencontres"><a name="user-content-53-problemes-rencontres" href="#53-problemes-rencontres" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>5.3 Problèmes rencontrés</h3>
+<h3 id="54-solutions-trouvees"><a name="user-content-54-solutions-trouvees" href="#54-solutions-trouvees" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>5.4 Solutions trouvées</h3>
+<h3 id="55-deploiement-du-logiciel"><a name="user-content-55-deploiement-du-logiciel" href="#55-deploiement-du-logiciel" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>5.5 Déploiement du logiciel</h3>
+<h2 id="chapitre-6-discussion-et-conclusion"><a name="user-content-chapitre-6-discussion-et-conclusion" href="#chapitre-6-discussion-et-conclusion" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Chapitre 6 : Discussion et conclusion</h2>
+<h3 id="61-dicussion"><a name="user-content-61-dicussion" href="#61-dicussion" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>6.1 Dicussion</h3>
+<h3 id="62-recommandations"><a name="user-content-62-recommandations" href="#62-recommandations" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>6.2 Recommandations</h3>
+<h3 id="63-conclusion"><a name="user-content-63-conclusion" href="#63-conclusion" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>6.3 Conclusion</h3></article></body></html>
