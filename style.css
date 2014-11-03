@@ -131,4 +131,36 @@ img {
   max-width: 75%;
 }
 
+table {
+     width: 100%;
+}
+
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit
+}
+
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit
+}
+
+tfoot {
+    display: table-footer-group;
+    vertical-align: middle;
+    border-color: inherit
+}
+
+table > tr {
+    vertical-align: middle;
+}
+
+
+th, td { 
+    width: 50%;
+    
+    padding: 0.1rem;
+}
 

@@ -39,7 +39,7 @@ De plus, ce projet vise à explorer différentes techniques de visualisation de 
 
 ### 2.1 Revue de l'architecture de Linux
 
-Pour obtenir des données sur l'activité d'une application précise il faut idéalement avoir en premier lieu une compréhension de l'environnement où est exécutée cette application, soit le système d'exploitation Dans ce projet l'emphase est mise sur les sytèmes d'exploitations UNIX de type Linux, mais les principes de base entre les différents OS.
+Pour obtenir des données sur l'activité d'une application précise il faut idéalement avoir en premier lieu une compréhension de l'environnement où est exécutée cette application, soit le système d'exploitation. Dans ce projet l'emphase est mise sur les sytèmes d'exploitations UNIX de type Linux, mais les principes de base restent les mêmes entre les différents OS.
 
 De manière générale, un [système d'exploitation](http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27exploitation) sert d'interface entre l'accès au ressources d'une machine et les usagers et applications qui veulent utiliser ces ressources. Grâce à cette interface, les applications peuvent bénéficier de plusieurs services offerts par le système d'exploitation, tel l'ordonnancement, le système de fichier, la sécurité, etc.
 
@@ -53,20 +53,91 @@ Cette architecture divisées en espaces usager/kernel est souvent représentée 
 
 ![Fig 1. Architecture de Linux](figures/fig1.png)
 
-Lors d'une analyse de la performance d'une application tout doit être pris en considération, toutes les différents couches logicielles ainsi que le matériel, vont impacter les résultats obtenus. 
+Tel qu'illustré sur la figure précédentes, les applications exécutées par les usagers d'une machine sont le dernier maillon de la chaine, et produisent le résultat attendu. Celles-ci ne peuvent toutefois fonctionner sans l'appui de tous les services implémentés par le système, services que l'application utilise par le biais de librairies ou d'appels systèmes directement. 
 
-De plus, lors de problèmes de performance, si la cause est due à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.
+Le principal avantage d'une telle architecture est qu'elle permet d'éviter ou de limiter la duplication d'effort. En effet, les développeurs d'applications peuvent se fier aux services offerts par le sytème d'exploitation et n'ont pas besoin de ce soucier de problèmes liés à la gestion du matériel par example, et éviter d'y consacrer des efforts puisque ces problèmes sont déjà gérés par le OS. Tel que l'a souvent répété [David Wheeler](https://en.wikipedia.org/wiki/David_Wheeler_(British_computer_scientist)), un éminent chercheur en informatique :
 
+> All problems in computer science can be solved by another level of indirection
+
+Les couches d'abstrations, ou d'indirection, offertes par les OS suivent également cette idée.
+
+Or puisque qu'en pratique les applications n'ont pas besoin de ce soucier de l'implémentation de ces couches sous-jacentes, pourquoi s'y intéresser lors de l'analyse de la performance de ces applications ? Cela dépend pricipalement du type d'analyse considéré. Lors de l'établisement d'indice de références, *benchmarks*, de la performance d'une application spécifique, le matériel et le système d'exploitation peuvent être ignorés - à la seule condition que les autres tests comparatifs soient réalisés sur le même exact environnement, pour qu'ils soient valides. 
+
+Toutefois, lorsque l'objectif est d'améliorer la performance d'une application donnée, ou de résoudre un problème lié à la performance, tout doit être pris en considération. Les résultats obtenus vont varier considérablement selon l'environnement, qu'il s'agisse des différentes couches logicelles - de l'application elle-même jusqu'au Kernel, ou alors du matériel de la machine. De plus, lors de problèmes de performance, si la cause est due à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.
+
+
+### 2.2 Méthodologies de l'analyse de perfomance
+
+Ce projet s'intéresse principalement aux analyses de performance reliées à l'amélioration ou la résolution de problèmes, et l'objectif final est de permettre à l'utilisateur d'en apprendre plus sur son application et la façon dont elle intéragit avec le OS pour améliorer celle-ci. L'établissement d'indices de performances, ou *benchmarks* ne sera pas considéré. Ceci dit, explorons les différentes techniques liées à ces types d'analyses. 
+
+Dans son livre Systems Performance: Enterprise and the Cloud, Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur son site web : [brendangregg.com/methodology.html](http://www.brendangregg.com/methodology.html). En voici quelques unes : 
+
+> 6. Ad Hoc Checklist Method
+> 7. Problem Statement Method
+> 8. Scientific Method
+> 9. Workload Characterization Method
+> 10. Drill-Down Analysis Method
+> 11. Five Whys Performance Method
+> 12. By-Layer Method
+> 13. Latency Analysis Method
+> 14. Tools Method
+> 15. USE Method  
+> [...]
+
+
+Deux méthodologies seront principalement utilisées dans le cadre du projet, soit la méthdode de caractérisation de la charge de travail *Workload Characterization Method*, et la méthode d'analyse par exploration *Drill-Down Analysis Method*. La caractérisation de la charge de travail consiste à identifier la source et la nature de la charge sur un système, et de suivre son évolution à travers le temps. Un changement soudain de la charge comparée à l'historique peut alors indiquer un problème potentiel, et l'identification du type de charge peut ensuite pointer vers la source. De manière générale, l'analyse par exploration, *Drill-Down*, consiste à examiner une vue d'ensemble d'un système, pour ensuite explorer plus en profondeur les détails d'un secteur d'intérêt en particulier. 
+
+En effet, la solution proposée devrait permettre à un utilisateur de voir une vue d'ensemble du système analysé, et de permettre à cet utilisateur de sélectioner une partie du système qu'il l'intéresse, pour rafiner la vue affichée pour afficher les détails de cette partie. Une *vue* devrait idéalement permettre à l'usager de caractériser visuellement la charge de travail présente sur le système, et possiblement de comparer la charge actuelle à un historique.
+
+
+### 2.3 Métriques et statistiques
+
+Les métriques sont des statisques qui décrivent la performance de différentes parties du système. Généralement il s'agit d'un pourcentage d'utilisation, ou un nombre d'opérations par intervalle de temps (typiquement des secondes, ex : IOPS, I/O operations per second). 
+
+* Métriques reliées au processeur et la mémoire :
+
+Processor metrics                 Memory metrics
+--------------------------        --------------------------
+CPU utilization                   Free memory
+User time                         Swap usage
+System time                       Buffer and cache
+Waiting time                      Slabs
+Idle time                         Active vs inactive memory
+Nice time
+Load average
+Runable processes
+Blocked processes
+Context switches
+Interrupts
+--------------------------        --------------------------
+
+* Métriques reliées au réseau et aux disques :  
+
+Network interface metrics       Block device metrics
+--------------------------      --------------------------
+Packets received and sent       IOwait
+Bytes received and sent         Average queue length
+Collisions per second           Average wait
+Packets dropped                 Transfers per second 
+Overruns
+Errors
+--------------------------      --------------------------
  
-### 2.2 Données et statistiques disponibles
+
+### 2.4 Données fournies par le Kernel
 
 
 
-### 2.3 Revue des outils existants
+
+
+### 2.5 Revue des outils existants
 
 
 
-### 2.4 Approches graphiques
+
+
+### 2.6 Approches graphiques
+
 
 
 
