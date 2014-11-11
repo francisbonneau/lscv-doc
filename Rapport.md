@@ -35,6 +35,25 @@ De plus, ce projet vise à explorer différentes techniques de visualisation de 
 
 * Gain de productivité suite à l’amélioration de la performance
 
+### 1.6 Terminologie
+
+# TODO
+
+Système d'exploitation : 
+
+Linux : Nom couramment donné à tout système d'exploitation 
+libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX qui respecte les spécifications POSIX.
+
+Processus : 
+
+Appel système : Un appel système (en anglais, system call, abrégé en syscall) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).  
+
+Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements. 
+
+
+Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données. 
+
+
 ## Chapitre 2 : Analyse de la performance sous Linux
 
 ### 2.1 Revue de l'architecture de Linux
@@ -96,7 +115,7 @@ Les métriques de performance sont des statisques qui mesurent l'activité de di
 
 Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifique aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le *Redpaper* de IBM intitulé [*Linux Performance and Tuning Guidelines*](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) décrit pour Linux les métriques suivants (descriptions en annexe) :
 
-Processor metrics                                           Memory metrics
+Métriques du processeur                                     Métriques de la mémoire
 --------------------------                                  --------------------------
 [CPU utilization](#cpu-utilization)                         [Free memory](#free-memory)
 [User time](#user-time)                                     [Swap usage](#swap-usage)
@@ -111,15 +130,15 @@ Processor metrics                                           Memory metrics
 [Interrupts](#interrups)
 --------------------------                                  --------------------------
 
-Network interface metrics                                   Block device metrics
---------------------------                                  --------------------------
+Métrique des cartes réseaux                                 Métriques des disques
+----------------------------                                --------------------------
 [Packets received and sent](#packets-received-and-sent)     [IOwait](#iowait)
 [Bytes received and sent](#bytes-received-and-sent)         [Average queue length](#average-queue-length)
 [Collisions per second](#collisions-per-second)             [Average wait](#average-wait)
 [Packets dropped](#packets-dropped)                         [Transfers per second](#transferts-per-second)
 [Overruns](#overruns)                                       [Blocks read/write per second](#blocks-readwrite-per-second)
 [Errors](#errors)                                           [Kilobytes per second read/write](#kilobytes-per-second-readwrite)
---------------------------                                  --------------------------
+----------------------------                                --------------------------
 
 Les métriques sont surtout utile lorsqu'on peut les comparer à un historique, et alors constater soit une dégradation ou une amélioration de la performance. 
 
@@ -130,25 +149,63 @@ Une alternative pourrait être de collecter tous les métriques durant une certa
 
 ### 2.4 Données fournies par le Kernel
 
+Les différents métriques énoncés plus haut peuvent être calculés par défaut par le Kernel (par l'incrémentation de compteurs), ou calculés par d'autre programmes externes. Différentes interfaces sont offertes par le Kernel pour accéder aux données et métriques du système, les deux principales sont les répertoires /proc et /sys. En effet puisque Linux prend à coeur la philosophie UNIX de *tout est un fichier*, ces données sont accessibles comme n'importe quel autre fichier ordinaire du système. /proc est toutefois créé dynamiquement par le Kernel au démarrage du système et n'existe qu'en mémoire vive, son contenu n'est enregistré sur aucun disque.
+
+À titre d'exemple, le répertoire /proc est organisé de la façon suivante : /proc contient un répertoire pour chaque processus sur le système et ce répertoire est nommé selon le pid du processus. 
 
 ![Fig 2. Aperçu de /proc/](figures/proc.png)
 
+Ce répertoire contient ensuite quelques fichiers qui eux conservent les données reliées à ce processus, tels les arguments et statistiques.
 
+![Fig 3. Aperçu de /proc/](figures/proc2.png)
 
+Quelques fichiers à la racine de /proc ne suivent pas cette nomenclature, il s'agit alors de propriétés de sous-systèmes du Kernel, ou de fichiers contenant les statistiques globales du système, tel loadavg qui contient un métrique générique de la charge du système pour les dernières minutes. 
+
+Beaucoup d'outils d'analyse de la performance utilisent les répertoires /proc et /sys du Kernel comme source de données sur l'état global du système. Toutefois pour certains besoin spécifiques, tels la capture d'événements, d'autres interfaces sont offertes par le Kernel, telles les kprobes, ftrace, perf_event, etc.  Cela dépend de la nature de l'outil et du besoin qu'il cherche à combler, tel que détaillé par la section suivante.
 
 ### 2.5 Revue des outils existants
 
+Un multitude d'outils existent pour identifier et diagnostiquer des problèmes de performance, ou pour simplement obtenir un aperçu de l'activité d'un système.
+
+![Fig 3. Aperçu de ps](figures/ps.png)
 
 
+![Fig . Aperçu de mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
+
+
+![Fig . Aperçu de netstat](figures/netstat.png)
+
+
+![Fig . Aperçu de top](figures/top.png)
+
+
+![Fig . Aperçu de htop](figures/htop.png)
+
+
+![Fig . Aperçu de vtop](figures/vtop.png)
+
+
+![Fig . Aperçu de iotop](figures/iotop.png)
+
+
+![Fig . Aperçu de nload](figures/nload.png)
+
+
+![Fig . Aperçu de strace](figures/strace.png)
+
+
+![Fig . Aperçu de sysdig](figures/sysdig.png)
 
 
 ### 2.6 Approches graphiques
 
-
+![Fig . Aperçu de ubuntu_monitor](figures/ubuntu_monitor.png)
 
 
 
 ## Chapitre 3 : Visualisation de données
+
+
 
 
 ### 3.1 Objectif
