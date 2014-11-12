@@ -165,41 +165,61 @@ Beaucoup d'outils d'analyse de la performance utilisent les répertoires /proc e
 
 ### 2.5 Revue des outils existants
 
-Un multitude d'outils existent pour identifier et diagnostiquer des problèmes de performance, ou pour simplement obtenir un aperçu de l'activité d'un système.
+Un multitude d'outils existent pour identifier et diagnostiquer des problèmes de performance, ou pour simplement obtenir un aperçu de l'activité d'un système. Cette section vise à présenter un aperçu des différents outils disponibles sous Linux. 
 
-![Fig 3. Aperçu de ps](figures/ps.png)
+#### 2.5.1 Processeur et mémoire
 
+Commençons par les outils les plus génériques, installés par défaut sur tous les systèmes modernes. Ces outils permettent d'obtenir un aperçu de l'activité du système, au moment immédiat ou alors avec un historique, en présentant pour chaque processus son utilisation CPU et sa mémoire.
 
-![Fig . Aperçu de mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
+*ps*, pour process status est probablement le plus simple, il affiche simplement la liste des processus qui sont présent sur la machine et leurs paramètres, tel l'usager qui l'exécute, le process id, etc. ps affiche peu d'information reliées à la performance - à part l'utilisation CPU, mais c'est souvent le programme de choix pour voir rapidement ce qui fonctionne sur une machine.
 
+![Fig 3. ps](figures/ps.png)
 
-![Fig . Aperçu de netstat](figures/netstat.png)
+Le deuxième outil le plus répandu est sans aucun doute *top*. top permet de voir comme ps la liste des processus qui tournent, et affiche pour chaque processus l'utilisation CPU et mémoire en plus d'un indicateur global pour le système. Contrairement à ps top s'actualise à chaque seconde.
 
+![Fig 4. top](figures/top.png)
 
-![Fig . Aperçu de top](figures/top.png)
+Plusieurs autres programmes se sont inspirés de top et visent à le remplacer en proposant une interface utilisateur plus moderne. Pour n'en citer que deux examples, *htop* tente de se démarquer par la couleur, et *vtop* lui propose un graphique sur lequel il est plus facile de voir l'évolution dans le temps.
 
+![Fig 5. htop](figures/htop.png)
 
-![Fig . Aperçu de htop](figures/htop.png)
-
-
-![Fig . Aperçu de vtop](figures/vtop.png)
-
-
-![Fig . Aperçu de iotop](figures/iotop.png)
+![Fig 6. vtop](figures/vtop.png)
 
 
-![Fig . Aperçu de nload](figures/nload.png)
+#### 2.5.2 Disques et réseau 
+
+top et les autres outils précédents mettent davantage l'accent sur l'utilisation CPU et de la mémoire, or il existe plusieurs autres outils qui les complémentent en permettant de voir l'activité des autres ressources du système, tel les cartes réseaux et les disques.
+
+*mpstat* et *vmstat* affichent des statistiques similaires à top, mais *iostat* quand à lui affiche des statistiques sur l'activité des disques durs du système.
+
+![Fig . mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
+
+*netstat* quant à lui affiche les connexions réseau établies par les processus, très similaire à ps par le fait qu'il n'affiche que peu de statistiques sur les connexions mais c'est souvent la première étape pour déterminer l'état actuel.
+
+![Fig . netstat](figures/netstat.png)
+
+*nload* est un autre outil dédié à l'activité réseau, similaire à vtop du fait qu'il affiche un historique qui est mis à jour à un intervalle régulier.
+
+![Fig . nload](figures/nload.png)
+
+*iotop* est l'équivalent de top pour les disques durs. Il affiche l'activité de lecture et écriture sur les disques pour chaque processus et présente une liste des processus avec le plus d'activité.
+
+![Fig . iotop](figures/iotop.png)
 
 
-![Fig . Aperçu de strace](figures/strace.png)
+
+#### 2.5.3 Capture d'événements
 
 
-![Fig . Aperçu de sysdig](figures/sysdig.png)
+![Fig . strace](figures/strace.png)
+
+
+![Fig . sysdig](figures/sysdig.png)
 
 
 ### 2.6 Approches graphiques
 
-![Fig . Aperçu de ubuntu_monitor](figures/ubuntu_monitor.png)
+![Fig . ubuntu_monitor](figures/ubuntu_monitor.png)
 
 
 
