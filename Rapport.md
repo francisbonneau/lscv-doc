@@ -1,3 +1,4 @@
+<!-- Rapport final de PFE - Francis Bonneau, automne 2014 -->
 
 # Visualisation temps réel des appels systèmes Linux
 
@@ -66,7 +67,7 @@ Le matériel physique de la machine est donc géré par le système d'exploitati
 
 Les applications des usagers sont alors exécutées dans l'espace utilisateur, où les permissions sont restreintes, et doivent demander la permissions au Kernel pour accéder aux ressources. Ces demandes sont nommées [appels systèmes](http://fr.wikipedia.org/wiki/Appel_syst%C3%A8me), ou *system calls* voire syscalls. Au débuts de UNIX il y avait approximativement 80 appels systèmes, aujourd'hui ce nombre s'élève à plus de 300. 
 
-Parmi les appels systèmes les plus courants il y a [*read*](http://linux.die.net/man/2/read) et son équivalent [*write*](http://linux.die.net/man/2/write) qui permet de lire et d'écrire dans un *file descriptor*, typiquement un fichier sur le disque. La liste complète est diponible sur plusieurs sites tels que [kernelgrok.com](http://syscalls.kernelgrok.com/), et de l'information spécifique sur chaque appel système est disponible dans le manuel du OS (man), typiquement dans la section numéro 2. Ex : `man 2 read` 
+Parmi les appels systèmes les plus courants il y a [*read*](http://linux.die.net/man/2/read) et son équivalent [*write*](http://linux.die.net/man/2/write) qui permet de lire et d'écrire dans un *file descriptor*, typiquement un fichier sur le disque. La liste complète est diponible sur plusieurs sites tels que [kernelgrok.com](http://syscalls.kernelgrok.com/), et de l'information spécifique sur chaque appel système est disponible dans le manuel du OS (man), typiquement dans la section numéro 2 (`man 2 read`).
 
 Cette architecture divisées en espaces usager/kernel est souvent représentée de la manière suivante :
 
@@ -179,47 +180,69 @@ Le deuxième outil le plus répandu est sans aucun doute *top*. top permet de vo
 
 ![Fig 4. top](figures/top.png)
 
-Plusieurs autres programmes se sont inspirés de top et visent à le remplacer en proposant une interface utilisateur plus moderne. Pour n'en citer que deux examples, *htop* tente de se démarquer par la couleur, et *vtop* lui propose un graphique sur lequel il est plus facile de voir l'évolution dans le temps.
+Plusieurs autres programmes se sont inspirés de top et visent à le remplacer en proposant une interface utilisateur plus moderne. Pour n'en citer que deux examples, *[htop](http://hisham.hm/htop/)* tente de se démarquer par la couleur, et *[vtop](https://parall.ax/vtop)* lui propose un graphique sur lequel il est plus facile de voir l'évolution dans le temps.
 
 ![Fig 5. htop](figures/htop.png)
 
 ![Fig 6. vtop](figures/vtop.png)
+
+Bien que la plupart des outils sont exécutés directement par l'usager, d'autre outils tels que *sar* fontionne en permanence en tant que daemon sur le système et visent plutôt à conserver un historique long terme de l'activité du système. Pour mettre en place le service sur certains systèmes des packages supplémentaires doivent être installés, tel que sysstat sur ubuntu, mais une fois le service établi il est possible d'accéder l'historique avec sar :
+
+![Fig 7. sar](figures/sar.png)
 
 
 #### 2.5.2 Disques et réseau 
 
 top et les autres outils précédents mettent davantage l'accent sur l'utilisation CPU et de la mémoire, or il existe plusieurs autres outils qui les complémentent en permettant de voir l'activité des autres ressources du système, tel les cartes réseaux et les disques.
 
-*mpstat* et *vmstat* affichent des statistiques similaires à top, mais *iostat* quand à lui affiche des statistiques sur l'activité des disques durs du système.
+Plusieurs outils de la famille \*stat peuvent être utilisés à cet effet. *mpstat* et *vmstat* affichent des statistiques similaires à top, mais *iostat* quand à lui affiche des statistiques sur l'activité des disques durs du système.
 
-![Fig . mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
+![Fig 8. mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
 
 *netstat* quant à lui affiche les connexions réseau établies par les processus, très similaire à ps par le fait qu'il n'affiche que peu de statistiques sur les connexions mais c'est souvent la première étape pour déterminer l'état actuel.
 
-![Fig . netstat](figures/netstat.png)
+![Fig 9. netstat](figures/netstat.png)
 
-*nload* est un autre outil dédié à l'activité réseau, similaire à vtop du fait qu'il affiche un historique qui est mis à jour à un intervalle régulier.
+*[nload](http://www.roland-riegel.de/nload/)* est un autre outil dédié à l'activité réseau, similaire à vtop du fait qu'il affiche un historique qui est mis à jour à un intervalle régulier.
 
-![Fig . nload](figures/nload.png)
+![Fig 10. nload](figures/nload.png)
 
-*iotop* est l'équivalent de top pour les disques durs. Il affiche l'activité de lecture et écriture sur les disques pour chaque processus et présente une liste des processus avec le plus d'activité.
+*[iotop](http://guichaz.free.fr/iotop/)* est l'équivalent de top pour les disques durs. Il affiche l'activité de lecture et écriture sur les disques pour chaque processus et présente une liste des processus avec le plus d'activité.
 
-![Fig . iotop](figures/iotop.png)
+![Fig 11. iotop affiche que la commande `du -h /` lit le disque à 19MB/sec](figures/iotop.png)
 
+Un autre logiciel qui mérite d'être mentionné est *[Collectl](http://collectl.sourceforge.net/index.html)*, qui est similaire aux autres outils *stat du fait qu'il affiche les données à un intervalle régulier, mais il se démarque par la quantité de données qu'il peut accéder, Collectl permet de mesurer l'activité d'une quantité impressionnante de sous-sytèmes différents, que ce soit la mémoire, les disques, le réseau, et même certaines cartes graphiques. 
 
+![Fig 12. Apperçu des nombreux métriques collectés par collectl](figures/collectl.png)
 
 #### 2.5.3 Capture d'événements
 
+Les outils présentés jusqu'à présent permettent de mesurer l'activité de différentes parties d'un système donné, et d'indentifier avec différents niveaux de succès la source de cette activité, dumoins le processus responsable. Or, lorsqu'un problème survient sur un processus critique du système, et qu'il faut identifier ce que fait ce processus et la source du problème, il faut parfois plus de données. Une façon d'obtenir ces données est par l'utilisation de logiciel de traçage ou *tracing*, qui eux peuvent capturer les évements en temps réel et afficher ceux-ci.
 
-![Fig . strace](figures/strace.png)
+La définition d'un événement peut varier selon l'outil, mais typiquement il s'agit d'une intéraction entre un processus et le système d'exploitation à un instant précis. Cette intéraction prend souvent la forme d'un appel système, et dans ce cas il s'agit alors d'une requête par le procesus suivie d'une réponse par le système quelques instants après. Par example un processus peut envoyer une requête de lecture *read* pour accéder aux derniers octets du fichier /var/log/syslog, et le système va répondre en envoyant les quelques octets demandés peu de temps après.
+
+Juste le fait de pouvoir observer en temps réel les différentes requêtes d'accès au système de fichiers ou au réseau permet d'en apprendre beaucoup sur l'état du processus et d'analyser son comportement pour voir si il réagit comme il le devrait. *strace* est un outil disponible par défaut sur presque tous les systèmes Linux et qui permet de faire exactement cela, il suffit de lui indiquer le pid du processus à analyser, et il va afficher les appels systèmes de ce processus au fur et à mesure.
+
+![Fig 13. Quelques appels système interceptés avec strace](figures/strace.png)
+
+Il existe toutefois plusieurs autre outils similaires à strace, mais qui ajoutent d'autres fonctionnalitées plus avancées, telles la possibilité d'injecter des sondes ou *probes* ( des fonctions personnalisées qui sont exécutées lorsque qu'un certain événement arrive) directement dans le kernel, afin de capturer des données plus spécifiques à certaines conditions. *[Dtrace](http://dtrace.org/blogs/about/)* est probablement l'un des outils les plus avancés de cette catégorie, mais comme il à été développé pour Solaris initialement son support Linux n'est peut t'être pas aussi stable. Plusieurs outils similaires ont été développés pour Linux, tel *[SystemTap](https://sourceware.org/systemtap/)*, *[perf](https://perf.wiki.kernel.org/index.php/Main_Page)*, *[LTTng](https://lttng.org/)* et *[Sysdig](http://www.sysdig.org/)*.
 
 
-![Fig . sysdig](figures/sysdig.png)
+La différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes.
+
+Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
+
+
+
+  
+
+
+![Fig 14. sysdig](figures/sysdig.png)
 
 
 ### 2.6 Approches graphiques
 
-![Fig . ubuntu_monitor](figures/ubuntu_monitor.png)
+![Fig 15. ubuntu_monitor](figures/ubuntu_monitor.png)
 
 
 
@@ -293,31 +316,31 @@ top et les autres outils précédents mettent davantage l'accent sur l'utilisati
 
 Tirées de http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf
 
-#### CPU utilization
+##### CPU utilization
 
 This is probably the most straightforward metric. It describes the overall utilization per processor. On IBM System x architectures, if the CPU utilization exceeds 80% for a sustained period of time, a processor bottleneck is likely.
 
-#### User time
+##### User time
 
 Depicts the CPU percentage spent on user processes, including nice time. High values in user time are generally desirable because, in this case, the system performs actual work. 
 
-#### System time
+##### System time
 
 Depicts the CPU percentage spent on kernel operations including IRQ and softirq time. High and sustained system time values can point you to bottlenecks in the network and driver stack. A system should generally spend as little time as possible in kernel time.
 
-#### Waiting time
+##### Waiting time
 
 Total amount of CPU time spent waiting for an I/O operation to occur. Like the blocked value, a system should not spend too much time waiting for I/O operations; otherwise you should investigate the performance of the respective I/O subsystem.
 
-#### Idle time
+##### Idle time
 
 Depicts the CPU percentage the system was idle waiting for tasks.
 
-#### Nice time
+##### Nice time
 
 Depicts the CPU percentage spent on re-nicing processes that change the execution order and priority of processes.
 
-#### Load average
+##### Load average
 
 The load average is not a percentage, but the rolling average of the sum of the following:
 
@@ -327,88 +350,88 @@ The load average is not a percentage, but the rolling average of the sum of the 
 
 That is, the average of the sum of TASK_RUNNING and TASK_UNINTERRUPTIBLE processes. If processes that request CPU time are blocked (which means that the CPU has no time to process them), the load average will increase. On the other hand, if each process gets immediate access to CPU time and there are no CPU cycles lost, the load will decrease.
 
-#### Runable processes
+##### Runable processes
 
 This value depicts the processes that are ready to be executed. This value should not exceed 10 times the amount of physical processors for a sustained period of time; otherwise a processor bottleneck is likely.
 
-#### Blocked processes
+##### Blocked processes
 
 Processes that cannot execute while they are waiting for an I/O operation to finish. Blocked processes can point you toward an I/O bottleneck.
 
-#### Context switches
+##### Context switches
 
 Amount of switches between threads that occur on the system. High numbers of context switches in connection with a large number of interrupts can signal driver or application issues. Context switches generally are not desirable because the CPU cache is flushed with each one, but some context switching is necessary. Refer to 1.1.5, “Context switching” on page 5.
 
-#### Interrupts
+##### Interrupts
 
 
 The interrupt value contains hard interrupts and soft interrupts. Hard interrupts have a more adverse effect on system performance. High interrupt values are an indication of a software bottleneck, either in the kernel or a driver. Remember that the interrupt value includes the interrupts caused by the CPU clock. Refer to 1.1.6, “Interrupt handling” on page 6.
 
-#### Free memory
+##### Free memory
 
 Compared to most other operating systems, the free memory value in Linux should not be a cause for concern. As explained in 1.2.2, “Virtual memory manager” on page 12, the Linux kernel allocates most unused memory as file system cache, so subtract the amount of buffers and cache from the used memory to determine (effectively) free memory.
 
-#### Swap usage
+##### Swap usage
 
 This value depicts the amount of swap space used. As described in 1.2.2, “Virtual memory manager” on page 12, swap usage only tells you that Linux manages memory really efficiently. Swap In/Out is a reliable means of identifying a memory bottleneck. Values above 200 to 300 pages per second for a sustained period of time express a likely memory bottleneck.
 
-#### Buffer and cache
+##### Buffer and cache
 
 Cache allocated as file system and block device cache.
 
-#### Slabs
+##### Slabs
 
 Depicts the kernel usage of memory. Note that kernel pages cannot be paged out to disk.
 
-#### Active vs inactive memory
+##### Active vs inactive memory
 
 Provides you with information about the active use of the system memory. Inactive memory is a likely candidate to be swapped out to disk by the kswapd daemon. Refer to “Page frame reclaiming” on page 14.
 
-#### Packets received and sent
+##### Packets received and sent
 
 This metric informs you of the quantity of packets received and sent by a given network interface.
 
-#### Bytes received and sent
+##### Bytes received and sent
 
 This value depicts the number of bytes received and sent by a given network interface.
 
-#### Collisions per second
+##### Collisions per second
 
 This value provides an indication of the number of collisions that occur on the network that the respective interface is connected to. Sustained values of collisions often concern a bottleneck in the network infrastructure, not the server. On most properly configured networks, collisions are very rare unless the network infrastructure consists of hubs.
 
-#### Packets dropped
+##### Packets dropped
 
 This is a count of packets that have been dropped by the kernel, either due to a firewall configuration or due to a lack of network buffers.
 
-#### Overruns
+##### Overruns
 
 Overruns represent the number of times that the network interface ran out of buffer space. This metric should be used in conjunction with the packets dropped value to identify a possible bottleneck in network buffers or the network queue length.
 
-#### Errors
+##### Errors
 
 The number of frames marked as faulty. This is often caused by a network mismatch or a partially broken network cable. Partially broken network cables can be a significant performance issue for copper-based gigabit networks.
 
-#### IOwait
+##### IOwait
 
 Time the CPU spends waiting for an I/O operation to occur. High and sustained values most likely indicate an I/O bottleneck.
 
-#### Average queue length
+##### Average queue length
 
 Amount of outstanding I/O requests. In general, a disk queue of 2 to 3 is optimal; higher values might point toward a disk I/O bottleneck.
 
-#### Average wait
+##### Average wait
 
 A measurement of the average time in ms it takes for an I/O request to be serviced. The wait time consists of the actual I/O operation and the time it waited in the I/O queue.
 
-#### Transfers per second
+##### Transfers per second
 
 Depicts how many I/O operations per second are performed (reads and writes). The transfers per second metric in conjunction with the kBytes per second value helps you to identify the average transfer size of the system. The average transfer size generally should match with the stripe size used by your disk subsystem.
 
-#### Blocks read/write per second
+##### Blocks read/write per second
 
 This metric depicts the reads and writes per second expressed in blocks of 1024 bytes as of kernel 2.6. Earlier kernels may report different block sizes, from 512 bytes to 4 KB.
  
-#### Kilobytes per second read/write
+##### Kilobytes per second read/write
 
 Reads and writes from/to the block device in kilobytes represent the amount of actual data transferred to and from the block device.
 

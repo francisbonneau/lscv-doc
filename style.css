@@ -1,10 +1,19 @@
+/*
+*   Theme pour rapport de PFE
+*   Francis Bonneau, automne 2014
+*
+*   Couleurs inspirées de http://docs.lighttable.com/
+*/
+
 @import url(http://fonts.googleapis.com/css?family=Vollkorn:400,400italic,700,700italic&subset=latin);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400italic,400,600italic,600,700italic,700,800italic,800);
+
 
 body {
     padding: 1em;
     margin: auto;
     max-width: 42em;
-    font: 1.3em "Vollkorn", Palatino, Times;
+    font: 1.3em "Open Sans", Palatino, Times;
     line-height: 1.4;
     background:#202020;
     color:#ddd;
@@ -46,24 +55,29 @@ nav p {
 }
 
 h1 {
-    margin-top: 0;
+    font-family: "Vollkorn",Palatino, Times ;
+    font-size: 65px;
     font-weight: normal;
 }
 
-h2 {
+h2, h3, h4 {
+    font-family: "Vollkorn",Palatino, Times ;
     font-weight: normal;
 }
 
-h3 {
-    font-weight: normal;
+h5 {
+    font-family: "Vollkorn",Palatino, Times ;     
+    font-weight: normal;    
+    font-size: 20.8px;
+    margin-bottom: 10px;
 }
-
-h4 {
-    font-weight: normal;
-}
-
+ 
 p {
     margin-top: 0;
+}
+
+p.caption {
+    margin-top: 10px;
 }
 
 ul {
@@ -84,7 +98,7 @@ blockquote {
 code {
     font-family: "Consolas", "Menlo", "Monaco", monospace, serif;
     font-size: .9em;
-    background: white;
+    background: black;
 }
 
 a {
@@ -169,3 +183,6 @@ th, td {
     padding: 0.1rem;
 }
 
+#TOC {
+    display: none;   
+}
