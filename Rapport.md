@@ -235,27 +235,36 @@ Sysdig est intéresant puisqu'il est relativement simple d'utilisation, et donne
 ![Fig 15. Capture d'événements avec sysdig](figures/sysdig.png)
 
 
-La différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes.
+#### 2.5.4 Diagramme des outils disponibles
 
-Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
+Pour résumer cette section sur les différent outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer les différents outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisé pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails.
+
+![Fig 16. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
 
 
 ### 2.6 Approches graphiques
 
-La très grande majorité des outils reliés à la 
 
+La très grande majorité des outils reliés à la 
 
 
 Cette section présente quelques visualisation de données 
 
 
-![Fig 16. ubuntu_monitor](figures/ubuntu_monitor.png)
+![Fig 17. ubuntu_monitor](figures/ubuntu_monitor.png)
 
 
 
-Pour résumer ce chapitre 
 
-![Fig 17. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
+### 2.7 Description de l'approche choisie
+
+
+La différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes.
+
+Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
+
+
+
 
 ## Chapitre 3 : Visualisation de données
 
