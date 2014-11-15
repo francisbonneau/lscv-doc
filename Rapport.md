@@ -240,8 +240,14 @@ La différence de temps entre la requête et la réponse est nommé temps de lat
 Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
 
 
-
 ### 2.6 Approches graphiques
+
+La très grande majorité des outils reliés à la 
+
+
+
+Cette section présente quelques visualisation de données 
+
 
 ![Fig 16. ubuntu_monitor](figures/ubuntu_monitor.png)
 
