@@ -252,16 +252,23 @@ Cette section présente donc quelques uns des outils existants pour visualiser d
 
 #### 2.6.1 Logiciels intégrés
 
-![Fig 17. OSX Activity Monitor](figures/system_monitor.png)
+Les logiciels avec interfaces graphiques dédiés à la performance les plus courants sont probablement les outils embarqués par défaut sur plusieurs systèmes d'exploitations. Ces outils sont généralement moins orienté serveurs, mais ceux-ci permettent typiquement de voir la liste des processus et leur activité processeur et mémoire, de façon similaire à top, mais avec une interface graphique. À titre d'exemple voici à quoi ressemblent le *Activity Monitor* de OSX et le *System Monitor* de Ubuntu.
 
+![Fig 17. OSX Activity Monitor](figures/system_monitor.png)
 
 ![Fig 18. Ubuntu System Monitor](figures/system_monitor.png)
 
+#### 2.6.2 Interfaces Graphiques aux outils de tracing
 
-#### 2.6.1 
+Il existe également quelques interfaces graphiques à certains outils mentionnés précédement, tels les programmes de tracing comme Dtrace et System Tap. Ces interfaces graphiques sont intéressantes puisqu'elles peuvent aider à réduire la courbe d'apprentissage reliée à ces outils avancés, l'interface graphique peut offir des raccourcis pour les analyses courantes et ainsi éviter à l'usager d'avoir à écrire lui-même ses fonctions (probes) pour arriver au résultat désiré. Apple offre notamment une interface graphique à Dtrace, nommée Instruments, qui permet d'instrumenter des applications sur OSX et d'afficher graphiquement le résultat. SystemTap GUI est un autre projet similaire pour SystemTap, et propose un environnement de développement intégré pour l'écriture de scripts et fonctions stap. 
 
+![Fig 19. Aperçu de Apple Instruments sur OSX](figures/instruments.png)
 
-![Fig 19. Instruments](figures/instruments.png)
+![Fig 20. IDE intégré de SystemTap-GUI ](figures/stapgui.png)
+
+#### 2.6.3 Autres visulisations
+
+Flame graphs
 
 
 ### 2.7 Description de l'approche choisie
@@ -270,8 +277,6 @@ Cette section présente donc quelques uns des outils existants pour visualiser d
 La différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes.
 
 Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
-
-
 
 
 ## Chapitre 3 : Visualisation de données
