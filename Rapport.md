@@ -79,7 +79,7 @@ Le principal avantage d'une telle architecture est qu'elle permet d'éviter ou d
 
 > All problems in computer science can be solved by another level of indirection
 
-Les couches d'abstrations, ou d'indirection, offertes par les OS suivent également cette idée.
+Les couches d'abstrations offertes par les OS suivent également cette idée.
 
 Or puisque qu'en pratique les applications n'ont pas besoin de ce soucier de l'implémentation de ces couches sous-jacentes, pourquoi s'y intéresser lors de l'analyse de la performance de ces applications ? Cela dépend pricipalement du type d'analyse considéré. Lors de l'établisement d'indice de références, *benchmarks*, de la performance d'une application spécifique, le matériel et le système d'exploitation peuvent être ignorés - à la seule condition que les autres tests comparatifs soient réalisés sur le même exact environnement, pour qu'ils soient valides. 
 
@@ -158,7 +158,7 @@ Les différents métriques énoncés plus haut peuvent être calculés par défa
 
 Ce répertoire contient ensuite quelques fichiers qui eux conservent les données reliées à ce processus, tels les arguments et statistiques.
 
-![Fig 3. Aperçu de /proc/](figures/proc2.png)
+![Fig 3. Contenu de /proc/1/](figures/proc2.png)
 
 Quelques fichiers à la racine de /proc ne suivent pas cette nomenclature, il s'agit alors de propriétés de sous-systèmes du Kernel, ou de fichiers contenant les statistiques globales du système, tel loadavg qui contient un métrique générique de la charge du système pour les dernières minutes. 
 
@@ -174,22 +174,25 @@ Commençons par les outils les plus génériques, installés par défaut sur tou
 
 *ps*, pour process status est probablement le plus simple, il affiche simplement la liste des processus qui sont présent sur la machine et leurs paramètres, tel l'usager qui l'exécute, le process id, etc. ps affiche peu d'information reliées à la performance - à part l'utilisation CPU, mais c'est souvent le programme de choix pour voir rapidement ce qui fonctionne sur une machine.
 
-![Fig 3. ps](figures/ps.png)
+![Fig 4. Liste des processus par ps](figures/ps.png)
 
-Le deuxième outil le plus répandu est sans aucun doute *top*. top permet de voir comme ps la liste des processus qui tournent, et affiche pour chaque processus l'utilisation CPU et mémoire en plus d'un indicateur global pour le système. Contrairement à ps top s'actualise à chaque seconde.
+Il y a plusieurs autres façons de représenter cette liste de processus, une représentation en arbre comme l'offre *pstree* est également commune. htop, décrit plus loin offre également cet affichage.
 
-![Fig 4. top](figures/top.png)
+![Fig 5. Liste des processus en arbre par pstree](figures/pstree.png)
+
+L'autre outil le plus répandu est sans aucun doute *top*. top permet de voir comme ps la liste des processus qui tournent, et affiche pour chaque processus l'utilisation CPU et mémoire en plus d'un indicateur global pour le système. Contrairement à ps, top s'actualise à chaque seconde.
+
+![Fig 6. Liste des processus organisés par %CPU par top](figures/top.png)
 
 Plusieurs autres programmes se sont inspirés de top et visent à le remplacer en proposant une interface utilisateur plus moderne. Pour n'en citer que deux examples, *[htop](http://hisham.hm/htop/)* tente de se démarquer par la couleur, et *[vtop](https://parall.ax/vtop)* lui propose un graphique sur lequel il est plus facile de voir l'évolution dans le temps.
 
-![Fig 5. htop](figures/htop.png)
+![Fig 6. % d'utilisation par CPU et liste des processus par htop](figures/htop.png)
 
-![Fig 6. vtop](figures/vtop.png)
+![Fig 7. Graphiques de l'activité système de vtop](figures/vtop.png)
 
 Bien que la plupart des outils sont exécutés directement par l'usager, d'autre outils tels que *sar* fontionne en permanence en tant que daemon sur le système et visent plutôt à conserver un historique long terme de l'activité du système. Pour mettre en place le service sur certains systèmes des packages supplémentaires doivent être installés, tel que sysstat sur ubuntu, mais une fois le service établi il est possible d'accéder l'historique avec sar :
 
-![Fig 7. sar](figures/sar.png)
-
+![Fig 8. Historique de l'activité du système, enregistré par sar](figures/sar.png)
 
 #### 2.5.2 Disques et réseau 
 
@@ -197,23 +200,23 @@ top et les autres outils précédents mettent davantage l'accent sur l'utilisati
 
 Plusieurs outils de la famille \*stat peuvent être utilisés à cet effet. *mpstat* et *vmstat* affichent des statistiques similaires à top, mais *iostat* quand à lui affiche des statistiques sur l'activité des disques durs du système.
 
-![Fig 8. mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
+![Fig 9. mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
 
 *netstat* quant à lui affiche les connexions réseau établies par les processus, très similaire à ps par le fait qu'il n'affiche que peu de statistiques sur les connexions mais c'est souvent la première étape pour déterminer l'état actuel.
 
-![Fig 9. netstat](figures/netstat.png)
+![Fig 10 Liste des connexions ouvertes, par netstat](figures/netstat.png)
 
 *[nload](http://www.roland-riegel.de/nload/)* est un autre outil dédié à l'activité réseau, similaire à vtop du fait qu'il affiche un historique qui est mis à jour à un intervalle régulier.
 
-![Fig 10. nload](figures/nload.png)
+![Fig 11. Diagramme de la charge réseau avec nload](figures/nload.png)
 
 *[iotop](http://guichaz.free.fr/iotop/)* est l'équivalent de top pour les disques durs. Il affiche l'activité de lecture et écriture sur les disques pour chaque processus et présente une liste des processus avec le plus d'activité.
 
-![Fig 11. iotop affiche que la commande `du -h /` lit le disque à 19MB/sec](figures/iotop.png)
+![Fig 12. iotop affiche que la commande `du -h /` lit le disque à 19MB/sec](figures/iotop.png)
 
 Un autre logiciel qui mérite d'être mentionné est *[Collectl](http://collectl.sourceforge.net/index.html)*, qui est similaire aux autres outils *stat du fait qu'il affiche les données à un intervalle régulier, mais il se démarque par la quantité de données qu'il peut accéder, Collectl permet de mesurer l'activité d'une quantité impressionnante de sous-sytèmes différents, que ce soit la mémoire, les disques, le réseau, et même certaines cartes graphiques. 
 
-![Fig 12. Apperçu des nombreux métriques collectés par collectl](figures/collectl.png)
+![Fig 13. Apperçu des nombreux métriques collectés par collectl](figures/collectl.png)
 
 #### 2.5.3 Capture d'événements
 
@@ -223,9 +226,13 @@ La définition d'un événement peut varier selon l'outil, mais typiquement il s
 
 Juste le fait de pouvoir observer en temps réel les différentes requêtes d'accès au système de fichiers ou au réseau permet d'en apprendre beaucoup sur l'état du processus et d'analyser son comportement pour voir si il réagit comme il le devrait. *strace* est un outil disponible par défaut sur presque tous les systèmes Linux et qui permet de faire exactement cela, il suffit de lui indiquer le pid du processus à analyser, et il va afficher les appels systèmes de ce processus au fur et à mesure.
 
-![Fig 13. Quelques appels système interceptés avec strace](figures/strace.png)
+![Fig 14. Quelques appels système interceptés avec strace](figures/strace.png)
 
-Il existe toutefois plusieurs autre outils similaires à strace, mais qui ajoutent d'autres fonctionnalitées plus avancées, telles la possibilité d'injecter des sondes ou *probes* ( des fonctions personnalisées qui sont exécutées lorsque qu'un certain événement arrive) directement dans le kernel, afin de capturer des données plus spécifiques à certaines conditions. *[Dtrace](http://dtrace.org/blogs/about/)* est probablement l'un des outils les plus avancés de cette catégorie, mais comme il à été développé pour Solaris initialement son support Linux n'est peut t'être pas aussi stable. Plusieurs outils similaires ont été développés pour Linux, tel *[SystemTap](https://sourceware.org/systemtap/)*, *[perf](https://perf.wiki.kernel.org/index.php/Main_Page)*, *[LTTng](https://lttng.org/)* et *[Sysdig](http://www.sysdig.org/)*.
+Il existe toutefois plusieurs autre outils similaires à strace qui ajoutent d'autres fonctionnalitées plus avancées, tel que la possibilité d'injecter des sondes ou *probes* ( des fonctions personnalisées qui sont exécutées lorsque qu'un certain événement arrive) directement dans le kernel, afin de capturer des données plus spécifiques à certaines conditions. *[Dtrace](http://dtrace.org/blogs/about/)* est probablement l'un des outils les plus avancés de cette catégorie, mais comme il à été développé pour Solaris initialement son support Linux n'est pas aussi stable. Plusieurs outils similaires ont été développés pour Linux, tel *[SystemTap](https://sourceware.org/systemtap/)*, *[perf](https://perf.wiki.kernel.org/index.php/Main_Page)*, *[LTTng](https://lttng.org/)* et *[Sysdig](http://www.sysdig.org/)*.
+
+Sysdig est intéresant puisqu'il est relativement simple d'utilisation, et donne accès à une grande variété de fonctions déjà écrites (appelées *[Chisels](https://github.com/draios/sysdig/wiki/Chisels-User-Guide)*) pour afficher les données capturées. Par défaut lorsqu'il est exécuté il affiche tous les événements du système - voir figure suivante, de tous les processsus, mais il offre une grande variété de filtres pour rafiner l'information affichée. Pour ces raisons, c'est l'outil qui sera utilisé dans ce projet la capture des données.
+
+![Fig 15. Capture d'événements avec sysdig](figures/sysdig.png)
 
 
 La différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes.
@@ -234,17 +241,15 @@ Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes q
 
 
 
-  
-
-
-![Fig 14. sysdig](figures/sysdig.png)
-
-
 ### 2.6 Approches graphiques
 
-![Fig 15. ubuntu_monitor](figures/ubuntu_monitor.png)
+![Fig 16. ubuntu_monitor](figures/ubuntu_monitor.png)
 
 
+
+Pour résumer ce chapitre 
+
+![Fig 17. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
 
 ## Chapitre 3 : Visualisation de données
 

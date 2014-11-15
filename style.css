@@ -8,6 +8,15 @@
 @import url(http://fonts.googleapis.com/css?family=Vollkorn:400,400italic,700,700italic&subset=latin);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400italic,400,600italic,600,700italic,700,800italic,800);
 
+::-moz-selection { 
+    background: #2484C1;
+    color:#ddd;
+}
+
+::selection {
+    background: #2484C1;
+    color:#ddd;
+}
 
 body {
     padding: 1em;
@@ -15,7 +24,7 @@ body {
     max-width: 42em;
     font: 1.3em "Open Sans", Palatino, Times;
     line-height: 1.4;
-    background:#202020;
+    background: rgba(24, 24, 24, 1);
     color:#ddd;
 }
 
@@ -63,12 +72,14 @@ h1 {
 h2, h3, h4 {
     font-family: "Vollkorn",Palatino, Times ;
     font-weight: normal;
+    font-size: 1.3em;
+    margin-bottom: 15px;
 }
 
 h5 {
     font-family: "Vollkorn",Palatino, Times ;     
     font-weight: normal;    
-    font-size: 20.8px;
+    font-size: 1.3em;
     margin-bottom: 10px;
 }
  
@@ -78,6 +89,7 @@ p {
 
 p.caption {
     margin-top: 10px;
+    font: 0.9em "Open Sans", Palatino, Times;
 }
 
 ul {
