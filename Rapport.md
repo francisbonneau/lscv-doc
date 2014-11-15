@@ -244,16 +244,24 @@ Pour résumer cette section sur les différent outils de capture de données dis
 
 ### 2.6 Approches graphiques
 
+Une grande majorité des outils disponibles pour l'analyse et la capture de données reliées à la performance de système Linux sont des outils en ligne de commande. Ceux-ci présentent l'information directement sous forme de texte, ou utilisent certaines techniques avec des caractères spéciaux pour afficher des diagrammmes à barres ou des histogrammes directement dans le terminal.
 
-La très grande majorité des outils reliés à la 
+Les outils avec des interfaces graphiques complètes sont moins communs. Souvent une combinaison d'outils en ligne de commande pour la capture de données et un autre système tel que *[RRDtool](http://oss.oetiker.ch/rrdtool/)* ou *[Graphite](http://graphite.wikidot.com/)* pour le stockage et l'affichage de graphiques est la solution retenue pour sa flexibilité. Cette flexiblité s'avère utile lorsqu'il faut analyser la perfomance de plusieurs machines et pouvoir visualiser les données dans un contexte qui permet de les comparer.
+
+Cette section présente donc quelques uns des outils existants pour visualiser des données reliées à la performance. 
+
+#### 2.6.1 Logiciels intégrés
+
+![Fig 17. OSX Activity Monitor](figures/system_monitor.png)
 
 
-Cette section présente quelques visualisation de données 
+![Fig 18. Ubuntu System Monitor](figures/system_monitor.png)
 
 
-![Fig 17. ubuntu_monitor](figures/ubuntu_monitor.png)
+#### 2.6.1 
 
 
+![Fig 19. Instruments](figures/instruments.png)
 
 
 ### 2.7 Description de l'approche choisie
