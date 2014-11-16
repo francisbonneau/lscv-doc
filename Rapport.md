@@ -313,8 +313,10 @@ Une solution potentielle serait d'examiner le temps de latence des appels systè
 
 ### 3.1 Objectif
 
+L'objectif premier de la visualisation de données
 
 
+http://readwrite.com/2010/11/27/what-is-data-visualization-inf
 
 
 ### 3.2 Théorie et bonnes pratiques
