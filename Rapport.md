@@ -297,26 +297,24 @@ Voici la description de la visualisation par Han Xiao  :
 > maximum 2000 system calls were plotted.
 Han Xiao, home.in.tum.de/~xiaoh/vistrace.html
 
-### 2.7 Description de l'approche choisie
+### 2.7 Description de l'approche de collecte de données choisie
 
 Comme l'objectif de ce projet est de permettre d'interpréter plus facilement les données liés à la performance d'un ou plusieurs système, il faut évidemment collecter ces données. Or compte tenu du fait qu'il existe plusieurs outils très avancés pour la collecte des données, il à été choisi de réutiliesr l'un des outils existants pour cette phase, quitte à bâtir un pont entre ce système et le reste de l'application - qui servira alors uniquement à interpréter et visualiser les données.
 
-La question suivante se pose alors : quelles type de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter une aperçu complet du système instrumenté il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément, et comme il faudrait également permettre à l'utilisateur de pouvoir 'rafiner' la visualisation sur un processus précis, l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisament précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à prévilégier à l'opposé d'un simple enregistrement du % d'activité d'un processus. Or l'outil qui à été retenu pour satisfaire ces conditions est Sysdig.
+La question suivante se pose alors : quelles type de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter une aperçu complet du système instrumenté il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément, et comme il faudrait également permettre à l'utilisateur de pouvoir 'rafiner' la visualisation sur un processus précis, l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisament précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à prévilégier à l'opposé d'un simple enregistrement du % d'activité d'un processus. L'outil qui à été retenu pour satisfaire ces conditions est Sysdig.
 
+L'avantage des appels systèmes est que l'analyse de ceux-ci est très instructive sur les activités d'un processus, mais comment peut-on utiliser les appels systèmes pour effectuer des comparaisons ? Ou déterminer une amélioration ou régression de la performance d'un processus, outre regarder la quantité d'appels systèmes envoyés ? 
 
-
-
-La différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes.
-
-Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
+Une solution potentielle serait d'examiner le temps de latence des appels systèmes. En effet, la différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes. Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
 
 
 ## Chapitre 3 : Visualisation de données
 
 
-
-
 ### 3.1 Objectif
+
+
+
 
 
 ### 3.2 Théorie et bonnes pratiques
@@ -325,7 +323,7 @@ Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes q
 ### 3.3 Revue des approches courantes
 
 
-### 3.4 Description de l'approche choisie
+### 3.4 Description de l'approche de visualisation des données choisie
 
 
 ### 3.5 Avantages et inconvéniants
