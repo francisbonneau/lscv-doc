@@ -270,10 +270,21 @@ Il existe également quelques interfaces graphiques à certains outils mentionn�
 
 Outre les interfaces graphiques aux outils existants, plusieurs autres façons de visualiser l'information collectée ont été imaginées, cette sections présente quelques unes de ces approches différentes mais très intéressantes.
 
+##### 2.6.3.1 Flame Graphs
+
 Une autre façon de réprésenter les *stack frames*, ou l'historique de la pile d'exécution à un instant donné, collectés par les outils de tracing comme Dtrace à été développée par Bredan Gregg, il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
 
-![Fig 21. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs/](figures/flame_graphs.png)
+![Fig 21. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs](figures/flame_graphs.png)
 
+Voici comment interpréter un Flame Graph : 
+
+> The x-axis shows the stack profile population, sorted alphabetically (it is not the passage  of time), and the y-axis shows stack depth. Each rectangle represents a stack frame. The wider a frame is is, the more often it was present in the stacks. The top edge shows what is on-CPU, and beneath it is its ancestry. The colors are usually not significant, picked randomly to differentiate frames.
+- Bredan Cregg, brendangregg.com/FlameGraphs
+
+##### 2.6.3.2 vistrace
+
+
+![Fig 22. vistrace](figures/vistrace.png)
 
 
 
