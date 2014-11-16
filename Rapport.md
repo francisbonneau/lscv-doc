@@ -38,8 +38,6 @@ De plus, ce projet vise à explorer différentes techniques de visualisation de 
 
 ### 1.6 Terminologie
 
-# TODO
-
 Système d'exploitation : 
 
 Linux : Nom couramment donné à tout système d'exploitation 
@@ -47,10 +45,12 @@ libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX q
 
 Processus : 
 
+
+Daemon : 
+
 Appel système : Un appel système (en anglais, system call, abrégé en syscall) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).  
 
 Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements. 
-
 
 Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données. 
 
@@ -279,16 +279,31 @@ Une autre façon de réprésenter les *stack frames*, ou l'historique de la pile
 Voici comment interpréter un Flame Graph : 
 
 > The x-axis shows the stack profile population, sorted alphabetically (it is not the passage  of time), and the y-axis shows stack depth. Each rectangle represents a stack frame. The wider a frame is is, the more often it was present in the stacks. The top edge shows what is on-CPU, and beneath it is its ancestry. The colors are usually not significant, picked randomly to differentiate frames.
-- Bredan Cregg, brendangregg.com/FlameGraphs
+Bredan Cregg, brendangregg.com/FlameGraphs
 
 ##### 2.6.3.2 vistrace
 
+*[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao. vistrace affiche les différents appels systèms capturés sur un graphe circulaire, et met en évidence l'ordre des appels, et le délai entre le requête d'un appel système et la réponse retournée par le système en reliant ces deux événements par une ligne. 
 
-![Fig 22. vistrace](figures/vistrace.png)
+![Fig 22. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html](figures/vistrace.png)
 
+Voici la description de la visualisation par Han Xiao  : 
 
+> vistrace visualizes the output produced by strace -ttt cmd as a circular graph. 
+> Each system call has a unique color (there are in total 380 UNIX system calls); 
+> system calls were plotted in clockwise (i.e. starts and ends at the 12 clock position);
+> a line is plotted between two functions if the return value of the first function was used as an argument of the second function;
+> functions that returned -1 (error) were omitted;
+> maximum 2000 system calls were plotted.
+Han Xiao, home.in.tum.de/~xiaoh/vistrace.html
 
 ### 2.7 Description de l'approche choisie
+
+Comme l'objectif de ce projet est de permettre d'interpréter plus facilement les données liés à la performance d'un ou plusieurs système, il faut évidemment collecter ces données. Or compte tenu du fait qu'il existe plusieurs outils très avancés pour la collecte des données, il à été choisi de réutiliesr l'un des outils existants pour cette phase, quitte à bâtir un pont entre ce système et le reste de l'application - qui servira alors uniquement à interpréter et visualiser les données.
+
+La question suivante se pose alors : quelles type de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter une aperçu complet du système instrumenté il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément, et comme il faudrait également permettre à l'utilisateur de pouvoir 'rafiner' la visualisation sur un processus précis, l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisament précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à prévilégier à l'opposé d'un simple enregistrement du % d'activité d'un processus. Or l'outil qui à été retenu pour satisfaire ces conditions est Sysdig.
+
+
 
 
 La différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes.
