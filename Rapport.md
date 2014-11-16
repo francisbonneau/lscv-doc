@@ -254,7 +254,7 @@ Cette section présente donc quelques uns des outils existants pour visualiser d
 
 Les logiciels avec interfaces graphiques dédiés à la performance les plus courants sont probablement les outils embarqués par défaut sur plusieurs systèmes d'exploitations. Ces outils sont généralement moins orienté serveurs, mais ceux-ci permettent typiquement de voir la liste des processus et leur activité processeur et mémoire, de façon similaire à top, mais avec une interface graphique. À titre d'exemple voici à quoi ressemblent le *Activity Monitor* de OSX et le *System Monitor* de Ubuntu.
 
-![Fig 17. OSX Activity Monitor](figures/system_monitor.png)
+![Fig 17. OSX Activity Monitor](figures/activity_monitor.png)
 
 ![Fig 18. Ubuntu System Monitor](figures/system_monitor.png)
 
@@ -264,11 +264,17 @@ Il existe également quelques interfaces graphiques à certains outils mentionn�
 
 ![Fig 19. Aperçu de Apple Instruments sur OSX](figures/instruments.png)
 
-![Fig 20. IDE intégré de SystemTap-GUI ](figures/stapgui.png)
+![Fig 20. IDE intégré de SystemTap-GUI, source : http://stapgui.sourceforge.net ](figures/stapgui.png)
 
 #### 2.6.3 Autres visulisations
 
-Flame graphs
+Outre les interfaces graphiques aux outils existants, plusieurs autres façons de visualiser l'information collectée ont été imaginées, cette sections présente quelques unes de ces approches différentes mais très intéressantes.
+
+Une autre façon de réprésenter les *stack frames*, ou l'historique de la pile d'exécution à un instant donné, collectés par les outils de tracing comme Dtrace à été développée par Bredan Gregg, il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
+
+![Fig 21. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs/](figures/flame_graphs.png)
+
+
 
 
 ### 2.7 Description de l'approche choisie
