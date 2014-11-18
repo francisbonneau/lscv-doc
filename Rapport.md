@@ -40,19 +40,18 @@ De plus, ce projet vise à explorer différentes techniques de visualisation de 
 
 Système d'exploitation : 
 
-Linux : Nom couramment donné à tout système d'exploitation 
-libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX qui respecte les spécifications POSIX.
+Linux : Nom couramment donné à tout système d'exploitation libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX qui respecte les spécifications POSIX.[^1]
 
 Processus : 
 
 
 Daemon : 
 
-Appel système : Un appel système (en anglais, system call, abrégé en syscall) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).  
+Appel système : Un appel système (en anglais, system call, abrégé en syscall) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).[^2]
 
-Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements. 
+Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements.[^3] [^4]
 
-Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données. 
+Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données. [^5]
 
 
 ## Chapitre 2 : Analyse de la performance sous Linux
@@ -379,125 +378,163 @@ http://readwrite.com/2010/11/27/what-is-data-visualization-inf
 
 ### Description des métriques
 
-Tirées de http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf
+Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) par Eduardo Ciliendo et Takechika Kunimasa.[^99] 
 
 ##### CPU utilization
 
-This is probably the most straightforward metric. It describes the overall utilization per processor. On IBM System x architectures, if the CPU utilization exceeds 80% for a sustained period of time, a processor bottleneck is likely.
+> This is probably the most straightforward metric. It describes the overall utilization per processor. On IBM System x architectures, if the CPU utilization exceeds 80% for a sustained period of time, a processor bottleneck is likely.
 
 ##### User time
 
-Depicts the CPU percentage spent on user processes, including nice time. High values in user time are generally desirable because, in this case, the system performs actual work. 
+> Depicts the CPU percentage spent on user processes, including nice time. High values in user time are generally desirable because, in this case, the system performs actual work.
 
 ##### System time
 
-Depicts the CPU percentage spent on kernel operations including IRQ and softirq time. High and sustained system time values can point you to bottlenecks in the network and driver stack. A system should generally spend as little time as possible in kernel time.
+> Depicts the CPU percentage spent on kernel operations including IRQ and softirq time. High and sustained system time values can point you to bottlenecks in the network and driver stack. A system should generally spend as little time as possible in kernel time.
 
 ##### Waiting time
 
-Total amount of CPU time spent waiting for an I/O operation to occur. Like the blocked value, a system should not spend too much time waiting for I/O operations; otherwise you should investigate the performance of the respective I/O subsystem.
+> Total amount of CPU time spent waiting for an I/O operation to occur. Like the blocked value, a system should not spend too much time waiting for I/O operations; otherwise you should investigate the performance of the respective I/O subsystem.
 
 ##### Idle time
 
-Depicts the CPU percentage the system was idle waiting for tasks.
+> Depicts the CPU percentage the system was idle waiting for tasks.
 
 ##### Nice time
 
-Depicts the CPU percentage spent on re-nicing processes that change the execution order and priority of processes.
+> Depicts the CPU percentage spent on re-nicing processes that change the execution order and priority of processes.
 
 ##### Load average
 
-The load average is not a percentage, but the rolling average of the sum of the following:
-
-– The number of processes in queue waiting to be processed  
-
-– The number of processes waiting for uninterruptable task to be completed
-
-That is, the average of the sum of TASK_RUNNING and TASK_UNINTERRUPTIBLE processes. If processes that request CPU time are blocked (which means that the CPU has no time to process them), the load average will increase. On the other hand, if each process gets immediate access to CPU time and there are no CPU cycles lost, the load will decrease.
+> The load average is not a percentage, but the rolling average of the sum of the following:
+> 
+> – The number of processes in queue waiting to be processed  
+> 
+> – The number of processes waiting for uninterruptable task to be completed
+> 
+> That is, the average of the sum of TASK_RUNNING and TASK_UNINTERRUPTIBLE processes. If processes that request CPU time are blocked (which means that the CPU has no time to process them), the load average will increase. On the other hand, if each process gets immediate access to CPU time and there are no CPU cycles lost, the load will decrease.
 
 ##### Runable processes
 
-This value depicts the processes that are ready to be executed. This value should not exceed 10 times the amount of physical processors for a sustained period of time; otherwise a processor bottleneck is likely.
+> This value depicts the processes that are ready to be executed. This value should not exceed 10 times the amount of physical processors for a sustained period of time; otherwise a processor bottleneck is likely.
 
 ##### Blocked processes
 
-Processes that cannot execute while they are waiting for an I/O operation to finish. Blocked processes can point you toward an I/O bottleneck.
+> Processes that cannot execute while they are waiting for an I/O operation to finish. Blocked processes can point you toward an I/O bottleneck.
 
 ##### Context switches
 
-Amount of switches between threads that occur on the system. High numbers of context switches in connection with a large number of interrupts can signal driver or application issues. Context switches generally are not desirable because the CPU cache is flushed with each one, but some context switching is necessary. Refer to 1.1.5, “Context switching” on page 5.
+> Amount of switches between threads that occur on the system. High numbers of context switches in connection with a large number of interrupts can signal driver or application issues. Context switches generally are not desirable because the CPU cache is flushed with each one, but some context switching is necessary. Refer to 1.1.5, “Context switching” on page 5.
 
 ##### Interrupts
 
-
-The interrupt value contains hard interrupts and soft interrupts. Hard interrupts have a more adverse effect on system performance. High interrupt values are an indication of a software bottleneck, either in the kernel or a driver. Remember that the interrupt value includes the interrupts caused by the CPU clock. Refer to 1.1.6, “Interrupt handling” on page 6.
+> The interrupt value contains hard interrupts and soft interrupts. Hard interrupts have a more adverse effect on system performance. High interrupt values are an indication of a software bottleneck, either in the kernel or a driver. Remember that the interrupt value includes the interrupts caused by the CPU clock. Refer to 1.1.6, “Interrupt handling” on page 6.
 
 ##### Free memory
 
-Compared to most other operating systems, the free memory value in Linux should not be a cause for concern. As explained in 1.2.2, “Virtual memory manager” on page 12, the Linux kernel allocates most unused memory as file system cache, so subtract the amount of buffers and cache from the used memory to determine (effectively) free memory.
+> Compared to most other operating systems, the free memory value in Linux should not be a cause for concern. As explained in 1.2.2, “Virtual memory manager” on page 12, the Linux kernel allocates most unused memory as file system cache, so subtract the amount of buffers and cache from the used memory to determine (effectively) free memory.
 
 ##### Swap usage
 
-This value depicts the amount of swap space used. As described in 1.2.2, “Virtual memory manager” on page 12, swap usage only tells you that Linux manages memory really efficiently. Swap In/Out is a reliable means of identifying a memory bottleneck. Values above 200 to 300 pages per second for a sustained period of time express a likely memory bottleneck.
+> This value depicts the amount of swap space used. As described in 1.2.2, “Virtual memory manager” on page 12, swap usage only tells you that Linux manages memory really efficiently. Swap In/Out is a reliable means of identifying a memory bottleneck. Values above 200 to 300 pages per second for a sustained period of time express a likely memory bottleneck.
 
 ##### Buffer and cache
 
-Cache allocated as file system and block device cache.
+> Cache allocated as file system and block device cache.
 
 ##### Slabs
 
-Depicts the kernel usage of memory. Note that kernel pages cannot be paged out to disk.
+> Depicts the kernel usage of memory. Note that kernel pages cannot be paged out to disk.
 
 ##### Active vs inactive memory
 
-Provides you with information about the active use of the system memory. Inactive memory is a likely candidate to be swapped out to disk by the kswapd daemon. Refer to “Page frame reclaiming” on page 14.
+> Provides you with information about the active use of the system memory. Inactive memory is a likely candidate to be swapped out to disk by the kswapd daemon. Refer to “Page frame reclaiming” on page 14.
 
 ##### Packets received and sent
 
-This metric informs you of the quantity of packets received and sent by a given network interface.
+> This metric informs you of the quantity of packets received and sent by a given network interface.
 
 ##### Bytes received and sent
 
-This value depicts the number of bytes received and sent by a given network interface.
+> This value depicts the number of bytes received and sent by a given network interface.
 
 ##### Collisions per second
 
-This value provides an indication of the number of collisions that occur on the network that the respective interface is connected to. Sustained values of collisions often concern a bottleneck in the network infrastructure, not the server. On most properly configured networks, collisions are very rare unless the network infrastructure consists of hubs.
+> This value provides an indication of the number of collisions that occur on the network that the respective interface is connected to. Sustained values of collisions often concern a bottleneck in the network infrastructure, not the server. On most properly configured networks, collisions are very rare unless the network infrastructure consists of hubs.
 
 ##### Packets dropped
 
-This is a count of packets that have been dropped by the kernel, either due to a firewall configuration or due to a lack of network buffers.
+> This is a count of packets that have been dropped by the kernel, either due to a firewall configuration or due to a lack of network buffers.
 
 ##### Overruns
 
-Overruns represent the number of times that the network interface ran out of buffer space. This metric should be used in conjunction with the packets dropped value to identify a possible bottleneck in network buffers or the network queue length.
+> Overruns represent the number of times that the network interface ran out of buffer space. This metric should be used in conjunction with the packets dropped value to identify a possible bottleneck in network buffers or the network queue length.
 
 ##### Errors
 
-The number of frames marked as faulty. This is often caused by a network mismatch or a partially broken network cable. Partially broken network cables can be a significant performance issue for copper-based gigabit networks.
+> The number of frames marked as faulty. This is often caused by a network mismatch or a partially broken network cable. Partially broken network cables can be a significant performance issue for copper-based gigabit networks.
 
 ##### IOwait
 
-Time the CPU spends waiting for an I/O operation to occur. High and sustained values most likely indicate an I/O bottleneck.
+> Time the CPU spends waiting for an I/O operation to occur. High and sustained values most likely indicate an I/O bottleneck.
 
 ##### Average queue length
 
-Amount of outstanding I/O requests. In general, a disk queue of 2 to 3 is optimal; higher values might point toward a disk I/O bottleneck.
+> Amount of outstanding I/O requests. In general, a disk queue of 2 to 3 is optimal; higher values might point toward a disk I/O bottleneck.
 
 ##### Average wait
 
-A measurement of the average time in ms it takes for an I/O request to be serviced. The wait time consists of the actual I/O operation and the time it waited in the I/O queue.
+> A measurement of the average time in ms it takes for an I/O request to be serviced. The wait time consists of the actual I/O operation and the time it waited in the I/O queue.
 
 ##### Transfers per second
 
-Depicts how many I/O operations per second are performed (reads and writes). The transfers per second metric in conjunction with the kBytes per second value helps you to identify the average transfer size of the system. The average transfer size generally should match with the stripe size used by your disk subsystem.
+> Depicts how many I/O operations per second are performed (reads and writes). The transfers per second metric in conjunction with the kBytes per second value helps you to identify the average transfer size of the system. The average transfer size generally should match with the stripe size used by your disk subsystem.
 
 ##### Blocks read/write per second
 
-This metric depicts the reads and writes per second expressed in blocks of 1024 bytes as of kernel 2.6. Earlier kernels may report different block sizes, from 512 bytes to 4 KB.
+> This metric depicts the reads and writes per second expressed in blocks of 1024 bytes as of kernel 2.6. Earlier kernels may report different block sizes, from 512 bytes to 4 KB.
  
 ##### Kilobytes per second read/write
 
-Reads and writes from/to the block device in kilobytes represent the amount of actual data transferred to and from the block device.
+> Reads and writes from/to the block device in kilobytes represent the amount of actual data transferred to and from the block device.
+
+## Bibliographie
+
+### Livres
+
+[^99]: CILIENDO, Eduardo; Kunimasa, Takechika (2007). Linux Performance and Tuning Guidelines, IBM: IBM, Coll. « Redpaper ».
+
+FRY, Ben (2008). Visualizing data, Beijing; Cambridge: O'Reilly Media, Inc.
+
+GREENBERG, Ira (2007). Processing creative coding and computational art, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
+
+GREGG, Brendan (2013). Systems performance enterprise and the cloud, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
+
+KIRK, Andy (2012). Data Visualization a successful design process, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
+
+REAS, Casey et Ben FRY (2007). Processing : a programming handbook for visual designers and artists, Cambridge, Mass.: MIT Press.
+
+SHIFFMAN, Daniel (2008). Learning Processing : a beginner's guide to programming images, animation, and interaction, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
+
+TUFTE, Edward R. (1983). The visual display of quantitative information, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
+
+TUFTE, Edward R. (2006). Beautiful evidence, Cheshire, Conn.: Graphics Press.
 
 
+### Web
+
+[^1]: CONTRIBUTEURS DE WIKIPÉDIA Linux, [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 18 novembre 2014.
+
+[^2]: CONTRIBUTEURS DE WIKIPÉDIA Appel système, [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 18 novembre 2014.
+
+[^3]: CONTRIBUTEURS DE WIKIPÉDIA Temps réel, [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 15 novembre 2014.
+
+[^4]: CONTRIBUTEURS DE STACKOVERFLOW What is the definition of realtime, near realtime and batch?, [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 15 novembre 2014.
+
+[^5]: CONTRIBUTEURS DE WIKIPÉDIA Visualisation d'informations, [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
+
+GREGG, Bredan Linux Performance, [En ligne], http://www.brendangregg.com/linuxperf.html.
+
+GREGG, Bredan Flame Graphs, [En ligne], http://www.brendangregg.com/flamegraphs.html.
+
+XIAO, Han vistrace: a visualization of strace, [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html.
