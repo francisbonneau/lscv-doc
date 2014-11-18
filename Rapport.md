@@ -77,7 +77,7 @@ Tel qu'illustré sur la figure précédentes, les applications exécutées par l
 Le principal avantage d'une telle architecture est qu'elle permet d'éviter ou de limiter la duplication d'effort. En effet, les développeurs d'applications peuvent se fier aux services offerts par le sytème d'exploitation et n'ont pas besoin de ce soucier de problèmes liés à la gestion du matériel par example, et éviter d'y consacrer des efforts puisque ces problèmes sont déjà gérés par le OS. Tel que l'a souvent répété [David Wheeler](https://en.wikipedia.org/wiki/David_Wheeler_(British_computer_scientist)), un éminent chercheur en informatique :
 
 > All problems in computer science can be solved by another level of indirection  
-­*-- David Wheeler*^[Ref 18]
+­*-- David Wheeler*^[Ref 19]
 
 Les couches d'abstrations offertes par les OS suivent également cette idée.
 
@@ -90,7 +90,7 @@ Toutefois, lorsque l'objectif est d'améliorer la performance d'une application 
 
 Ce projet s'intéresse principalement aux analyses de performance reliées à l'amélioration ou la résolution de problèmes, et l'objectif final est de permettre à l'utilisateur d'en apprendre plus sur son application et la façon dont elle intéragit avec le OS pour améliorer celle-ci. L'établissement d'indices de performances, ou *benchmarks* ne sera pas considéré. Ceci dit, explorons les différentes techniques liées à ces types d'analyses. 
 
-Dans son livre *Systems Performance: Enterprise and the Cloud*^[Ref 12], Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur son site web : [brendangregg.com/methodology.html](http://www.brendangregg.com/methodology.html). En voici quelques unes : 
+Dans son livre *Systems Performance: Enterprise and the Cloud*^[Ref 13], Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur son site web : [brendangregg.com/methodology.html](http://www.brendangregg.com/methodology.html). En voici quelques unes : 
 
 > 6. Ad Hoc Checklist Method
 > 7. Problem Statement Method
@@ -114,7 +114,7 @@ En effet, la solution proposée devrait permettre à un utilisateur de voir une 
 
 Les métriques de performance sont des statisques qui mesurent l'activité de différentes parties du système. Généralement il s'agit d'un pourcentage d'utilisation, un nombre d'opérations par intervale de temps (typiquement des secondes, ex : IOPS, I/O operations per second), ou alors le temps de latence associé à une certaine opération. Le métriques peuvent être caculés directement par le système d'exploitation ou par des applications distinctes. 
 
-Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifique aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le *Redpaper* de IBM intitulé [*Linux Performance and Tuning Guidelines*](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) décrit pour Linux les métriques suivants^[Ref 09] (descriptions en annexe) :
+Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifique aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le *Redpaper* de IBM intitulé [*Linux Performance and Tuning Guidelines*](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) décrit pour Linux les métriques suivants^[Ref 10] (descriptions en annexe) :
 
 Métriques du processeur                                     Métriques de la mémoire
 --------------------------                                  --------------------------
@@ -286,12 +286,12 @@ Voici comment interpréter un Flame Graph :
 
 Voici la description de la visualisation par Han Xiao  : 
 
-> vistrace visualizes the output produced by strace -ttt cmd as a circular graph. 
-> Each system call has a unique color (there are in total 380 UNIX system calls); 
-> system calls were plotted in clockwise (i.e. starts and ends at the 12 clock position);
-> a line is plotted between two functions if the return value of the first function was used as an argument of the second function;
-> functions that returned -1 (error) were omitted;
-> maximum 2000 system calls were plotted.  
+> vistrace visualizes the output produced by strace -ttt cmd as a circular graph.   
+> Each system call has a unique color (there are in total 380 UNIX system calls);  
+> System calls were plotted in clockwise (i.e. starts and ends at the 12 clock position);  
+> A line is plotted between two functions if the return value of the first function was used as an argument of the second function;  
+> Functions that returned -1 (error) were omitted;  
+> Maximum 2000 system calls were plotted.  
 -- Han Xiao^[Ref 08]
 
 ### 2.7 Description de l'approche de collecte de données choisie
@@ -304,17 +304,20 @@ L'avantage des appels systèmes est que l'analyse de ceux-ci est très instructi
 
 Une solution potentielle serait d'examiner le temps de latence des appels systèmes. En effet, la différence de temps entre la requête et la réponse est nommé temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralenti. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes. Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
 
+Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nommmés *Chisels*, permet justement d'écrire une fonction qui va enregistrer les données d'intérêt, tels le temps de latence pour chaque événement, et ces données pourront ensuite être envoyés vers le reste du système pour être analysée. Or c'est la que la visualisation des données va s'avérer très utile, car Sysdig et les outils de tracing produisent une très grande quantité de données en très peu de temps.
+
+À titre d'exemple, exécuter Sysdig sans aucun argument sur un système ordinaire Ubuntu Desktop pendant une minute (60 secondes) à produit un fichier texte de **384 Mégaoctets**, soit **4 383 538 lignes de texte** (approximativement 1 événement par ligne). Analyser cette quantité de données directement demande un investissement considérable de temps par l'usager, et bien qu'en pratique on n'a souvent pas le choix de mettre des filtres pour réduire cette quantité d'information à potentiellement ce qu'on recherche, on perd alors la vision globale de l'état du système. Or c'est le but du projet, de proposer une alternative qui va permettre d'analyser ces données plus rapidement, par la visualisation de données.
 
 ## Chapitre 3 : Visualisation de données
 
 
 ### 3.1 Objectif
 
-L'objectif premier de la visualisation de données
+La visualisation de données comporte de nombreux aspects, qui sont éloquamment représentés par cette infographique réalisé par la firme FFunction :
+ 
+![Fig 23. What is Data Visualisation? Infographique par FFunction^[Ref 09]](figures/data_visualization.jpg)
 
-
-http://readwrite.com/2010/11/27/what-is-data-visualization-inf
-
+Or l'objectif de l'utilisation de la visulisation de données dans le contexte de ce projet est principalement d'aider l'utilisateur à analyser les données sur les systèmes analysés, afin de mieux comprendre l'état de ceux-ci, identifier des problèmes potentiels de performance et de cibler la source de ces problèmes. Si en utilisant l'application l'usager peut augmenter ses connaissances du fonctionnement de Linux et des applications d'intérêt alors une grande partie de l'objectif sera atteint.
 
 ### 3.2 Théorie et bonnes pratiques
 
@@ -329,7 +332,6 @@ http://readwrite.com/2010/11/27/what-is-data-visualization-inf
 
 
 ### 3.6 Alternatives possibles
-
 
 
 ## Chapitre 4 : Conception du logiciel
@@ -376,33 +378,33 @@ http://readwrite.com/2010/11/27/what-is-data-visualization-inf
 
 ### Description des métriques
 
-Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) par Eduardo Ciliendo et Takechika Kunimasa.^[Ref 09] 
+Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) par Eduardo Ciliendo et Takechika Kunimasa.^[Ref 10] 
 
-##### CPU utilization
+###### CPU utilization
 
 > This is probably the most straightforward metric. It describes the overall utilization per processor. On IBM System x architectures, if the CPU utilization exceeds 80% for a sustained period of time, a processor bottleneck is likely.
 
-##### User time
+###### User time
 
 > Depicts the CPU percentage spent on user processes, including nice time. High values in user time are generally desirable because, in this case, the system performs actual work.
 
-##### System time
+###### System time
 
 > Depicts the CPU percentage spent on kernel operations including IRQ and softirq time. High and sustained system time values can point you to bottlenecks in the network and driver stack. A system should generally spend as little time as possible in kernel time.
 
-##### Waiting time
+###### Waiting time
 
 > Total amount of CPU time spent waiting for an I/O operation to occur. Like the blocked value, a system should not spend too much time waiting for I/O operations; otherwise you should investigate the performance of the respective I/O subsystem.
 
-##### Idle time
+###### Idle time
 
 > Depicts the CPU percentage the system was idle waiting for tasks.
 
-##### Nice time
+###### Nice time
 
 > Depicts the CPU percentage spent on re-nicing processes that change the execution order and priority of processes.
 
-##### Load average
+###### Load average
 
 > The load average is not a percentage, but the rolling average of the sum of the following:
 > 
@@ -412,87 +414,87 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 > 
 > That is, the average of the sum of TASK_RUNNING and TASK_UNINTERRUPTIBLE processes. If processes that request CPU time are blocked (which means that the CPU has no time to process them), the load average will increase. On the other hand, if each process gets immediate access to CPU time and there are no CPU cycles lost, the load will decrease.
 
-##### Runable processes
+###### Runable processes
 
 > This value depicts the processes that are ready to be executed. This value should not exceed 10 times the amount of physical processors for a sustained period of time; otherwise a processor bottleneck is likely.
 
-##### Blocked processes
+###### Blocked processes
 
 > Processes that cannot execute while they are waiting for an I/O operation to finish. Blocked processes can point you toward an I/O bottleneck.
 
-##### Context switches
+###### Context switches
 
 > Amount of switches between threads that occur on the system. High numbers of context switches in connection with a large number of interrupts can signal driver or application issues. Context switches generally are not desirable because the CPU cache is flushed with each one, but some context switching is necessary. Refer to 1.1.5, “Context switching” on page 5.
 
-##### Interrupts
+###### Interrupts
 
 > The interrupt value contains hard interrupts and soft interrupts. Hard interrupts have a more adverse effect on system performance. High interrupt values are an indication of a software bottleneck, either in the kernel or a driver. Remember that the interrupt value includes the interrupts caused by the CPU clock. Refer to 1.1.6, “Interrupt handling” on page 6.
 
-##### Free memory
+###### Free memory
 
 > Compared to most other operating systems, the free memory value in Linux should not be a cause for concern. As explained in 1.2.2, “Virtual memory manager” on page 12, the Linux kernel allocates most unused memory as file system cache, so subtract the amount of buffers and cache from the used memory to determine (effectively) free memory.
 
-##### Swap usage
+###### Swap usage
 
 > This value depicts the amount of swap space used. As described in 1.2.2, “Virtual memory manager” on page 12, swap usage only tells you that Linux manages memory really efficiently. Swap In/Out is a reliable means of identifying a memory bottleneck. Values above 200 to 300 pages per second for a sustained period of time express a likely memory bottleneck.
 
-##### Buffer and cache
+###### Buffer and cache
 
 > Cache allocated as file system and block device cache.
 
-##### Slabs
+###### Slabs
 
 > Depicts the kernel usage of memory. Note that kernel pages cannot be paged out to disk.
 
-##### Active vs inactive memory
+###### Active vs inactive memory
 
 > Provides you with information about the active use of the system memory. Inactive memory is a likely candidate to be swapped out to disk by the kswapd daemon. Refer to “Page frame reclaiming” on page 14.
 
-##### Packets received and sent
+###### Packets received and sent
 
 > This metric informs you of the quantity of packets received and sent by a given network interface.
 
-##### Bytes received and sent
+###### Bytes received and sent
 
 > This value depicts the number of bytes received and sent by a given network interface.
 
-##### Collisions per second
+###### Collisions per second
 
 > This value provides an indication of the number of collisions that occur on the network that the respective interface is connected to. Sustained values of collisions often concern a bottleneck in the network infrastructure, not the server. On most properly configured networks, collisions are very rare unless the network infrastructure consists of hubs.
 
-##### Packets dropped
+###### Packets dropped
 
 > This is a count of packets that have been dropped by the kernel, either due to a firewall configuration or due to a lack of network buffers.
 
-##### Overruns
+###### Overruns
 
 > Overruns represent the number of times that the network interface ran out of buffer space. This metric should be used in conjunction with the packets dropped value to identify a possible bottleneck in network buffers or the network queue length.
 
-##### Errors
+###### Errors
 
 > The number of frames marked as faulty. This is often caused by a network mismatch or a partially broken network cable. Partially broken network cables can be a significant performance issue for copper-based gigabit networks.
 
-##### IOwait
+###### IOwait
 
 > Time the CPU spends waiting for an I/O operation to occur. High and sustained values most likely indicate an I/O bottleneck.
 
-##### Average queue length
+###### Average queue length
 
 > Amount of outstanding I/O requests. In general, a disk queue of 2 to 3 is optimal; higher values might point toward a disk I/O bottleneck.
 
-##### Average wait
+###### Average wait
 
 > A measurement of the average time in ms it takes for an I/O request to be serviced. The wait time consists of the actual I/O operation and the time it waited in the I/O queue.
 
-##### Transfers per second
+###### Transfers per second
 
 > Depicts how many I/O operations per second are performed (reads and writes). The transfers per second metric in conjunction with the kBytes per second value helps you to identify the average transfer size of the system. The average transfer size generally should match with the stripe size used by your disk subsystem.
 
-##### Blocks read/write per second
+###### Blocks read/write per second
 
 > This metric depicts the reads and writes per second expressed in blocks of 1024 bytes as of kernel 2.6. Earlier kernels may report different block sizes, from 512 bytes to 4 KB.
  
-##### Kilobytes per second read/write
+###### Kilobytes per second read/write
 
 > Reads and writes from/to the block device in kilobytes represent the amount of actual data transferred to and from the block device.
 
@@ -510,32 +512,33 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 
 [Ref 05] CONTRIBUTEURS DE WIKIPÉDIA Visualisation d'informations, [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
 
-[Ref 06] GREGG, Bredan Linux Performance, [En ligne], http://www.brendangregg.com/linuxperf.html.
+[Ref 06] GREGG, Bredan Linux Performance, [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.
 
-[Ref 07] GREGG, Bredan Flame Graphs, [En ligne], http://www.brendangregg.com/flamegraphs.html.
+[Ref 07] GREGG, Bredan Flame Graphs, [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.
 
-[Ref 08] XIAO, Han vistrace: a visualization of strace, [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html.
+[Ref 08] XIAO, Han vistrace: a visualization of strace, [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
 
+[Ref 09] What is Data Visualization? [Infographic], [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
 
 ### Livres
 
-[Ref 09] CILIENDO, Eduardo; Kunimasa, Takechika (2007). Linux Performance and Tuning Guidelines, IBM: IBM, Coll. « Redpaper ».
+[Ref 10] CILIENDO, Eduardo; Kunimasa, Takechika (2007). Linux Performance and Tuning Guidelines, IBM: IBM, Coll. « Redpaper ».
 
-[Ref 10] FRY, Ben (2008). Visualizing data, Beijing; Cambridge: O'Reilly Media, Inc.
+[Ref 11] FRY, Ben (2008). Visualizing data, Beijing; Cambridge: O'Reilly Media, Inc.
 
-[Ref 11] GREENBERG, Ira (2007). Processing creative coding and computational art, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
+[Ref 12] GREENBERG, Ira (2007). Processing creative coding and computational art, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
 
-[Ref 12] GREGG, Brendan (2013). Systems performance enterprise and the cloud, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
+[Ref 13] GREGG, Brendan (2013). Systems performance enterprise and the cloud, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
 
-[Ref 13] KIRK, Andy (2012). Data Visualization a successful design process, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
+[Ref 14] KIRK, Andy (2012). Data Visualization a successful design process, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
 
-[Ref 14] REAS, Casey et Ben FRY (2007). Processing : a programming handbook for visual designers and artists, Cambridge, Mass.: MIT Press.
+[Ref 15] REAS, Casey et Ben FRY (2007). Processing : a programming handbook for visual designers and artists, Cambridge, Mass.: MIT Press.
 
-[Ref 15] SHIFFMAN, Daniel (2008). Learning Processing : a beginner's guide to programming images, animation, and interaction, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
+[Ref 16] SHIFFMAN, Daniel (2008). Learning Processing : a beginner's guide to programming images, animation, and interaction, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
 
-[Ref 16] TUFTE, Edward R. (1983). The visual display of quantitative information, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
+[Ref 17] TUFTE, Edward R. (1983). The visual display of quantitative information, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
 
-[Ref 17] TUFTE, Edward R. (2006). Beautiful evidence, Cheshire, Conn.: Graphics Press.
+[Ref 18] TUFTE, Edward R. (2006). Beautiful evidence, Cheshire, Conn.: Graphics Press.
 
-[Ref 18] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). Beautiful code. Sebastopol, CA: O'Reilly. ISBN 0-596-51004-7.
+[Ref 19] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). Beautiful code. Sebastopol, CA: O'Reilly. ISBN 0-596-51004-7.
 

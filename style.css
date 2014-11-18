@@ -69,22 +69,24 @@ h1 {
     font-weight: normal;
 }
 
-h2, h3, h4 {
+h2, h3, h4, h5 {
     font-family: "Vollkorn",Palatino, Times ;
     font-weight: normal;
     font-size: 1.3em;
     margin-bottom: 15px;
 }
 
-h5 {
+h6 {
     font-family: "Vollkorn",Palatino, Times ;     
     font-weight: normal;    
-    font-size: 1.3em;
-    margin-bottom: 10px;
+    font-size: 1.1em;
+    margin-top: -5px;
+    margin-bottom: -10px;
 }
+
  
 p {
-    margin-top: 0;
+    margin-top: -5px;
 }
 
 p.caption {
