@@ -40,18 +40,18 @@ De plus, ce projet vise à explorer différentes techniques de visualisation de 
 
 Système d'exploitation : 
 
-Linux : Nom couramment donné à tout système d'exploitation libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX qui respecte les spécifications POSIX.[^1]
+Linux : Nom couramment donné à tout système d'exploitation libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX qui respecte les spécifications POSIX.^[Ref 01]
 
 Processus : 
 
 
 Daemon : 
 
-Appel système : Un appel système (en anglais, system call, abrégé en syscall) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).[^2]
+Appel système : Un appel système (en anglais, system call, abrégé en syscall) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).^[Ref 02]
 
-Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements.[^3] [^4]
+Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements.^[Ref 03] ^[Ref 04]
 
-Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données. [^5]
+Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données.^[Ref 05]
 
 
 ## Chapitre 2 : Analyse de la performance sous Linux
@@ -76,7 +76,8 @@ Tel qu'illustré sur la figure précédentes, les applications exécutées par l
 
 Le principal avantage d'une telle architecture est qu'elle permet d'éviter ou de limiter la duplication d'effort. En effet, les développeurs d'applications peuvent se fier aux services offerts par le sytème d'exploitation et n'ont pas besoin de ce soucier de problèmes liés à la gestion du matériel par example, et éviter d'y consacrer des efforts puisque ces problèmes sont déjà gérés par le OS. Tel que l'a souvent répété [David Wheeler](https://en.wikipedia.org/wiki/David_Wheeler_(British_computer_scientist)), un éminent chercheur en informatique :
 
-> All problems in computer science can be solved by another level of indirection
+> All problems in computer science can be solved by another level of indirection  
+­*-- David Wheeler*^[Ref 18]
 
 Les couches d'abstrations offertes par les OS suivent également cette idée.
 
@@ -89,7 +90,7 @@ Toutefois, lorsque l'objectif est d'améliorer la performance d'une application 
 
 Ce projet s'intéresse principalement aux analyses de performance reliées à l'amélioration ou la résolution de problèmes, et l'objectif final est de permettre à l'utilisateur d'en apprendre plus sur son application et la façon dont elle intéragit avec le OS pour améliorer celle-ci. L'établissement d'indices de performances, ou *benchmarks* ne sera pas considéré. Ceci dit, explorons les différentes techniques liées à ces types d'analyses. 
 
-Dans son livre *Systems Performance: Enterprise and the Cloud*, Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur son site web : [brendangregg.com/methodology.html](http://www.brendangregg.com/methodology.html). En voici quelques unes : 
+Dans son livre *Systems Performance: Enterprise and the Cloud*^[Ref 12], Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur son site web : [brendangregg.com/methodology.html](http://www.brendangregg.com/methodology.html). En voici quelques unes : 
 
 > 6. Ad Hoc Checklist Method
 > 7. Problem Statement Method
@@ -113,7 +114,7 @@ En effet, la solution proposée devrait permettre à un utilisateur de voir une 
 
 Les métriques de performance sont des statisques qui mesurent l'activité de différentes parties du système. Généralement il s'agit d'un pourcentage d'utilisation, un nombre d'opérations par intervale de temps (typiquement des secondes, ex : IOPS, I/O operations per second), ou alors le temps de latence associé à une certaine opération. Le métriques peuvent être caculés directement par le système d'exploitation ou par des applications distinctes. 
 
-Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifique aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le *Redpaper* de IBM intitulé [*Linux Performance and Tuning Guidelines*](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) décrit pour Linux les métriques suivants (descriptions en annexe) :
+Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifique aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le *Redpaper* de IBM intitulé [*Linux Performance and Tuning Guidelines*](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) décrit pour Linux les métriques suivants^[Ref 09] (descriptions en annexe) :
 
 Métriques du processeur                                     Métriques de la mémoire
 --------------------------                                  --------------------------
@@ -141,7 +142,6 @@ Métrique des cartes réseaux                                 Métriques des dis
 ----------------------------                                --------------------------
 
 Les métriques sont surtout utile lorsqu'on peut les comparer à un historique, et alors constater soit une dégradation ou une amélioration de la performance. 
-
 
 En pratique, collecter une grande quantité de métriques sur un système en production peut s'avérer utile lors de la résolution de problèmes, mais cela à un certain coût additionnel sur le système instrumenté, qui peut performer moins efficacement dépendament des cas. 
 
@@ -233,13 +233,11 @@ Sysdig est intéresant puisqu'il est relativement simple d'utilisation, et donne
 
 ![Fig 15. Capture d'événements avec sysdig](figures/sysdig.png)
 
-
 #### 2.5.4 Diagramme des outils disponibles
 
-Pour résumer cette section sur les différent outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer les différents outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisé pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails.
+Pour résumer cette section sur les différent outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer les différents outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisé pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails^[Ref 06].
 
 ![Fig 16. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
-
 
 ### 2.6 Approches graphiques
 
@@ -271,18 +269,18 @@ Outre les interfaces graphiques aux outils existants, plusieurs autres façons d
 
 ##### 2.6.3.1 Flame Graphs
 
-Une autre façon de réprésenter les *stack frames*, ou l'historique de la pile d'exécution à un instant donné, collectés par les outils de tracing comme Dtrace à été développée par Bredan Gregg, il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
+Une autre façon de réprésenter les *stack frames*, ou l'historique de la pile d'exécution à un instant donné, collectés par les outils de tracing comme Dtrace à été développée par Bredan Gregg^[Ref 07], il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
 
 ![Fig 21. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs](figures/flame_graphs.png)
 
 Voici comment interpréter un Flame Graph : 
 
-> The x-axis shows the stack profile population, sorted alphabetically (it is not the passage  of time), and the y-axis shows stack depth. Each rectangle represents a stack frame. The wider a frame is is, the more often it was present in the stacks. The top edge shows what is on-CPU, and beneath it is its ancestry. The colors are usually not significant, picked randomly to differentiate frames.
-Bredan Cregg, brendangregg.com/FlameGraphs
+> The x-axis shows the stack profile population, sorted alphabetically (it is not the passage  of time), and the y-axis shows stack depth. Each rectangle represents a stack frame. The wider a frame is is, the more often it was present in the stacks. The top edge shows what is on-CPU, and beneath it is its ancestry. The colors are usually not significant, picked randomly to differentiate frames.  
+-- Bredan Cregg^[Ref 07]
 
 ##### 2.6.3.2 vistrace
 
-*[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao. vistrace affiche les différents appels systèms capturés sur un graphe circulaire, et met en évidence l'ordre des appels, et le délai entre le requête d'un appel système et la réponse retournée par le système en reliant ces deux événements par une ligne. 
+*[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao^[Ref 08]. vistrace affiche les différents appels systèms capturés sur un graphe circulaire, et met en évidence l'ordre des appels, et le délai entre le requête d'un appel système et la réponse retournée par le système en reliant ces deux événements par une ligne. 
 
 ![Fig 22. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html](figures/vistrace.png)
 
@@ -293,14 +291,14 @@ Voici la description de la visualisation par Han Xiao  :
 > system calls were plotted in clockwise (i.e. starts and ends at the 12 clock position);
 > a line is plotted between two functions if the return value of the first function was used as an argument of the second function;
 > functions that returned -1 (error) were omitted;
-> maximum 2000 system calls were plotted.
-Han Xiao, home.in.tum.de/~xiaoh/vistrace.html
+> maximum 2000 system calls were plotted.  
+-- Han Xiao^[Ref 08]
 
 ### 2.7 Description de l'approche de collecte de données choisie
 
 Comme l'objectif de ce projet est de permettre d'interpréter plus facilement les données liés à la performance d'un ou plusieurs système, il faut évidemment collecter ces données. Or compte tenu du fait qu'il existe plusieurs outils très avancés pour la collecte des données, il à été choisi de réutiliesr l'un des outils existants pour cette phase, quitte à bâtir un pont entre ce système et le reste de l'application - qui servira alors uniquement à interpréter et visualiser les données.
 
-La question suivante se pose alors : quelles type de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter une aperçu complet du système instrumenté il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément, et comme il faudrait également permettre à l'utilisateur de pouvoir 'rafiner' la visualisation sur un processus précis, l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisament précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à prévilégier à l'opposé d'un simple enregistrement du % d'activité d'un processus. L'outil qui à été retenu pour satisfaire ces conditions est Sysdig.
+La question suivante se pose alors : quelles type de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter une aperçu complet du système instrumenté il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément, et comme il faudrait également permettre à l'utilisateur de pouvoir 'rafiner' la visualisation sur un processus précis, l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisament précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à prévilégier à l'opposé d'un simple enregistrement du pourcentage d'activité d'un processus. L'outil qui à été retenu pour satisfaire ces conditions est Sysdig.
 
 L'avantage des appels systèmes est que l'analyse de ceux-ci est très instructive sur les activités d'un processus, mais comment peut-on utiliser les appels systèmes pour effectuer des comparaisons ? Ou déterminer une amélioration ou régression de la performance d'un processus, outre regarder la quantité d'appels systèmes envoyés ? 
 
@@ -378,7 +376,7 @@ http://readwrite.com/2010/11/27/what-is-data-visualization-inf
 
 ### Description des métriques
 
-Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) par Eduardo Ciliendo et Takechika Kunimasa.[^99] 
+Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) par Eduardo Ciliendo et Takechika Kunimasa.^[Ref 09] 
 
 ##### CPU utilization
 
@@ -500,41 +498,44 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 
 ## Bibliographie
 
-### Livres
-
-[^99]: CILIENDO, Eduardo; Kunimasa, Takechika (2007). Linux Performance and Tuning Guidelines, IBM: IBM, Coll. « Redpaper ».
-
-FRY, Ben (2008). Visualizing data, Beijing; Cambridge: O'Reilly Media, Inc.
-
-GREENBERG, Ira (2007). Processing creative coding and computational art, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
-
-GREGG, Brendan (2013). Systems performance enterprise and the cloud, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
-
-KIRK, Andy (2012). Data Visualization a successful design process, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
-
-REAS, Casey et Ben FRY (2007). Processing : a programming handbook for visual designers and artists, Cambridge, Mass.: MIT Press.
-
-SHIFFMAN, Daniel (2008). Learning Processing : a beginner's guide to programming images, animation, and interaction, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
-
-TUFTE, Edward R. (1983). The visual display of quantitative information, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
-
-TUFTE, Edward R. (2006). Beautiful evidence, Cheshire, Conn.: Graphics Press.
-
-
 ### Web
 
-[^1]: CONTRIBUTEURS DE WIKIPÉDIA Linux, [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 18 novembre 2014.
+[Ref 01] CONTRIBUTEURS DE WIKIPÉDIA Linux, [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 18 novembre 2014.
 
-[^2]: CONTRIBUTEURS DE WIKIPÉDIA Appel système, [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 18 novembre 2014.
+[Ref 02] CONTRIBUTEURS DE WIKIPÉDIA Appel système, [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 18 novembre 2014.
 
-[^3]: CONTRIBUTEURS DE WIKIPÉDIA Temps réel, [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 15 novembre 2014.
+[Ref 03] CONTRIBUTEURS DE WIKIPÉDIA Temps réel, [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 15 novembre 2014.
 
-[^4]: CONTRIBUTEURS DE STACKOVERFLOW What is the definition of realtime, near realtime and batch?, [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 15 novembre 2014.
+[Ref 04] CONTRIBUTEURS DE STACKOVERFLOW What is the definition of realtime, near realtime and batch?, [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 15 novembre 2014.
 
-[^5]: CONTRIBUTEURS DE WIKIPÉDIA Visualisation d'informations, [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
+[Ref 05] CONTRIBUTEURS DE WIKIPÉDIA Visualisation d'informations, [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
 
-GREGG, Bredan Linux Performance, [En ligne], http://www.brendangregg.com/linuxperf.html.
+[Ref 06] GREGG, Bredan Linux Performance, [En ligne], http://www.brendangregg.com/linuxperf.html.
 
-GREGG, Bredan Flame Graphs, [En ligne], http://www.brendangregg.com/flamegraphs.html.
+[Ref 07] GREGG, Bredan Flame Graphs, [En ligne], http://www.brendangregg.com/flamegraphs.html.
 
-XIAO, Han vistrace: a visualization of strace, [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html.
+[Ref 08] XIAO, Han vistrace: a visualization of strace, [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html.
+
+
+### Livres
+
+[Ref 09] CILIENDO, Eduardo; Kunimasa, Takechika (2007). Linux Performance and Tuning Guidelines, IBM: IBM, Coll. « Redpaper ».
+
+[Ref 10] FRY, Ben (2008). Visualizing data, Beijing; Cambridge: O'Reilly Media, Inc.
+
+[Ref 11] GREENBERG, Ira (2007). Processing creative coding and computational art, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
+
+[Ref 12] GREGG, Brendan (2013). Systems performance enterprise and the cloud, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
+
+[Ref 13] KIRK, Andy (2012). Data Visualization a successful design process, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
+
+[Ref 14] REAS, Casey et Ben FRY (2007). Processing : a programming handbook for visual designers and artists, Cambridge, Mass.: MIT Press.
+
+[Ref 15] SHIFFMAN, Daniel (2008). Learning Processing : a beginner's guide to programming images, animation, and interaction, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
+
+[Ref 16] TUFTE, Edward R. (1983). The visual display of quantitative information, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
+
+[Ref 17] TUFTE, Edward R. (2006). Beautiful evidence, Cheshire, Conn.: Graphics Press.
+
+[Ref 18] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). Beautiful code. Sebastopol, CA: O'Reilly. ISBN 0-596-51004-7.
+
