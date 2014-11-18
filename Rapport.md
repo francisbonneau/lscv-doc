@@ -185,13 +185,13 @@ L'autre outil le plus répandu est sans aucun doute *top*. top permet de voir co
 
 Plusieurs autres programmes se sont inspirés de top et visent à le remplacer en proposant une interface utilisateur plus moderne. Pour n'en citer que deux examples, *[htop](http://hisham.hm/htop/)* tente de se démarquer par la couleur, et *[vtop](https://parall.ax/vtop)* lui propose un graphique sur lequel il est plus facile de voir l'évolution dans le temps.
 
-![Fig 6. % d'utilisation par CPU et liste des processus par htop](figures/htop.png)
+![Fig 7. % d'utilisation par CPU et liste des processus par htop](figures/htop.png)
 
-![Fig 7. Graphiques de l'activité système de vtop](figures/vtop.png)
+![Fig 8. Graphiques de l'activité système de vtop](figures/vtop.png)
 
 Bien que la plupart des outils sont exécutés directement par l'usager, d'autre outils tels que *sar* fontionne en permanence en tant que daemon sur le système et visent plutôt à conserver un historique long terme de l'activité du système. Pour mettre en place le service sur certains systèmes des packages supplémentaires doivent être installés, tel que sysstat sur ubuntu, mais une fois le service établi il est possible d'accéder l'historique avec sar :
 
-![Fig 8. Historique de l'activité du système, enregistré par sar](figures/sar.png)
+![Fig 9. Historique de l'activité du système, enregistré par sar](figures/sar.png)
 
 #### 2.5.2 Disques et réseau 
 
@@ -199,23 +199,23 @@ top et les autres outils précédents mettent davantage l'accent sur l'utilisati
 
 Plusieurs outils de la famille \*stat peuvent être utilisés à cet effet. *mpstat* et *vmstat* affichent des statistiques similaires à top, mais *iostat* quand à lui affiche des statistiques sur l'activité des disques durs du système.
 
-![Fig 9. mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
+![Fig 10 mpstat - vmstat - iostat](figures/mpstat_vmstat_iostat.png)
 
 *netstat* quant à lui affiche les connexions réseau établies par les processus, très similaire à ps par le fait qu'il n'affiche que peu de statistiques sur les connexions mais c'est souvent la première étape pour déterminer l'état actuel.
 
-![Fig 10 Liste des connexions ouvertes, par netstat](figures/netstat.png)
+![Fig 11.Liste des connexions ouvertes, par netstat](figures/netstat.png)
 
 *[nload](http://www.roland-riegel.de/nload/)* est un autre outil dédié à l'activité réseau, similaire à vtop du fait qu'il affiche un historique qui est mis à jour à un intervalle régulier.
 
-![Fig 11. Diagramme de la charge réseau avec nload](figures/nload.png)
+![Fig 12. Diagramme de la charge réseau avec nload](figures/nload.png)
 
 *[iotop](http://guichaz.free.fr/iotop/)* est l'équivalent de top pour les disques durs. Il affiche l'activité de lecture et écriture sur les disques pour chaque processus et présente une liste des processus avec le plus d'activité.
 
-![Fig 12. iotop affiche que la commande `du -h /` lit le disque à 19MB/sec](figures/iotop.png)
+![Fig 13. iotop affiche que la commande `du -h /` lit le disque à 19MB/sec](figures/iotop.png)
 
 Un autre logiciel qui mérite d'être mentionné est *[Collectl](http://collectl.sourceforge.net/index.html)*, qui est similaire aux autres outils *stat du fait qu'il affiche les données à un intervalle régulier, mais il se démarque par la quantité de données qu'il peut accéder, Collectl permet de mesurer l'activité d'une quantité impressionnante de sous-sytèmes différents, que ce soit la mémoire, les disques, le réseau, et même certaines cartes graphiques. 
 
-![Fig 13. Apperçu des nombreux métriques collectés par collectl](figures/collectl.png)
+![Fig 14. Apperçu des nombreux métriques collectés par collectl](figures/collectl.png)
 
 #### 2.5.3 Capture d'événements
 
@@ -225,19 +225,19 @@ La définition d'un événement peut varier selon l'outil, mais typiquement il s
 
 Juste le fait de pouvoir observer en temps réel les différentes requêtes d'accès au système de fichiers ou au réseau permet d'en apprendre beaucoup sur l'état du processus et d'analyser son comportement pour voir si il réagit comme il le devrait. *strace* est un outil disponible par défaut sur presque tous les systèmes Linux et qui permet de faire exactement cela, il suffit de lui indiquer le pid du processus à analyser, et il va afficher les appels systèmes de ce processus au fur et à mesure.
 
-![Fig 14. Quelques appels système interceptés avec strace](figures/strace.png)
+![Fig 15. Quelques appels système interceptés avec strace](figures/strace.png)
 
 Il existe toutefois plusieurs autre outils similaires à strace qui ajoutent d'autres fonctionnalitées plus avancées, tel que la possibilité d'injecter des sondes ou *probes* ( des fonctions personnalisées qui sont exécutées lorsque qu'un certain événement arrive) directement dans le kernel, afin de capturer des données plus spécifiques à certaines conditions. *[Dtrace](http://dtrace.org/blogs/about/)* est probablement l'un des outils les plus avancés de cette catégorie, mais comme il à été développé pour Solaris initialement son support Linux n'est pas aussi stable. Plusieurs outils similaires ont été développés pour Linux, tel *[SystemTap](https://sourceware.org/systemtap/)*, *[perf](https://perf.wiki.kernel.org/index.php/Main_Page)*, *[LTTng](https://lttng.org/)* et *[Sysdig](http://www.sysdig.org/)*.
 
 Sysdig est intéresant puisqu'il est relativement simple d'utilisation, et donne accès à une grande variété de fonctions déjà écrites (appelées *[Chisels](https://github.com/draios/sysdig/wiki/Chisels-User-Guide)*) pour afficher les données capturées. Par défaut lorsqu'il est exécuté il affiche tous les événements du système - voir figure suivante, de tous les processsus, mais il offre une grande variété de filtres pour rafiner l'information affichée. Pour ces raisons, c'est l'outil qui sera utilisé dans ce projet la capture des données.
 
-![Fig 15. Capture d'événements avec sysdig](figures/sysdig.png)
+![Fig 16. Capture d'événements avec sysdig](figures/sysdig.png)
 
 #### 2.5.4 Diagramme des outils disponibles
 
 Pour résumer cette section sur les différent outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer les différents outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisé pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails^[Ref 06].
 
-![Fig 16. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
+![Fig 17. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
 
 ### 2.6 Approches graphiques
 
@@ -251,17 +251,17 @@ Cette section présente donc quelques uns des outils existants pour visualiser d
 
 Les logiciels avec interfaces graphiques dédiés à la performance les plus courants sont probablement les outils embarqués par défaut sur plusieurs systèmes d'exploitations. Ces outils sont généralement moins orienté serveurs, mais ceux-ci permettent typiquement de voir la liste des processus et leur activité processeur et mémoire, de façon similaire à top, mais avec une interface graphique. À titre d'exemple voici à quoi ressemblent le *Activity Monitor* de OSX et le *System Monitor* de Ubuntu.
 
-![Fig 17. OSX Activity Monitor](figures/activity_monitor.png)
+![Fig 18. OSX Activity Monitor](figures/activity_monitor.png)
 
-![Fig 18. Ubuntu System Monitor](figures/system_monitor.png)
+![Fig 19. Ubuntu System Monitor](figures/system_monitor.png)
 
 #### 2.6.2 Interfaces Graphiques aux outils de tracing
 
 Il existe également quelques interfaces graphiques à certains outils mentionnés précédement, tels les programmes de tracing comme Dtrace et System Tap. Ces interfaces graphiques sont intéressantes puisqu'elles peuvent aider à réduire la courbe d'apprentissage reliée à ces outils avancés, l'interface graphique peut offir des raccourcis pour les analyses courantes et ainsi éviter à l'usager d'avoir à écrire lui-même ses fonctions (probes) pour arriver au résultat désiré. Apple offre notamment une interface graphique à Dtrace, nommée Instruments, qui permet d'instrumenter des applications sur OSX et d'afficher graphiquement le résultat. SystemTap GUI est un autre projet similaire pour SystemTap, et propose un environnement de développement intégré pour l'écriture de scripts et fonctions stap. 
 
-![Fig 19. Aperçu de Apple Instruments sur OSX](figures/instruments.png)
+![Fig 20. Aperçu de Apple Instruments sur OSX](figures/instruments.png)
 
-![Fig 20. IDE intégré de SystemTap-GUI, source : http://stapgui.sourceforge.net ](figures/stapgui.png)
+![Fig 21. IDE intégré de SystemTap-GUI, source : http://stapgui.sourceforge.net ](figures/stapgui.png)
 
 #### 2.6.3 Autres visulisations
 
@@ -271,7 +271,7 @@ Outre les interfaces graphiques aux outils existants, plusieurs autres façons d
 
 Une autre façon de réprésenter les *stack frames*, ou l'historique de la pile d'exécution à un instant donné, collectés par les outils de tracing comme Dtrace à été développée par Bredan Gregg^[Ref 07], il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
 
-![Fig 21. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs](figures/flame_graphs.png)
+![Fig 22. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs](figures/flame_graphs.png)
 
 Voici comment interpréter un Flame Graph : 
 
@@ -282,7 +282,7 @@ Voici comment interpréter un Flame Graph :
 
 *[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao^[Ref 08]. vistrace affiche les différents appels systèms capturés sur un graphe circulaire, et met en évidence l'ordre des appels, et le délai entre le requête d'un appel système et la réponse retournée par le système en reliant ces deux événements par une ligne. 
 
-![Fig 22. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html](figures/vistrace.png)
+![Fig 23. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html](figures/vistrace.png)
 
 Voici la description de la visualisation par Han Xiao  : 
 
@@ -310,16 +310,17 @@ Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nomm
 
 ## Chapitre 3 : Visualisation de données
 
-
 ### 3.1 Objectif
 
-La visualisation de données comporte de nombreux aspects, qui sont éloquamment représentés par cette infographique réalisé par la firme FFunction :
+La visualisation de données comporte de nombreux aspects, qui sont éloquamment représentés par cette infographique réalisé par la firme FFunction^[Ref 09] :
  
-![Fig 23. What is Data Visualisation? Infographique par FFunction^[Ref 09]](figures/data_visualization.jpg)
+![Fig 24. What is Data Visualisation? Infographique par FFunction](figures/data_visualization.jpg)
 
 Or l'objectif de l'utilisation de la visulisation de données dans le contexte de ce projet est principalement d'aider l'utilisateur à analyser les données sur les systèmes analysés, afin de mieux comprendre l'état de ceux-ci, identifier des problèmes potentiels de performance et de cibler la source de ces problèmes. Si en utilisant l'application l'usager peut augmenter ses connaissances du fonctionnement de Linux et des applications d'intérêt alors une grande partie de l'objectif sera atteint.
 
 ### 3.2 Théorie et bonnes pratiques
+
+
 
 
 ### 3.3 Revue des approches courantes
