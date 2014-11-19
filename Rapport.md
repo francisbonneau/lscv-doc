@@ -361,7 +361,12 @@ Si on simplifie le problème un instant et qu'on imagine le cas le plus simple, 
 ![Fig 26. Simple diagramme à ligne](figures/line_chart.png)
 
 
-![Fig 26. Simple diagramme à nuage de points](figures/scatterplot.png)
+![Fig 27. Simple diagramme à nuage de points](figures/scatterplot.png)
+
+
+![Fig 28. Types de diagrammes](figures/data_chart_type.png)
+
+http://www.labnol.org/software/find-right-chart-type-for-your-data/6523/
 
 
 ### 3.4 Description de l'approche de visualisation des données choisie
