@@ -306,7 +306,7 @@ Une solution potentielle serait d'examiner le temps de latence des appels systè
 
 Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nommmés *Chisels*, permet justement d'écrire une fonction qui va enregistrer les données d'intérêt, tels le temps de latence pour chaque événement, et ces données pourront ensuite être envoyés vers le reste du système pour être analysée. Or c'est la que la visualisation des données va s'avérer très utile, car Sysdig et les outils de tracing produisent une très grande quantité de données en très peu de temps.
 
-À titre d'exemple, exécuter Sysdig sans aucun argument sur un système ordinaire Ubuntu Desktop pendant une minute (60 secondes) à produit un fichier texte de **384 Mégaoctets**, soit **4 383 538 lignes de texte** (approximativement 1 événement par ligne). Analyser cette quantité de données directement demande un investissement considérable de temps par l'usager, et bien qu'en pratique on n'a souvent pas le choix de mettre des filtres pour réduire cette quantité d'information à potentiellement ce qu'on recherche, on perd alors la vision globale de l'état du système. Or c'est le but du projet, de proposer une alternative qui va permettre d'analyser ces données plus rapidement, par la visualisation de données.
+À titre d'exemple, exécuter Sysdig sans aucun argument sur un système ordinaire Ubuntu Desktop pendant une minute (60 secondes) à produit un fichier texte de **384 Mégaoctets**, soit **4 383 538 lignes de texte** (approximativement 1 appel système, ou événement, par ligne). Analyser cette quantité de données directement demande un investissement considérable de temps par l'usager, et bien qu'en pratique on n'a souvent pas le choix de mettre des filtres pour réduire cette quantité d'information à potentiellement ce qu'on recherche, on perd alors la vision globale de l'état du système. Or c'est le but du projet, de proposer une alternative qui va permettre d'analyser ces données plus rapidement, par la visualisation de données.
 
 ## Chapitre 3 : Visualisation de données
 
@@ -318,12 +318,50 @@ La visualisation de données comporte de nombreux aspects, qui sont éloquamment
 
 Or l'objectif de l'utilisation de la visulisation de données dans le contexte de ce projet est principalement d'aider l'utilisateur à analyser les données sur les systèmes analysés, afin de mieux comprendre l'état de ceux-ci, identifier des problèmes potentiels de performance et de cibler la source de ces problèmes. Si en utilisant l'application l'usager peut augmenter ses connaissances du fonctionnement de Linux et des applications d'intérêt alors une grande partie de l'objectif sera atteint.
 
-### 3.2 Théorie et bonnes pratiques
+### 3.2 Bonnes pratiques
+
+La visualisation de données, bien qu'elle aide généréalement à l'analyse et la compréhension, n'est pas infaillible. Des erreurs liées à la représentation peuvent confondre l'usager sur le phénomène observé, et mener à des fausses conclusions. La référence probablement la plus reconnue sur le sujet est le livre de Edward Tufte, The Visual Display of Quantitative Information. Dans ce livre Tufte présente plusieurs bonnes pratiques à suivre lors de la création d'une représentation graphique de données. En voici quelques unes énuméres dans le premier chapitre^[Ref 17], et une interprétation de celles-ci :  
+
+* Montrer les données : le graphique doit avant tout illustrer les données, dans un contexte qui facilite la compréhension de celles-ci.
+
+* Inciter le sujet à réfléchir sur le sujet : mettre l'emphase sur le contenu et non sur la forme, éviter les éléments qui détourne l'attention des données elles-même.
+
+* Éviter de distorsionner les données : celles-ci doivent être représentées de manière précise.
+
+* Présenter beaucoup de chiffres (d'information) dans un espace restreint : maximiser l'information dans l'espace alloué (data-ink ratio).
+
+* Encourager la comparaison des données : possiblement en offrant une visulisation intéractive, ou l'usager peut choisir les données à comparer.
+
+* Représenter les données avec différents niveaux de détails  : afin que l'utilisateur puisse avoir une vue d'ensemble de la situtation, et permettre à l'usager de mettre l'emphase sur une section pour avoir plus de détails.
+
+L'approche choisie pour ce projet, détaillée plus bas, tente de respecter le plus possible ces bonnes pratiques.
 
 
+### 3.3 Description des défis reliés à la visualisation
+
+Suite à l'analyse précédente des différents métriques disponibles il à été établi que les données à collecter et à visuliser dans le cas présent serait le temps de latence des appels systèmes du ou des systèmes à analyser. Or une fois ces données collectées la visualisation de celles-ci propose plusieurs défis : 
+
+* La quantité de données est considérable. Lors du test réalisé précedemment Sysdig à enregistré environ 4 300 000 événements en une minute, ou ­~70 000 événements par seconde . On calcule le temps de latence comme la différence entre l'appel système (l'événement) d'entrée et de sortie, alors on divise ce nombre par 2 et on obtient alors 35 000 'points' ou 'mesures' à afficher à chaque seconde. La solution devra proposer une façon qui permettra à l'utilisateur de suivre autant d'activité sans être accablé par celle-ci.
+
+* Les données présentent plusieurs dimensions. Dans le cas où la solution sera utilisée pour surveillée plusieurs machines, chaque événement va être attaché à une machine, un usager local, un processus, un type d'appel système. Il devrait être possible de filtrer l'information selon ces dimensions.
+
+* Chaque dimension comporte plusieurs catégories, voir un très grand nombre de catégories. Le nombre de systèmes surveillés dépendra des choix de l'utilisateur, toutefois le nombre de processus sur la machine analysée peut varier considérablement, typiquement entre 10 et 100 processus, mais peut être beaucoup plus élevé. Le nombre d'appels systèmes est fixe, mais il y a environ 300 catégories de différents appels systèmes. Il sera difficile de représenter visuellement autant de catégories, si on prend des couleurs à titre d'exemple, il est typiquement difficle de les distinguer passé 6-8 couleurs. 
+
+Différents approches peuvent être envisagées pour contourner le problème de la grande quantité de dimensions et de catégories, du fait que certaines propriétées visuelles de la représentation (telle la position, la taille, la couleur, etc.) peuvent représenter fidèlemeent plus de valeurs de que d'autre. Autrement dit, certaines propriétés visuelles d'un graphique peuvent être plus facilement distinguées par l'utilisateur, elles peuvent donc représenter plus de valeurs. Le diagramme suivant par Noahg Iliinsky^[Ref 20] liste ces différentes propriétés et une estimation du nombre de valeurs différentes qu'elles peuvent représenter :
+
+![Fig 25. Différentes propriétés visuelles et leur caractéristiques](figures/visual_encoding.png)
+
+La solution devra prendre en considération ces différents propriétés pour arriver à représenter les données de la façon la plus efficace possible, en respectant les bonnes pratiques de énoncées à la section 3.2.
+
+### 3.4 Revue des approches courantes
+
+Si on simplifie le problème un instant et qu'on imagine le cas le plus simple, une visualisation du temps de latence d'un seul type d'appel système (ex: read), par un seul processus (ex: apache) par un seul usager sur une seule machine. Comment représenter graphiquement ce temps de latence, qui varie dans le temps, puisqu'à chaque seconde ce processus effectue plusieurs requêtes au système d'exploitation. Dans ce cas précis le plus simple serait probablement une simple diagramme à ligne, sur lequel l'axe des X représent
 
 
-### 3.3 Revue des approches courantes
+![Fig 26. Simple diagramme à ligne](figures/line_chart.png)
+
+
+![Fig 26. Simple diagramme à nuage de points](figures/scatterplot.png)
 
 
 ### 3.4 Description de l'approche de visualisation des données choisie
@@ -520,6 +558,8 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 [Ref 08] XIAO, Han vistrace: a visualization of strace, [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
 
 [Ref 09] What is Data Visualization? [Infographic], [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
+
+[Ref 20] Noah Iliinsky Properties and Best Uses of Visual Encodings, [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 19 novembre 2014.
 
 ### Livres
 
