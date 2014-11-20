@@ -320,7 +320,7 @@ Or l'objectif de l'utilisation de la visulisation de données dans le contexte d
 
 ### 3.2 Bonnes pratiques
 
-La visualisation de données, bien qu'elle aide généréalement à l'analyse et la compréhension, n'est pas infaillible. Des erreurs liées à la représentation peuvent confondre l'usager sur le phénomène observé, et mener à des fausses conclusions. La référence probablement la plus reconnue sur le sujet est le livre de Edward Tufte, The Visual Display of Quantitative Information. Dans ce livre Tufte présente plusieurs bonnes pratiques à suivre lors de la création d'une représentation graphique de données. En voici quelques unes énuméres dans le premier chapitre^[Ref 17], et une interprétation de celles-ci :  
+La visualisation de données, bien qu'elle aide généréalement à l'analyse et la compréhension, n'est pas infaillible. Des erreurs liées à la représentation peuvent confondre l'usager sur le phénomène observé, et mener à des fausses conclusions. La référence probablement la plus reconnue sur le sujet est le livre de Edward Tufte, The Visual Display of Quantitative Information. Dans ce livre Tufte présente plusieurs bonnes pratiques à suivre lors de la création d'une représentation graphique de données. En voici quelques unes énuméres dans le premier chapitre^[Ref 17], et une interprétation de celles-ci : 
 
 * Montrer les données : le graphique doit avant tout illustrer les données, dans un contexte qui facilite la compréhension de celles-ci.
 
@@ -336,12 +336,11 @@ La visualisation de données, bien qu'elle aide généréalement à l'analyse et
 
 L'approche choisie pour ce projet, détaillée plus bas, tente de respecter le plus possible ces bonnes pratiques.
 
-
 ### 3.3 Description des défis reliés à la visualisation
 
-Suite à l'analyse précédente des différents métriques disponibles il à été établi que les données à collecter et à visuliser dans le cas présent serait le temps de latence des appels systèmes du ou des systèmes à analyser. Or une fois ces données collectées la visualisation de celles-ci propose plusieurs défis : 
+Suite à l'analyse précédente des différents métriques disponibles, il à été établi que les données à collecter et à visualiser dans le cas présent seraient principalement le temps de latence des appels systèmes du ou des machines à analyser. Or, une fois ces données collectées, la visualisation de celles-ci propose plusieurs défis : 
 
-* La quantité de données est considérable. Lors du test réalisé précedemment Sysdig à enregistré environ 4 300 000 événements en une minute, ou ­~70 000 événements par seconde . On calcule le temps de latence comme la différence entre l'appel système (l'événement) d'entrée et de sortie, alors on divise ce nombre par 2 et on obtient alors 35 000 'points' ou 'mesures' à afficher à chaque seconde. La solution devra proposer une façon qui permettra à l'utilisateur de suivre autant d'activité sans être accablé par celle-ci.
+* La quantité de données est considérable. Lors du test réalisé précedemment, Sysdig à collecté environ 4 300 000 événements en une minute, soit ­~70 000 événements par seconde . On calcule le temps de latence comme la différence entre l'appel système (l'événement) d'entrée et de sortie, alors on divise ce nombre par 2 et on obtient alors 35 000 'points' ou 'mesures' à afficher à chaque seconde. La solution devra proposer une façon qui permettra à l'utilisateur de suivre autant d'activité sans être accablé par celle-ci.
 
 * Les données présentent plusieurs dimensions. Dans le cas où la solution sera utilisée pour surveillée plusieurs machines, chaque événement va être attaché à une machine, un usager local, un processus, un type d'appel système. Il devrait être possible de filtrer l'information selon ces dimensions.
 
@@ -355,21 +354,29 @@ La solution devra prendre en considération ces différents propriétés pour ar
 
 ### 3.4 Revue des approches courantes
 
-Si on simplifie le problème un instant et qu'on imagine le cas le plus simple, une visualisation du temps de latence d'un seul type d'appel système (ex: read), par un seul processus (ex: apache) par un seul usager sur une seule machine. Comment représenter graphiquement ce temps de latence, qui varie dans le temps, puisqu'à chaque seconde ce processus effectue plusieurs requêtes au système d'exploitation. Dans ce cas précis le plus simple serait probablement une simple diagramme à ligne, sur lequel l'axe des X représent
-
+Si on simplifie le problème un instant et qu'on imagine le cas le plus simple, une visualisation du temps de latence d'un seul type d'appel système (ex: read), par un seul processus (ex: apache) par un seul usager sur une seule machine. Comment représenter graphiquement ce temps de latence, qui varie dans le temps puisqu'à chaque seconde ce processus effectue plusieurs requêtes au système d'exploitation ? Le moyen le plus simple est un diagramme à ligne, sur lequel l'axe des X représente la latence et l'axe des Y le temps. Comme ceci (données aléatoires pour l'exemple) : 
 
 ![Fig 26. Simple diagramme à ligne](figures/line_chart.png)
 
+Ce diagramme fait parfaitement le travail, puisqu'il permet de comparer la variation de la latence dans le temps, lorsqu'on n'a qu'une seule dimension - un seul appel système et un seul processus. Toutefois il y a déjà quelques inconvénients à l'utilisation de ce graphique en ligne, qui vont apparaitre avec une bonne quantité de données. Premièrement avec grand nombre de points à chaque tranche de temps (axe des X), si il y a des variations considérables dans les données (si par exemple la moitié des appels systèmes ont une latence aux alentours de 100ns et l'autre moitié aux alentours de 400 ns), la ligne risque de tellement bouger qu'il sera impossible de la suivre. Même phénomène si la majorité des données est homogène, mais présente quelques importantes variations, ce qui arrive lorsque les temps des appels systèmes sont mesurés en nanosecondes. Pour remédier à cela, on peut soit utiliser des percentiles pour filtrer les variations trop importantes, ou alors oublier les lignes et simplement tracer les points : 
 
 ![Fig 27. Simple diagramme à nuage de points](figures/scatterplot.png)
 
+Le diagramme à nuage de points risque d'être plus facile à lire dans ce cas, et il permettra de voir rapidement les groupes et concentrations de points. Toutefois ce n'est pas garanti que le graphique va rester lisible si on dessine les 35 000 points par intervalle de temps, si les points sont très rapprochés, voir superposés, on perd alors une partie de la qualité de la visualisation car on n'est plus en mesure d'évaluer facilement la quantité relative de points à des positions différentes. De plus, cela demande beaucoup de ressources pour afficher autant de points, ce qui est moins intéressant si on veut avoir une visualisation en temps réel. 
 
-![Fig 28. Types de diagrammes](figures/data_chart_type.png)
+Une possible alternative serait alors de considérer un diagramme de type *heat map*, qui est très similaire aux nuages de points, sauf que l'espace du graphique est divisé en rectangles, et les points dans le même rectangle (dans le même intervalle de valeurs) sont regroupés, et ce rectangle prend alors une couleur qui représente la quantité de points présents dans cette zone. L'avantage princiapl des heat maps est que ceux-ci restent faciles à lire peut importe la quantité de points représentés et demandent également beaucoup moins de ressources lors de l'affichage. Brendan Gregg à notamment développé plusieurs outils pour réaliser des heat maps à partir de captures d'outils de tracing, voici un exemple tiré de son site web^[Ref 21] : 
 
-http://www.labnol.org/software/find-right-chart-type-for-your-data/6523/
+![Fig 28. Exemple de heat map, realisée par Bredan Gregg](figures/latency_heatmap.svg)
 
+Toutefois, un des requis de la solution est de permettre la comparaison des données. Les heat maps sont très intéressants lorsque l'on à une seule dimension à visualiser, mais dans notre il faudrait pouvoir être en mesure de comparer et explorer les différentes dimensions des données, ce qui n'est pas possible avec un seul heatmap. C'est possible avec les diagrammes à ligne et les diagrammes à nuages de points, car on peut ajouter d'autres lignes ou points de différentes couleurs pour la comparaison des catégories, alors que l'attribut de la couleur est déjà employé dans un heat map. Par contre il est certain qu'avec un grand nombre de catégories, placer tout cela sur le même diagramme va résulter également avec quelque chose de peu lisible, peu importe que ce soit des points ou des lignes. Il faut alors considérer de répartir les données sur plusieurs diagrammes, chaque diagramme représentant une dimension ou un aspect des données différent. Cette technique n'est pas mauvaise en soi, cela va donner un tableau de bord ou *dashboard*, ce qui est de plus en plus utilisé. Cela reste tout de même un compromis entre représenter moins d'information pour que celle-ci soit claire, et perdre une partie de la vue complète du système.
+
+Il n'y a pas de solution idéale à ce problème de représentation des données, étant donné la quantité de données, le nombre de catégories et de dimension, c'est effectivement un problème difficile à résoudre visuellement sans faire de sacrifices. Peu importe le type de visualisation il faut considérer le contexte de celle-ci, c'est-à-dire la question qu'on cherche à répondre, et trouver la technique de représentation qui convient le mieux. Sur le sujet, le diagramme réalisé par Andrew Abela^[Ref 22] est fort intéressant puisqu'il indique quels sont les différents types de graphiques qui sont le plus approprié selon l'objectif de la visualisation : 
+
+![Fig 28. Différents types de diagrammes organisés par objectif, par Andrew Abela](figures/data_chart_type.png)
 
 ### 3.4 Description de l'approche de visualisation des données choisie
+
+
 
 
 ### 3.5 Avantages et inconvéniants
@@ -452,7 +459,7 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 
 > The load average is not a percentage, but the rolling average of the sum of the following:
 > 
-> – The number of processes in queue waiting to be processed  
+> – The number of processes in queue waiting to be processed 
 > 
 > – The number of processes waiting for uninterruptable task to be completed
 > 
@@ -566,6 +573,10 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 
 [Ref 20] Noah Iliinsky Properties and Best Uses of Visual Encodings, [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 19 novembre 2014.
 
+[Ref 21] GREGG, Bredan Latency Heat Maps, [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 18 novembre 2014. 
+
+
+
 ### Livres
 
 [Ref 10] CILIENDO, Eduardo; Kunimasa, Takechika (2007). Linux Performance and Tuning Guidelines, IBM: IBM, Coll. « Redpaper ».
@@ -587,4 +598,7 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 [Ref 18] TUFTE, Edward R. (2006). Beautiful evidence, Cheshire, Conn.: Graphics Press.
 
 [Ref 19] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). Beautiful code. Sebastopol, CA: O'Reilly. ISBN 0-596-51004-7.
+
+[Ref 22] ABELA, Andrew. Advanced Presentations by Design: Creating Communication that Drives Action
+
 
