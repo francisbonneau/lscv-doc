@@ -356,11 +356,11 @@ La solution devra prendre en considération ces différents propriétés pour ar
 
 Si on simplifie le problème un instant et qu'on imagine le cas le plus simple, une visualisation du temps de latence d'un seul type d'appel système (ex: read), par un seul processus (ex: apache) par un seul usager sur une seule machine. Comment représenter graphiquement ce temps de latence, qui varie dans le temps puisqu'à chaque seconde ce processus effectue plusieurs requêtes au système d'exploitation ? Le moyen le plus simple est un diagramme à ligne, sur lequel l'axe des X représente la latence et l'axe des Y le temps. Comme ceci (données aléatoires pour l'exemple) : 
 
-![Fig 26. Simple diagramme à ligne](figures/line_chart.png)
+![Fig 26. Simple diagramme à ligne - données aléatoires](figures/line_chart.png)
 
 Ce diagramme fait parfaitement le travail, puisqu'il permet de comparer la variation de la latence dans le temps, lorsqu'on n'a qu'une seule dimension - un seul appel système et un seul processus. Toutefois il y a déjà quelques inconvénients à l'utilisation de ce graphique en ligne, qui vont apparaitre avec une bonne quantité de données. Premièrement avec grand nombre de points à chaque tranche de temps (axe des X), si il y a des variations considérables dans les données (si par exemple la moitié des appels systèmes ont une latence aux alentours de 100ns et l'autre moitié aux alentours de 400 ns), la ligne risque de tellement bouger qu'il sera impossible de la suivre. Même phénomène si la majorité des données est homogène, mais présente quelques importantes variations, ce qui arrive lorsque les temps des appels systèmes sont mesurés en nanosecondes. Pour remédier à cela, on peut soit utiliser des percentiles pour filtrer les variations trop importantes, ou alors oublier les lignes et simplement tracer les points : 
 
-![Fig 27. Simple diagramme à nuage de points](figures/scatterplot.png)
+![Fig 27. Diagramme à nuage de points - mêmes données aléatoires](figures/scatterplot.png)
 
 Le diagramme à nuage de points risque d'être plus facile à lire dans ce cas, et il permettra de voir rapidement les groupes et concentrations de points. Toutefois ce n'est pas garanti que le graphique va rester lisible si on dessine les 35 000 points par intervalle de temps, si les points sont très rapprochés, voir superposés, on perd alors une partie de la qualité de la visualisation car on n'est plus en mesure d'évaluer facilement la quantité relative de points à des positions différentes. De plus, cela demande beaucoup de ressources pour afficher autant de points, ce qui est moins intéressant si on veut avoir une visualisation en temps réel. 
 
@@ -378,52 +378,37 @@ Il n'y a pas de solution idéale à ce problème de représentation des données
 
 
 
-
 ### 3.5 Avantages et inconvéniants
 
-
 ### 3.6 Alternatives possibles
-
 
 ## Chapitre 4 : Conception du logiciel
 
 ### 4.1 Défis rencontrés
 
-
 ### 4.2 Architecture choisie
 
-
 ### 4.3 Diagrammes
-
 
 ## Chapitre 5 : Implémentation du logiciel
 
 ### 5.1 Outils utilisés
 
-
 ### 5.2 Méthodologie
-
 
 ### 5.3 Problèmes rencontrés
 
-
 ### 5.4 Solutions trouvées
-
 
 ### 5.5 Déploiement du logiciel
 
-
 ## Chapitre 6 : Discussion et conclusion
-
 
 ### 6.1 Dicussion
 
-
 ### 6.2 Recommandations
 
-
 ### 6.3 Conclusion
-
 
 ## Annexe
 
