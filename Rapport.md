@@ -70,7 +70,7 @@ Parmi les appels systèmes les plus courants il y a [*read*](http://linux.die.ne
 
 Cette architecture divisées en espaces usager/kernel est souvent représentée de la manière suivante :
 
-![Fig 1. Architecture de Linux](figures/linux_arch.png)
+![Fig 01. Architecture de Linux](figures/linux_arch.png)
 
 Tel qu'illustré sur la figure précédentes, les applications exécutées par les usagers d'une machine sont le dernier maillon de la chaine, et produisent le résultat attendu. Celles-ci ne peuvent toutefois fonctionner sans l'appui de tous les services implémentés par le système, services que l'application utilise par le biais de librairies ou d'appels systèmes directement. 
 
@@ -153,11 +153,11 @@ Les différents métriques énoncés plus haut peuvent être calculés par défa
 
 À titre d'exemple, le répertoire /proc est organisé de la façon suivante : /proc contient un répertoire pour chaque processus sur le système et ce répertoire est nommé selon le pid du processus. 
 
-![Fig 2. Aperçu de /proc/](figures/proc.png)
+![Fig 02. Aperçu de /proc/](figures/proc.png)
 
 Ce répertoire contient ensuite quelques fichiers qui eux conservent les données reliées à ce processus, tels les arguments et statistiques.
 
-![Fig 3. Contenu de /proc/1/](figures/proc2.png)
+![Fig 03. Contenu de /proc/1/](figures/proc2.png)
 
 Quelques fichiers à la racine de /proc ne suivent pas cette nomenclature, il s'agit alors de propriétés de sous-systèmes du Kernel, ou de fichiers contenant les statistiques globales du système, tel loadavg qui contient un métrique générique de la charge du système pour les dernières minutes. 
 
@@ -173,25 +173,25 @@ Commençons par les outils les plus génériques, installés par défaut sur tou
 
 *ps*, pour process status est probablement le plus simple, il affiche simplement la liste des processus qui sont présent sur la machine et leurs paramètres, tel l'usager qui l'exécute, le process id, etc. ps affiche peu d'information reliées à la performance - à part l'utilisation CPU, mais c'est souvent le programme de choix pour voir rapidement ce qui fonctionne sur une machine.
 
-![Fig 4. Liste des processus par ps](figures/ps.png)
+![Fig 04. Liste des processus par ps](figures/ps.png)
 
 Il y a plusieurs autres façons de représenter cette liste de processus, une représentation en arbre comme l'offre *pstree* est également commune. htop, décrit plus loin offre également cet affichage.
 
-![Fig 5. Liste des processus en arbre par pstree](figures/pstree.png)
+![Fig 05. Liste des processus en arbre par pstree](figures/pstree.png)
 
 L'autre outil le plus répandu est sans aucun doute *top*. top permet de voir comme ps la liste des processus qui tournent, et affiche pour chaque processus l'utilisation CPU et mémoire en plus d'un indicateur global pour le système. Contrairement à ps, top s'actualise à chaque seconde.
 
-![Fig 6. Liste des processus organisés par %CPU par top](figures/top.png)
+![Fig 06. Liste des processus organisés par %CPU par top](figures/top.png)
 
 Plusieurs autres programmes se sont inspirés de top et visent à le remplacer en proposant une interface utilisateur plus moderne. Pour n'en citer que deux examples, *[htop](http://hisham.hm/htop/)* tente de se démarquer par la couleur, et *[vtop](https://parall.ax/vtop)* lui propose un graphique sur lequel il est plus facile de voir l'évolution dans le temps.
 
-![Fig 7. % d'utilisation par CPU et liste des processus par htop](figures/htop.png)
+![Fig 07. % d'utilisation par CPU et liste des processus par htop](figures/htop.png)
 
-![Fig 8. Graphiques de l'activité système de vtop](figures/vtop.png)
+![Fig 08. Graphiques de l'activité système de vtop](figures/vtop.png)
 
 Bien que la plupart des outils sont exécutés directement par l'usager, d'autre outils tels que *sar* fontionne en permanence en tant que daemon sur le système et visent plutôt à conserver un historique long terme de l'activité du système. Pour mettre en place le service sur certains systèmes des packages supplémentaires doivent être installés, tel que sysstat sur ubuntu, mais une fois le service établi il est possible d'accéder l'historique avec sar :
 
-![Fig 9. Historique de l'activité du système, enregistré par sar](figures/sar.png)
+![Fig 09. Historique de l'activité du système, enregistré par sar](figures/sar.png)
 
 #### 2.5.2 Disques et réseau 
 
@@ -372,9 +372,34 @@ Toutefois, un des requis de la solution est de permettre la comparaison des donn
 
 Il n'y a pas de solution idéale à ce problème de représentation des données, étant donné la quantité de données, le nombre de catégories et de dimension, c'est effectivement un problème difficile à résoudre visuellement sans faire de sacrifices. Peu importe le type de visualisation il faut considérer le contexte de celle-ci, c'est-à-dire la question qu'on cherche à répondre, et trouver la technique de représentation qui convient le mieux. Sur le sujet, le diagramme réalisé par Andrew Abela^[Ref 22] est fort intéressant puisqu'il indique quels sont les différents types de graphiques qui sont le plus approprié selon l'objectif de la visualisation : 
 
-![Fig 28. Différents types de diagrammes organisés par objectif, par Andrew Abela](figures/data_chart_type.png)
+![Fig 29. Différents types de diagrammes organisés par objectif, par Andrew Abela](figures/data_chart_type.png)
 
 ### 3.4 Description de l'approche de visualisation des données choisie
+
+Après avoir exploré les différents techniques de visualisation de données possibles, cette section présente la méthode qui à été choisie pour interpréter les données collectées. Dès le début du projet plusieurs prototypes ont été explorés pour représenter l'information souhaitée, en premier lieu avec pluiseurs essquisses sur papier. Voici quelques artéfacts de ces premières explorations. 
+
+![Fig 30. Première esquisse de l'interface](figures/sketch1.jpeg)
+
+Comme on peut le constater sur la figure 30, dès le début les différentes dimensions ont été identifiées et quelques idées ont été émises sur les attributs visuels qui pourraient les représenter, tel la couleur, la position, etc. Comme il s'agit de représenter l'activité d'une section de l'architecture du Kernel Linux, l'idée de se servir d'un cercle pour illustrer le Kernel à été reprise de nombreux diagrammes qui documentent cette architecture.
+
+Toutefois comme la visualisation vise à afficher l'activité en temps réel, ce cercle ne sera pas statique, mais va plutôt s'animer de façon à représenter les événements qui traversent le Kernel. Considérant la quantité d'événements à afficher, une des façon les plus courantes d'aborder le problème est de représenter chaque événement comme une simple forme telle un point, couramment appelée *particule*, pour former un *système de particules*. Le livre [*The Nature of Code*](http://natureofcode.com/) de Daniel Shiffman à d'ailleur un très bon chapitre^[Ref 23] sur le sujet. 
+
+![Fig 31. Exploration de l'intéractivité et interface de filtrage ](figures/sketch2.jpeg)
+
+L'avantage d'un système de particule est que celui-ci peut offrir une vision complète de l'état du système, et on peut ajouter à cette vue la possibilité de zoomer sur une zone spéficique, en ajoutant un mécanisme d'intéraction à l'usager. L'idée de pouvoir diviser le cercle en section en utilisant la position pour représenter une catégorie comme un diagramme à pointe de tarte ou *pie chart* est également considéree pour mettre en évidence certains faits des données, tel la répartition de l'ensemble des événements par catégories, comme le nom du processus ou le type d'appel système. 
+
+![Fig 32. Division de l'espace pour afficher plusieurs systèmes](figures/sketch3.jpeg)
+
+Un des avantages des diagrammes circulaires de type *pie chart* est que ceux-ci sont relativement compacts, or cet aspect peut être utilisé pour représenter plusieurs systèmes d'exploitations différents en même temps, ce qui permettrait d'avoir une vue complète d'un groupe de serveurs, voire d'un centre de données au complet. 
+
+![Fig 33. Esquisse de l'interface utilisateur ](figures/sketch4.jpeg)
+
+Avant de pouvoir traiter et afficher les données de différents serveurs il faut que le logiciel soit en mesure de se connecter à ceux-ci pour récupérer l'information, or cette esquisse présente un aperçu de l'interface utilisateur qui sera developpée pour permettre à l'utilisateur d'établir des connexions vers les serveurs à instrumenter, et ensuite régler le nombre de systèmes de particules en conséquence.
+
+Autre possibilité qui vient du fait de pouvoir afficher plusieurs systèmes de particules, ceux-ci peuvent également être utilisés pour représenter différement l'information du même système, afficher par exemple la répartition des appels systèmes par processus dans un premier cercle, et la répartition des appels systèmes par type (read, write, etc.) dans un second cercle.
+  
+
+![Fig 34. ](figures/sketch5.jpeg)
 
 
 
@@ -560,6 +585,7 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 
 [Ref 21] GREGG, Bredan Latency Heat Maps, [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 18 novembre 2014. 
 
+[Ref 23] SHIFFMAN, Daniel The Nature of Code, [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 20 novembre 2014.
 
 
 ### Livres
