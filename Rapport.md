@@ -402,24 +402,48 @@ Autre possibilité qui vient du fait de pouvoir afficher plusieurs systèmes de 
 ![Fig 34. ](figures/sketch5.jpeg)
 
 
-
 ### 3.5 Avantages et inconvéniants
 
 ### 3.6 Alternatives possibles
+
 
 ## Chapitre 4 : Conception du logiciel
 
 ### 4.1 Défis rencontrés
 
+La solution souhaitée présente plusieurs défis qui devront être résolus par l'architecture élaborée. La qualité du logiciel, sa flexibilité et capacité d'adaption aux changements futurs vont en effet dépendre de l'architecture choisie. 
+
+L'architecture du logiciel peut être divisée en deux principaux modules, un module serveur - responsable de la collecte des données, et un module client qui devra interpréter les données et afficher celles-ci. Or ces deux modules présentent des défis différents. Du point de vue serveur, le principal défis est de concevoir une méthode d'acheminer les données collectées au module client, un protocole qui sera idéalement assez flexible pour supporter des connexions de N clients à N serveurs, c'est-à-dire que l'application cliente doit pouvoir se connecter à plusieurs serveurs simultanément pour recevoir leur données, et inversement un serveur doit pouvoir supporter plusieurs connexions clientes simultanément. De plus une certaine robustesse doit être présente dans le module serveur pour que les données soient idéalement disponible sur demande, peut importe quand.
+
+Du côté client, le problème consiste plutôt à concevoir une architecture flexible pour que si des besoins additionels sont manifestés par les usagers dans le futur, il devrait être possible d'ajouter des fonctionnalités avec un minimum d'impact sur le code. Ces ajouts de fonctionnalités risquent fortement d'être au niveau de l'interface utilisateur ou de la visualisation de données, mais il peut s'agir également de changement au niveau du traitement des données, tel l'ajout du support pour d'autres sources de données.
+
 ### 4.2 Architecture choisie
 
-### 4.3 Diagrammes
+Cette section décrit en détail l'architecture choisie pour répondre aux exigences.
+
+### 4.2.1 Vue d'ensemble
+
+
+![Fig 35. ](figures/arch1.png)
+
+
+### 4.2.2 Architecture module serveur
+
+
+![Fig 36. ](figures/arch2.png)
+
+
+### 4.2.3 Architecture module client
+
+
+
+
 
 ## Chapitre 5 : Implémentation du logiciel
 
 ### 5.1 Outils utilisés
 
-### 5.2 Méthodologie
+### 5.2 Méthodologie de travail
 
 ### 5.3 Problèmes rencontrés
 
