@@ -404,6 +404,8 @@ Autre possibilité qui vient du fait de pouvoir afficher plusieurs systèmes de 
 
 ### 3.5 Avantages et inconvéniants
 
+
+
 ### 3.6 Alternatives possibles
 
 
@@ -423,19 +425,35 @@ Cette section décrit en détail l'architecture choisie pour répondre aux exige
 
 ### 4.2.1 Vue d'ensemble
 
+Pour illustrer cette intéraction entre la partie serveur et la partie cliente de l'application, le diagramme suivant montre les principales étapes de l'établissement des connexions :
 
 ![Fig 35. ](figures/arch1.png)
 
+Tel que mentionné précédemment, le serveur doit être en mesure d'accepter de nouvelles connexions en tout temps, et transmettre les données aux clients aussi longtemps que ceux-ci restent connectés. Les connexions seront de durées variables, cela peut varier de quelques minutes dans le cas d'un usager souhaitant simplement avoir aperçu du système à une très longue durée dans le cas d'un dashboard affichant l'information d'un ou plusieurs systèmes en permanence.
 
 ### 4.2.2 Architecture module serveur
+
+La technique choisie pour gérer ces connexions est le patron de conception publish-subscribe : 
+
+> In software architecture, publish–subscribe is a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers.  
+> -- Wikipedia^[Ref 24].
+
+Ce patron de conception convient parfaitment au problème courant puisqu'il offre la flexbilité nécessaire pour permettre des connexions dynamiques entre les clients et serveur. Différentes implémentations de ce patron sont disponible, mais après quelques recherches il s'est avéré qu'une façon simple d'ajouter la fonctionnalité au module serveur serait de recourir à un serveur qui est supporté par presques tous les languages de programmation, l'idéal pour batîr un pont entre la collecte de données de Sysdig et le reste de l'application. 
+
+Ce serveur avec la fonctionnalité pusblish-subscribe est [Redis](http://redis.io/), qui offre un mécanisme nommé PUBSUB avec quelques commandes pour utiliser ce système d'envoi de message. Redis va donc s'occuper de gérer les connexions client et Sysdig lui de la collecte des données. Pour connecter les deux, c'est-à-dire envoyer les données collectées à Redis pour qu'elles soient consommées par les clients, il est possible de tirer avantage d'une fonctionnalité de Sysdig, qui permet d'écrire des scripts en Lua (nommés chisels) pour traiter les données - ou l'envoi de celles-ci à Redis. L'architecture du module serveur va donc ressembler à la figure suivante :
 
 
 ![Fig 36. ](figures/arch2.png)
 
+De cette façon les données sont encodées ou sérialisées à la source par le script lscv-chisel, et sont transportés sur le réseau par le protocole natif de communication de Redis. L'avantage de cette approche est que celle-ci reste flexible, les données peuvent être consommées facilement par à peu près n'importe quelle application cliente, suffit que celle-ci utilise un libraire pour accéder à Redis, et que les données soient encodées dans un format bien supporté, tel JSON ou XML.
+
+Le processus de Redis est géré (démarrage automatique et status avec /etc/init.d/) par défault avec les scripts fournis, alors il ne va rester qu'à écrire le script d'envoi des données (lscv-chisel) ainsi que du code pour encadrer le fonctionnement de Sysdig et le chargement du script.
+
+La performance est un enjeu important du projet, du fait qu'une grande quantité d'événements peut être reçue en peu temps. Or le choix de Redis dans ce scénario est également confirmé par sa réputation,  Redis est généralement considéré comme étant très performant. Selon la documentation officielle de Redis, la complexité de l'opération d'envoi de message est O(N+M)^[Ref 25] où N est le nombre de clients connectés au canal et M le nombre de clients connectés au total. Il reste à voir si cela va suffire pour traiter toutes les données, ou si un autre module va agir comme goulot d'étranglement.
 
 ### 4.2.3 Architecture module client
 
-
+![Fig 37. ](figures/arch3.png)
 
 
 
@@ -610,6 +628,10 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 [Ref 21] GREGG, Bredan Latency Heat Maps, [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 18 novembre 2014. 
 
 [Ref 23] SHIFFMAN, Daniel The Nature of Code, [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 20 novembre 2014.
+
+[Ref 24] CONTRIBUTEURS DE WIKIPÉDIA Publish–subscribe pattern, [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 15 novembre 2014.
+
+[Ref 24] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 15 novembre 2014.
 
 
 ### Livres
