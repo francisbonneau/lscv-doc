@@ -427,7 +427,7 @@ Cette section décrit en détail l'architecture choisie pour répondre aux exige
 
 Pour illustrer cette intéraction entre la partie serveur et la partie cliente de l'application, le diagramme suivant montre les principales étapes de l'établissement des connexions :
 
-![Fig 35. ](figures/arch1.png)
+![Fig 35. Vue d'ensemble du système](figures/arch1.png)
 
 Tel que mentionné précédemment, le serveur doit être en mesure d'accepter de nouvelles connexions en tout temps, et transmettre les données aux clients aussi longtemps que ceux-ci restent connectés. Les connexions seront de durées variables, cela peut varier de quelques minutes dans le cas d'un usager souhaitant simplement avoir aperçu du système à une très longue durée dans le cas d'un dashboard affichant l'information d'un ou plusieurs systèmes en permanence.
 
@@ -442,8 +442,7 @@ Ce patron de conception convient parfaitment au problème courant puisqu'il offr
 
 Ce serveur avec la fonctionnalité pusblish-subscribe est [Redis](http://redis.io/), qui offre un mécanisme nommé PUBSUB avec quelques commandes pour utiliser ce système d'envoi de message. Redis va donc s'occuper de gérer les connexions client et Sysdig lui de la collecte des données. Pour connecter les deux, c'est-à-dire envoyer les données collectées à Redis pour qu'elles soient consommées par les clients, il est possible de tirer avantage d'une fonctionnalité de Sysdig, qui permet d'écrire des scripts en Lua (nommés chisels) pour traiter les données - ou l'envoi de celles-ci à Redis. L'architecture du module serveur va donc ressembler à la figure suivante :
 
-
-![Fig 36. ](figures/arch2.png)
+![Fig 36. Architecture du module serveur](figures/arch2.png)
 
 De cette façon les données sont encodées ou sérialisées à la source par le script lscv-chisel, et sont transportés sur le réseau par le protocole natif de communication de Redis. L'avantage de cette approche est que celle-ci reste flexible, les données peuvent être consommées facilement par à peu près n'importe quelle application cliente, suffit que celle-ci utilise un libraire pour accéder à Redis, et que les données soient encodées dans un format bien supporté, tel JSON ou XML.
 
@@ -453,7 +452,9 @@ La performance est un enjeu important du projet, du fait qu'une grande quantité
 
 ### 4.2.3 Architecture module client
 
-![Fig 37. ](figures/arch3.png)
+L'architecture du module client est plus complexe que le serveur, en raison notamment de la gestion des intéraction avec l'utilisateur.
+
+![Fig 37. Architecture du modle client](figures/arch3.png)
 
 
 
