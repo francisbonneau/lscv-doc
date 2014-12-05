@@ -470,9 +470,21 @@ La performance est un enjeu important du projet, du fait qu'une grande quantité
 
 ### 4.2.3 Architecture module client
 
-L'architecture du côté du client est plus complexe que le serveur à cause notamment de la gestion des intéraction avec l'utilisateur.
+L'architecture du côté du client est plus complexe que le serveur à cause notamment de la gestion de l'intéraction avec l'utilisateur. Pour gérer cette complexité et aider à séparer les différentes fonctionnalités de l'application, son architecture est principalement basée sur le modèle MVC, ou Modèle-Vue-Contrôlleur. L'idée est de regrouper tout le code relié au traitement des données dans le modèle, le code de l'interface utilisateur dans les vues et l'interaction entre les deux est gérée par les contrôleurs. Un existe plusieurs variantes de cette architecture, mais l'idée générale est de segmenter le code pour éviter d'avoir à tout modifier lors de changement liés à l'interface utilisateur. 
 
-![Fig 37. Architecture du modle client](figures/arch3.png)
+Le schéma suivant montre la conception initiale de l'application. D'autres classes ont été ajoutées au cours de l'implémentation pour répondre à différents besoins, mais la structure est restée la même. 
+
+![Fig 37. Architecture du module client](figures/arch3.png)
+
+Initialement beacoup d'effort à été mis sur la conception de la section Modèle de l'application, où les données sont reçues et traitées puisque c'est la partie la plus évidente pour commencer à développer et tester le tout. Différents patrons de conceptions ont été utilisés dans cette section, afin notamment de supporter différentes sources de données, et de manière générale d'être plus flexible. 
+
+Comme les données reçues sont en réalité une série d'événements, une fois traitées c'est une liste d'objets de type Event qui sont envoyés du modèle au reste de l'application. En pratique, c'est une classe qui implémente l'interface DataSource (partron Stratégie pour supporter différentes sources de données) qui va établir le canal avec Redis et reçevoir les données. Comme la réception des données est asynchrone, le patron Observateur est utilisé pour que la DataSource notifie le DataAggregator quand des nouvelles données sont reçues. Chaque DataSource se doit d'être indépendent, soit d'être exécutée dans un thread différent pour que la gestion d'événements concurrents soit possible. C'est la classe DataAggregator qui regoupe les données de différentes sources et qui envoie ces données aux vues. 
+
+Le coeur de l'application, l'objet MainLoop qui contient la classe Main est celle qui va initialiser toutes les composantes de l'application. Celle-ci agit donc en tant que contrôleur pour les vues. À noter que les variables d'état partagées globalement sont conservées dans un objet nommé Params, qui utilise le parton Singleton pour s'assurer qu'une seule instance existe en tout temps. Parmi ces variables se retrouvent les paramètres de l'interface utilisateur, qui sont utilisés à différents endroits et qui doivent être gardés synchronisés. Du fait que toutes ces variables d'état sont regroupées, cela devrait faciliter l'ajout de fonctionnalités dans le futur tels la sauvegarde et le chargement des paramètres courants, ou l'ajout d'une autre interface tel un API pour les modifier directement.
+
+Ce n'est pas évident dans ce diagramme mais une très grande partie de l'effort de développement sera consacrée uniquement aux vues, soit sur l'aspect de l'affichage et la représentation des données. C'est sûr que le but premier de cette application est de permettre la visualisation des données, mais comme cette section va évoluer considérablement au fil du développement et de l'expérimentation il est difficle de prévoir d'avance la structure que va prendre les vues. 
+
+De plus, par leur nature les vues seront difficile à réutiliser dans d'autres contexte, du fait que le code sera spécifique à situation présente, contrairement au code du modèle voire des contrôleurs. Tout de même il est certain que le code des vues sera organisé en différentes classes comme le reste du programme, et d'emblée il semble correct que les principaux concepts de la visualisation de données vont chacun avoir une classe différente pour séparer le code. Ainsi comme les événements sont représentés sous forme de particules, une classe Particle est liée à un Event, un groupe de particules provenant d'une même source sont conservées dans la classe Emitter, et puisque plusieurs sources de données peuvent être affichées en même temps, les Emitters sont regroupés dans la classe Hud.
 
 
 
