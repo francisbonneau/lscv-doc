@@ -2,11 +2,29 @@
 
 # Visualisation temps réel des appels systèmes Linux
 
+## Sommaire
+
+L'objectif de ce projet était d'explorer différentes techniques de visualisation de données pour proposer une méthode différente d'analyse des données reliées à la performance d'applications. Le focus principal était les applications fonctionnant sur Linux, en raison de l'ouverture du système d'exploitation et de sa popularité dans le monde des serveurs.
+
+Idéalement la solution retenue devait également permettre l'analyse de données provenant de plusieurs systèmes différents, afin de pouvoir analyser les systèmes distribués, et ces données seraient envoyées et interprétées en temps réel pour offrir un vue directe de l'activité des systèmes observés. 
+
+Une fois interprétées, ces données serient ensuite affichées à l'usager via une visualisation de données intéractive, qui offrirait une vue d'ensemble des données, mais que l'utilisateur aurait la possibilité de rafiner pour avoir plus de détails sur un segment des données. La visualisation de données choisie devrait également faciliter la comparaison des données, que ce soit entre différents systèmes ou différents processus sur le même système.
+
+Après quelques recherches sur les outils existants et différentes techniques pour accomplir ces objectifs, l'architecture élaborée pour y répondre consiste d'un module serveur responsable de la collecte de données, et d'un module client qui analyse les données et affiche celles-ci. Différents patrons de conceptions, tels les patron stratégie, observateur et singleton, ont été utilisés à travers ces modules pour favoriser l'extensibilité et la flexibilité de l'application. 
+
+L'implémentation à donc été réalisée principalement en Java pour la partie client, en utilisant le framework Processing pour l'affichage graphique. La partie serveur utilise Sysdig pour la capture des données, et envoie les données à Redis en temps réel avec système publish-subscribe via un script écrit en Lua. Diverses autres librairies (dont ControlP5, Jedis, GSON, etc.) ont été utilisées au cours du projet pour maximiser la réutilisation de code. 
+
+Somme toute, les différents défis reliés au projet, tel la performance nécessaire vue la quantité de données à analyser et l'aspect temps-réel de la visualisation, ont pu être dans l'ensemble résolus ou contournés pour arriver au résultat souhaité, une application capable de recevoir des données en temps réel de plusieurs systèmes et d'afficher celles-ci.
+
+La réalisation principale suite à la complétition du projet est que malgré l'effort considérable requis, l'utilisation d'un framework comme Processing offre des possibilitées inégalées pour la visualisation de données, en raison du contrôle total sur tous les aspects de la représentation graphique, au pixel près. C'est toutefois une arme à deux trenchants, puisque ce contrôle demande beaucoup d'effort pour reproduire des visualisation simples qui sont directements intégrées dans d'autres outil. C'est toutefois une avenue qui mérite d'être explorée, surtout lorsque l'on veut expérimenter différentes approches uniques. 
+
+
+
 ## Chapitre 1 : Introduction
 
 ### 1.1 Description du projet en bref
 
-Ce projet consiste à explorer des différents méthodes de visualisation de données reliées aux systèmes d'exploitation et de proposer une nouvelle option.
+Ce projet consiste à explorer les différentes méthodes de visualisation de données reliées aux systèmes d'exploitation et de proposer une nouvelle option.
 
 ### 1.2 Contexte
 
@@ -14,9 +32,9 @@ Grand nombre d’entreprises ont des applications en production dont la performa
 
 ### 1.3 Problématique
 
-Diagnostiquer la source d’un problème de performance d’une application en production, qui est exécutée en parallèle sur différentes machines peut s’avérer une tâche ardue. D’autant plus si cette application fonctionne sur des systèmes d'exploitation (Operating system, ou OS) de type Linux, sur lesquels souvent le seul accès possible est via un simple terminal en mode texte.
+Diagnostiquer la source d’un problème de performance d’une application en production, surout lorsqu'elle est exécutée en parallèle sur différentes machines, peut s’avérer une tâche ardue. D’autant plus si cette application fonctionne sur des systèmes d'exploitation (Operating system, ou OS) de type Linux, sur lesquels souvent le seul accès possible est via un simple terminal en mode texte.
 
-Plusieurs outils en ligne commande existent pour examiner l’activité d’un système Linux, ou l’utilisation des différentes ressources de ce système, mais ceux-ci sont généralement très spécifique, c’est-à-dire qu’ils présentent l’activité en détail qu’une seule partie du système ( comme l’activité sur le réseau ) ou alors ils sont plutôt généraliste et ne présentent qu’un léger aperçu de l’activité des différentes parties du système.
+Plusieurs outils en ligne commande existent pour examiner l’activité d’un système Linux, ou l’utilisation des différentes ressources de ce système, mais ceux-ci sont généralement très spécifique, c’est-à-dire qu’ils présentent l’activité en détail qu’une seule partie du système ( comme l’activité sur le réseau ) ou alors ils sont plutôt généraliste et ne présentent qu’un simple aperçu de l’activité des différentes parties du système.
 
 ### 1.4 Objectifs
 
@@ -58,7 +76,7 @@ Visualisation de données : Domaine informatique multidisciplinaire don’t l’
 
 ### 2.1 Revue de l'architecture de Linux
 
-Pour obtenir des données sur l'activité d'une application précise il faut idéalement avoir en premier lieu une compréhension de l'environnement où est exécutée cette application, soit le système d'exploitation. Dans ce projet l'emphase est mise sur les sytèmes d'exploitations UNIX de type Linux, mais les principes de base restent les mêmes entre les différents OS.
+Pour obtenir des données sur l'activité d'une application précise il faut  avoir en premier lieu une connaissance de l'environnement où est exécutée cette application, soit le système d'exploitation. Dans ce projet l'emphase est mise sur les sytèmes d'exploitations UNIX de type Linux, mais les principes de base restent les mêmes entre les différents OS.
 
 De manière générale, un [système d'exploitation](http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27exploitation) sert d'interface entre l'accès au ressources d'une machine et les usagers et applications qui veulent utiliser ces ressources. Grâce à cette interface, les applications peuvent bénéficier de plusieurs services offerts par le système d'exploitation, tel l'ordonnancement, le système de fichier, la sécurité, etc.
 
@@ -68,7 +86,7 @@ Les applications des usagers sont alors exécutées dans l'espace utilisateur, o
 
 Parmi les appels systèmes les plus courants il y a [*read*](http://linux.die.net/man/2/read) et son équivalent [*write*](http://linux.die.net/man/2/write) qui permet de lire et d'écrire dans un *file descriptor*, typiquement un fichier sur le disque. La liste complète est diponible sur plusieurs sites tels que [kernelgrok.com](http://syscalls.kernelgrok.com/), et de l'information spécifique sur chaque appel système est disponible dans le manuel du OS (man), typiquement dans la section numéro 2 (`man 2 read`).
 
-Cette architecture divisées en espaces usager/kernel est souvent représentée de la manière suivante :
+Cette architecture divisées en espaces usager/kernel est souvent représentée de la façon suivante :
 
 ![Fig 01. Architecture de Linux](figures/linux_arch.png)
 
@@ -81,9 +99,9 @@ Le principal avantage d'une telle architecture est qu'elle permet d'éviter ou d
 
 Les couches d'abstrations offertes par les OS suivent également cette idée.
 
-Or puisque qu'en pratique les applications n'ont pas besoin de ce soucier de l'implémentation de ces couches sous-jacentes, pourquoi s'y intéresser lors de l'analyse de la performance de ces applications ? Cela dépend pricipalement du type d'analyse considéré. Lors de l'établisement d'indice de références, *benchmarks*, de la performance d'une application spécifique, le matériel et le système d'exploitation peuvent être ignorés - à la seule condition que les autres tests comparatifs soient réalisés sur le même exact environnement, pour qu'ils soient valides. 
+Puisque qu'en pratique les applications n'ont pas besoin de ce soucier de l'implémentation de ces couches sous-jacentes, pourquoi s'y intéresser lors de l'analyse de la performance de ces applications ? Cela dépend principalement du type d'analyse considéré. Lors de l'établisement d'indice de références, *benchmarks*, de la performance d'une application spécifique, le matériel et le système d'exploitation peuvent être ignorés - à la seule condition que les autres tests comparatifs soient réalisés sur exactement le même environnement.
 
-Toutefois, lorsque l'objectif est d'améliorer la performance d'une application donnée, ou de résoudre un problème lié à la performance, tout doit être pris en considération. Les résultats obtenus vont varier considérablement selon l'environnement, qu'il s'agisse des différentes couches logicelles - de l'application elle-même jusqu'au Kernel, ou alors du matériel de la machine. De plus, lors de problèmes de performance, si la cause est due à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.
+Toutefois, lorsque l'objectif est d'améliorer la performance d'une application donnée, ou de résoudre un problème lié à la performance, tout doit être pris en considération. Les résultats obtenus vont varier considérablement selon l'environnement, qu'il s'agisse des différentes couches logicelles - de l'application elle-même jusqu'au Kernel, ou alors du matériel de la machine. De plus, lors de problèmes de performance, si la cause est reliée à du matériel ou des périphériques fautifs, alors c'est au niveau du OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.
 
 
 ### 2.2 Méthodologies de l'analyse de perfomance
@@ -141,15 +159,15 @@ Métrique des cartes réseaux                                 Métriques des dis
 [Errors](#errors)                                           [Kilobytes per second read/write](#kilobytes-per-second-readwrite)
 ----------------------------                                --------------------------
 
-Les métriques sont surtout utile lorsqu'on peut les comparer à un historique, et alors constater soit une dégradation ou une amélioration de la performance. 
+Les métriques sont utile lorsque l'on peut les comparer à un historique, et alors constater soit une dégradation ou une amélioration de la performance. 
 
 En pratique, collecter une grande quantité de métriques sur un système en production peut s'avérer utile lors de la résolution de problèmes, mais cela à un certain coût additionnel sur le système instrumenté, qui peut performer moins efficacement dépendament des cas. 
 
-Une alternative pourrait être de collecter tous les métriques durant une certaine période, cibler ceux qui sont réelement d'intérêt et de se limiter à ceux-là en production. Rien n'empêche également d'activer l'instrumentation maximale suite à un changement dans le système tel un nouveau déploiement, et réduire par la suite l'instrumentation du système une fois sa stabilité établie. 
+Une alternative pourrait être de collecter tous les métriques durant une certaine période, cibler ceux qui sont réelement d'intérêt et de se limiter à ceux-là en production. Rien n'empêche également d'activer l'instrumentation complète suite à un changement dans le système tel un nouveau déploiement, et réduire par la suite l'instrumentation du système une fois sa stabilité établie. 
 
 ### 2.4 Données fournies par le Kernel
 
-Les différents métriques énoncés plus haut peuvent être calculés par défaut par le Kernel (par l'incrémentation de compteurs), ou calculés par d'autre programmes externes. Différentes interfaces sont offertes par le Kernel pour accéder aux données et métriques du système, les deux principales sont les répertoires /proc et /sys. En effet puisque Linux prend à coeur la philosophie UNIX de *tout est un fichier*, ces données sont accessibles comme n'importe quel autre fichier ordinaire du système. /proc est toutefois créé dynamiquement par le Kernel au démarrage du système et n'existe qu'en mémoire vive, son contenu n'est enregistré sur aucun disque.
+Les différents métriques énoncés plus haut peuvent être calculés par défaut par le Kernel (par l'incrémentation de compteurs), ou calculés par d'autre programmes externes. Différentes interfaces sont offertes par le Kernel pour accéder aux données et métriques du système, les deux principales sont les répertoires /proc et /sys. En effet, puisque Linux prend à coeur la philosophie UNIX de *tout est un fichier*, ces données sont accessibles comme n'importe quel autre fichier ordinaire du système. /proc est toutefois créé dynamiquement par le Kernel au démarrage du système et n'existe qu'en mémoire vive, son contenu n'est enregistré sur aucun disque.
 
 À titre d'exemple, le répertoire /proc est organisé de la façon suivante : /proc contient un répertoire pour chaque processus sur le système et ce répertoire est nommé selon le pid du processus. 
 
@@ -159,27 +177,27 @@ Ce répertoire contient ensuite quelques fichiers qui eux conservent les donnée
 
 ![Fig 03. Contenu de /proc/1/](figures/proc2.png)
 
-Quelques fichiers à la racine de /proc ne suivent pas cette nomenclature, il s'agit alors de propriétés de sous-systèmes du Kernel, ou de fichiers contenant les statistiques globales du système, tel loadavg qui contient un métrique générique de la charge du système pour les dernières minutes. 
+Quelques fichiers à la racine de /proc ne suivent pas cette nomenclature. Il s'agit soit de propriétés de sous-systèmes du Kernel, ou de fichiers contenant les statistiques globales du système, tel loadavg qui contient un métrique générique de la charge du système pour les dernières minutes. 
 
 Beaucoup d'outils d'analyse de la performance utilisent les répertoires /proc et /sys du Kernel comme source de données sur l'état global du système. Toutefois pour certains besoin spécifiques, tels la capture d'événements, d'autres interfaces sont offertes par le Kernel, telles les kprobes, ftrace, perf_event, etc.  Cela dépend de la nature de l'outil et du besoin qu'il cherche à combler, tel que détaillé par la section suivante.
 
 ### 2.5 Revue des outils existants
 
-Un multitude d'outils existent pour identifier et diagnostiquer des problèmes de performance, ou pour simplement obtenir un aperçu de l'activité d'un système. Cette section vise à présenter un aperçu des différents outils disponibles sous Linux. 
+Un multitude d'outils existent pour identifier et diagnostiquer des problèmes de performance, ou pour simplement obtenir un portrait de l'activité d'un système. Cette section vise à présenter un aperçu des différents outils disponibles sous Linux. 
 
 #### 2.5.1 Processeur et mémoire
 
 Commençons par les outils les plus génériques, installés par défaut sur tous les systèmes modernes. Ces outils permettent d'obtenir un aperçu de l'activité du système, au moment immédiat ou alors avec un historique, en présentant pour chaque processus son utilisation CPU et sa mémoire.
 
-*ps*, pour process status est probablement le plus simple, il affiche simplement la liste des processus qui sont présent sur la machine et leurs paramètres, tel l'usager qui l'exécute, le process id, etc. ps affiche peu d'information reliées à la performance - à part l'utilisation CPU, mais c'est souvent le programme de choix pour voir rapidement ce qui fonctionne sur une machine.
+*ps*, pour process status est probablement le plus simple. Il affiche la liste des processus qui sont présent sur la machine et leurs paramètres, tel l'usager qui l'exécute, le process id, etc. ps affiche peu d'information reliée à la performance - à part l'utilisation CPU, mais c'est souvent le programme de choix pour voir rapidement ce qui fonctionne sur une machine.
 
 ![Fig 04. Liste des processus par ps](figures/ps.png)
 
-Il y a plusieurs autres façons de représenter cette liste de processus, une représentation en arbre comme l'offre *pstree* est également commune. htop, décrit plus loin offre également cet affichage.
+Il y a plusieurs autres façons de représenter cette liste de processus, une représentation en arbre comme l'offre *pstree* est également commune. htop, présenté plus loin propose également cette représentation.
 
 ![Fig 05. Liste des processus en arbre par pstree](figures/pstree.png)
 
-L'autre outil le plus répandu est sans aucun doute *top*. top permet de voir comme ps la liste des processus qui tournent, et affiche pour chaque processus l'utilisation CPU et mémoire en plus d'un indicateur global pour le système. Contrairement à ps, top s'actualise à chaque seconde.
+L'autre outil le plus répandu est sans aucun doute *top*. top permet de voir comme ps la liste des processus qui tournent, et affiche pour chaque processus l'utilisation CPU et mémoire, en plus d'un indicateur global pour le système. Contrairement à ps, top s'actualise à chaque seconde.
 
 ![Fig 06. Liste des processus organisés par %CPU par top](figures/top.png)
 
@@ -189,7 +207,7 @@ Plusieurs autres programmes se sont inspirés de top et visent à le remplacer e
 
 ![Fig 08. Graphiques de l'activité système de vtop](figures/vtop.png)
 
-Bien que la plupart des outils sont exécutés directement par l'usager, d'autre outils tels que *sar* fontionne en permanence en tant que daemon sur le système et visent plutôt à conserver un historique long terme de l'activité du système. Pour mettre en place le service sur certains systèmes des packages supplémentaires doivent être installés, tel que sysstat sur ubuntu, mais une fois le service établi il est possible d'accéder l'historique avec sar :
+Bien que la plupart des outils sont exécutés directement par l'usager, d'autres outils tels que *sar* fontionne en permanence en tant que daemon sur le système, et visent plutôt à conserver un historique à long terme de l'activité du système. Pour mettre en place le service sur certains systèmes des packages supplémentaires doivent être installés, tel que *sysstat* sur Ubuntu, mais une fois le service établi il est possible d'accéder l'historique avec sar :
 
 ![Fig 09. Historique de l'activité du système, enregistré par sar](figures/sar.png)
 
@@ -452,7 +470,7 @@ La performance est un enjeu important du projet, du fait qu'une grande quantité
 
 ### 4.2.3 Architecture module client
 
-L'architecture du module client est plus complexe que le serveur, en raison notamment de la gestion des intéraction avec l'utilisateur.
+L'architecture du côté du client est plus complexe que le serveur à cause notamment de la gestion des intéraction avec l'utilisateur.
 
 ![Fig 37. Architecture du modle client](figures/arch3.png)
 
