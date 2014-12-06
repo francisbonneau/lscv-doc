@@ -486,7 +486,6 @@ Ce n'est pas évident dans ce diagramme mais une très grande partie de l'effort
 
 De plus, par leur nature les vues seront difficile à réutiliser dans d'autres contexte, du fait que le code sera spécifique à situation présente, contrairement au code du modèle voire des contrôleurs. Tout de même il est certain que le code des vues sera organisé en différentes classes comme le reste du programme, et d'emblée il semble correct que les principaux concepts de la visualisation de données vont chacun avoir une classe différente pour séparer le code. Ainsi comme les événements sont représentés sous forme de particules, une classe Particle est liée à un Event, un groupe de particules provenant d'une même source sont conservées dans la classe Emitter, et puisque plusieurs sources de données peuvent être affichées en même temps, les Emitters sont regroupés dans la classe Hud.
 
-
 ## Chapitre 5 : Implémentation du logiciel
 
 ### 5.1 Outils utilisés
@@ -542,38 +541,45 @@ Documentation
 *	Rédaction du manuel de l’utilisateur
 
 
-L’approche utilisée pour le développement est similaire à la méthodologie Agile, principalement au niveau des itérations successives, surtout au niveau de la conception et de l’implémentation de l’interface utilisateur. 
-
-
+L’approche utilisée pour le développement est similaire à la méthodologie Agile, principalement au niveau des itérations successives, surtout au niveau de la conception et de l’implémentation de l’interface utilisateur.
 
 
 ### 5.3 Problèmes rencontrés
 
 
+Gestion des dépendances = maven
+
+Serialisation/deserialisation data = msgpack => json
+
+performance, # particules et fps = opengl 
 
 
 ### 5.4 Solutions trouvées
 
 
 
-### 5.5 Déploiement du logiciel
+### 5.5 Architecture finale
 
 
 
-
-## Chapitre 6 : Discussion et conclusion
-
-
-
-### 6.1 Dicussion
+### 5.6 Déploiement du logiciel
 
 
 
-### 6.2 Recommandations
+## Chapitre 6 : Démonstration de l'application finale
 
 
 
-### 6.3 Conclusion
+## Chapitre 7 : Discussion et conclusion
+
+
+### 7.1 Dicussion
+
+
+### 7.2 Recommandations
+
+
+### 7.3 Conclusion
 
 
 ## Annexe
@@ -730,7 +736,7 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 
 [Ref 24] CONTRIBUTEURS DE WIKIPÉDIA Publish–subscribe pattern, [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 15 novembre 2014.
 
-[Ref 24] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 15 novembre 2014.
+[Ref 25] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 15 novembre 2014.
 
 
 ### Livres
