@@ -487,26 +487,94 @@ Ce n'est pas évident dans ce diagramme mais une très grande partie de l'effort
 De plus, par leur nature les vues seront difficile à réutiliser dans d'autres contexte, du fait que le code sera spécifique à situation présente, contrairement au code du modèle voire des contrôleurs. Tout de même il est certain que le code des vues sera organisé en différentes classes comme le reste du programme, et d'emblée il semble correct que les principaux concepts de la visualisation de données vont chacun avoir une classe différente pour séparer le code. Ainsi comme les événements sont représentés sous forme de particules, une classe Particle est liée à un Event, un groupe de particules provenant d'une même source sont conservées dans la classe Emitter, et puisque plusieurs sources de données peuvent être affichées en même temps, les Emitters sont regroupés dans la classe Hud.
 
 
-
 ## Chapitre 5 : Implémentation du logiciel
 
 ### 5.1 Outils utilisés
 
+Différents outils ont été utilisés au cours de la réalisation de ce projet, les principaux sont les suivants : 
+
+Outils liés au développement
+
+* Eclipse, développement Java
+* Sublime Text, développement Lua et autres scripts
+* Git, gestion du code source 
+* VirtualBox, création de machines virtuelles
+* Vagrant, gestion de machines virtuelles
+
+Écriture du rapport et de la documentation
+
+* Markdown, syntaxe simplifiée pour le formattage
+* Pandoc, outil de conversion de différents formats
+
+Autre
+
+* Dropbox
+
 ### 5.2 Méthodologie de travail
+
+Voici la liste des activitées à réaliser dans le cadre de ce projet, telle qu'énumérée dans le document de proposition du projet : 
+
+Analyse et spécification des besoins
+
+*	Recueil des données
+*	Rédaction du document de vision
+*	Rédaction du SRS
+
+Conception et développement
+
+*	Conception de l’architecture
+*	Conception de l’interface utilisateur
+*	Création de prototypes et maquettes de l’interface utilisateur
+*	Implémentation du module de collecte de données
+*	Implémentation du module d’interprétation des données
+*	Implémentation de l’interface utilisateur
+
+Tests et validation
+
+*	Validation des données collectées
+*	Validation des données affichées
+*	Essai de l’interface par plusieurs utilisateurs potentiels
+
+Documentation
+
+*	Création de diagrammes UML de l’architecture
+*	Rédaction du manuel de référence
+*	Rédaction du manuel de l’utilisateur
+
+
+L’approche utilisée pour le développement est similaire à la méthodologie Agile, principalement au niveau des itérations successives, surtout au niveau de la conception et de l’implémentation de l’interface utilisateur. 
+
+
+
 
 ### 5.3 Problèmes rencontrés
 
+
+
+
 ### 5.4 Solutions trouvées
+
+
 
 ### 5.5 Déploiement du logiciel
 
+
+
+
 ## Chapitre 6 : Discussion et conclusion
+
+
 
 ### 6.1 Dicussion
 
+
+
 ### 6.2 Recommandations
 
+
+
 ### 6.3 Conclusion
+
 
 ## Annexe
 
