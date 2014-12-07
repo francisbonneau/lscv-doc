@@ -584,6 +584,19 @@ Voici le résultat final de l'implémentation de l'application cliente. La struc
 
 ## Chapitre 6 : Démonstration de l'application finale
 
+![Fig 39. ](figures/settings1.png)
+
+![Fig 40. ](figures/settings2.png)
+
+![Fig 41. ](figures/settings3.png)
+
+![Fig 42. ](figures/help_menu.png)
+
+![Fig 43. ](figures/start_data_viz.png)
+
+![Fig 44. ](figures/viz_started.png)
+
+
 
 ## Chapitre 7 : Discussion et conclusion
 
