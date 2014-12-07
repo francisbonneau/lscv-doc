@@ -540,21 +540,28 @@ Documentation
 *	Rédaction du manuel de référence
 *	Rédaction du manuel de l’utilisateur
 
-
-L’approche utilisée pour le développement est similaire à la méthodologie Agile, principalement au niveau des itérations successives, surtout au niveau de la conception et de l’implémentation de l’interface utilisateur.
-
+L’approche utilisée pour le développement est similaire à la méthodologie Agile, principalement au niveau des itérations successives, surtout au niveau de la conception et de l’implémentation de l’interface utilisateur. Après qu'une nouvelle fonctionnalité ait été ajoutée à l'interface utilisateur, l'application à été testée à nouveau par un des utilisateurs cible afin d'avoir ses impressions et suggestions sur l'interface.
 
 ### 5.3 Problèmes rencontrés
 
+Différents problèmes ont été rencontrés au cours de l'implémentation de l'application. Cette section en explique quelques uns de ces problèmes de nature technique et les solutions trouvées.
 
-Gestion des dépendances = maven
+#### 5.3.1 Gestion des dépendances 
 
-Serialisation/deserialisation data = msgpack => json
+Le premier problème rencontré au cours du projet à été la gestion des dépendences. En effet, comme l'application cliente utilise plusieurs libraires et frameworks externes, garder ces libraires organisées et disponibles peu importe la machine utilisée pour le développement s'est avéré initialement problématique. Ajouter manuellement les fichiers jars sur les différents systèmes à fonctionné initialement mais au fur et à mesure que le projet à avancé et que d'autres libraires se sont ajoutées ce processus s'est avéré inutilement long. 
 
-performance, # particules et fps = opengl 
+Or la solution qui à été utilisée pour résoudre ce problème des dépendances logcielles à été d'utiliser le système de gestion des dépendances nommé [Apache Maven](http://maven.apache.org/). Une fois quelques plugins installés dans Eclipse, les différentes librairies sont désormais gérées par Maven et téléchargées automatiquement sur un nouveau système.
 
+#### 5.3.2 Transfert des données sur le réseau 
 
-### 5.4 Solutions trouvées
+En anticipation à la quantité de données à transférer entre le module serveur et le module client, il fut établi dès le début que les données devraient être encodées le plus efficacement possible lors de leur transfert sur le réseau. Ainsi divers protocoles de sérialisation de données ont été considéré, et [MessagePack](http://msgpack.org/) semblait le plus intéressant en raison de sa taille compacte. Précédement utilisé dans d'autres projets avec des languages dynamiques comme Ruby et Python, les libraires MessagePack de ces languages ont fonctionné sans problème et sont simple d'utilisation. Dans le cas présent toutefois, comme le script en charge de sérialiser les données est en Lua et que l'application cliente est en Java, l'utilisation des librairies MessagePack dans ces languages à été problématique, principalement en raison des types forts en Java, qui contrairement à Ruby ou Python, doivent impérativement être spécifiés à l'avance. Le fait que MesssagePack est un format binaire est avantageux pour la performance, mais dans le cas présent cela n'a pas aidé au déboguage de l'application.
+
+Comme cette embûche technique ralentissait la progression du premier prototype de l'application, il à été décidé de changer le format de sérialisation pour un format moins performant, mais plus facile à déboguer, soit le JSON. Plusieurs librairies existent pour le JSON en Lua et Java, et pour tester plus rapidement l'application celle qui à été initiallement utilisée était écrite entièrement en Lua, et une fois que les tranferts de données ont fonctionné avec succès, cette librairie Lua à été remplacée par une option plus performante, du fait qu'elle est écrite en C avec des liens Lua, [Lua CJSON](http://www.kyne.com.au/~mark/software/lua-cjson-manual.html). Du côté client, la libraire Java [google-gson](http://code.google.com/p/google-gson/) à fonctionné sans problèmes.
+
+#### 5.3.3 Performance - affichage graphique
+
+Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de frames par secondes (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Une chute du fps de l'application brise l'intéractivité de celle-ci avec l'usager, quitte à être complètement inutilisable. L'avantage d'utiliser le framework Processing et le language Java pour l'application est que cela permettre d'expériementer plus rapidement, mais le prix à payer est que l'affichage graphique est plus lent qu'une application native écrite en C ou C++. 
+
 
 
 
