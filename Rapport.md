@@ -1,5 +1,6 @@
 <!-- Rapport final de PFE - Francis Bonneau, automne 2014 -->
 
+
 # Visualisation temps réel des appels systèmes Linux
 
 ## Sommaire
@@ -560,21 +561,28 @@ Comme cette embûche technique ralentissait la progression du premier prototype 
 
 #### 5.3.3 Performance - affichage graphique
 
-Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de frames par secondes (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Une chute du fps de l'application brise l'intéractivité de celle-ci avec l'usager, quitte à être complètement inutilisable. L'avantage d'utiliser le framework Processing et le language Java pour l'application est que cela permettre d'expériementer plus rapidement, mais le prix à payer est que l'affichage graphique est plus lent qu'une application native écrite en C ou C++. 
+Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de frames par secondes (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Suivre la position de dizaines voire centaines de milliers de particules, et mettre à jour celles-ci au minimum 30 fois par seconde demande beaucoup de ressources. Toutefois une chute du fps de l'application risque de briser l'intéractivité de celle-ci avec l'usager, quitte à être complètement inutilisable. 
 
+L'avantage d'utiliser le framework Processing et le language Java pour l'application est que cela permettre d'expérimenter plus rapidement, mais le prix à payer est que l'affichage graphique est plus lent qu'une application native écrite en C ou C++. La plupart des applications qui sont très demandantes graphiquement sont écrites dans ces languages pour justement avoir un plus grand contrôle sur la pipeline graphique, et avoir une meilleure performance. Différentes techniques ont donc dû être utilisées pour s'assurer que l'application reste la plus fluide possible et garder le fps élevé. 
 
+Premièrement au niveau de la visualisation de données elle-même, en utilisant la technique empruntée des heat maps de regrouper les événements similaires, cela permet d'avoir à afficher moins de particules, du fait qu'une seule particule d'aire plus importante peut en représenter plusieurs. L'échelle qui détermine les seuils auxquels sont regroupé plusieurs événements peut également être ajustée dynamiquement, pour avoir une plus grande précision, quitte à ce que plus d'événements soient affichés et que cela demande plus de ressources, ou l'inverse pour que cela regroupe plus d'événements et demande moins de ressources.
 
+Ensuite l'autre méthode utilisée pour s'assurer de la performance à été d'expérimenter avec les différents systèmes de rendus graphique supportés par Processing. En effet, Processing supporte différents moteurs graphiques, tels que P3D et Opengl, qui ont 
 
 ### 5.5 Architecture finale
+
+Voici le résultat final de l'implémentation de l'application cliente. La structure ressemble à celle initialement conçue, mais l'architecture est tout de même légèrement différente en raison des choix ont dû être fait lors de l'implémentation, tel l'ajout de classes pour supporter des fonctionnalités qui n'ont pas été prévues initialement. 
+
+
+![Fig 38. Diagramme UML de l'application cliente](figures/diag_uml.png)
+
 
 
 
 ### 5.6 Déploiement du logiciel
 
 
-
 ## Chapitre 6 : Démonstration de l'application finale
-
 
 
 ## Chapitre 7 : Discussion et conclusion
