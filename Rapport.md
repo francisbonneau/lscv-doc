@@ -559,7 +559,13 @@ En anticipation à la quantité de données à transférer entre le module serve
 
 Comme cette embûche technique ralentissait la progression du premier prototype de l'application, il à été décidé de changer le format de sérialisation pour un format moins performant, mais plus facile à déboguer, soit le JSON. Plusieurs librairies existent pour le JSON en Lua et Java, et pour tester plus rapidement l'application celle qui à été initiallement utilisée était écrite entièrement en Lua, et une fois que les tranferts de données ont fonctionné avec succès, cette librairie Lua à été remplacée par une option plus performante, du fait qu'elle est écrite en C avec des liens Lua, [Lua CJSON](http://www.kyne.com.au/~mark/software/lua-cjson-manual.html). Du côté client, la libraire Java [google-gson](http://code.google.com/p/google-gson/) à fonctionné sans problèmes.
 
-#### 5.3.3 Performance - affichage graphique
+#### 5.3.3 Génération d'une palette de couleurs
+
+
+
+
+
+#### 5.3.4 Performance - affichage graphique
 
 Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de frames par secondes (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Suivre la position de dizaines voire centaines de milliers de particules, et mettre à jour celles-ci au minimum 30 fois par seconde demande beaucoup de ressources. Toutefois une chute du fps de l'application risque de briser l'intéractivité de celle-ci avec l'usager, quitte à être complètement inutilisable. 
 
@@ -567,35 +573,49 @@ L'avantage d'utiliser le framework Processing et le language Java pour l'applica
 
 Premièrement au niveau de la visualisation de données elle-même, en utilisant la technique empruntée des heat maps de regrouper les événements similaires, cela permet d'avoir à afficher moins de particules, du fait qu'une seule particule d'aire plus importante peut en représenter plusieurs. L'échelle qui détermine les seuils auxquels sont regroupé plusieurs événements peut également être ajustée dynamiquement, pour avoir une plus grande précision, quitte à ce que plus d'événements soient affichés et que cela demande plus de ressources, ou l'inverse pour que cela regroupe plus d'événements et demande moins de ressources.
 
-Ensuite l'autre méthode utilisée pour s'assurer de la performance à été d'expérimenter avec les différents systèmes de rendus graphique supportés par Processing. En effet, Processing supporte différents moteurs graphiques, tels que P3D et Opengl, qui ont 
+Ensuite l'autre méthode utilisée pour s'assurer de la performance à été d'expérimenter avec les différents systèmes de rendus graphique supportés par Processing. En effet, Processing supporte différents moteurs de rendu graphique, le moteur par défaut, P2D, P3D et PDF. Par défault Processing utilise un moteur qui utilise les librairies Java 2D pour supporter l'affichage en deux dimensions, ce qui est suffisant dans le cas présent. Toutefois après quelques essais il s'est avéré que le nombre de frames par secondes est plus stable et plus élévé en utilisant soit P2D ou P3D au lieu du défault. Les deux moteurs sont sensés utiliser l'accélération matérielle via OpenGL lorsque disponible, mais il semble que pour un affichage composé uniquement de formes simples, telles des particules dans notre cas, P2D et P3D supportent mieux la charge que le moteur par défaut.
+
 
 ### 5.5 Architecture finale
 
 Voici le résultat final de l'implémentation de l'application cliente. La structure ressemble à celle initialement conçue, mais l'architecture est tout de même légèrement différente en raison des choix ont dû être fait lors de l'implémentation, tel l'ajout de classes pour supporter des fonctionnalités qui n'ont pas été prévues initialement. 
 
+![Fig 38. Diagramme UML de l'application cliente](figures/uml.png)
 
-![Fig 38. Diagramme UML de l'application cliente](figures/diag_uml.png)
-
-
-
+Parmi ces quelques classes ajoutées il y a notamment une classe pour gérer le menu d'aide affiché au démarrage de l'application (HelpMenu), une classe pour la génération des couleurs (ColorGenerator) ainsi que deux classes pour gérer la subdivision de l'espace d'affichage, lorsque plusieurs sources de données sont affichées simultanément.
 
 ### 5.6 Déploiement du logiciel
+
+Tout le code du projet à 
 
 
 ## Chapitre 6 : Démonstration de l'application finale
 
-![Fig 39. ](figures/settings1.png)
+Ce chapitre présente l'interface utilisateur de la version finale de l'application cliente. Le module serveur ne s'exécute qu'en ligne de commande pour le moment. L'application cliente comporte deux fenêtres, une fenêtre principale où est affichée la visualisation de données, qui peut être en mode plein écran, ainsi qu'une autre fenêtre dédiée aux paramètres de la visualisation. C'est avec cette seconde fenêtre que l'utilisateur peut choisir à quels serveurs se connecter, et ajuster les différents aspects de la visualisation. Les contrôles de cette fenêtre ont été réalisés avec la libraire [ControlP5](http://www.sojamo.de/libraries/controlP5/) pour Processing.
 
-![Fig 40. ](figures/settings2.png)
+Voici à quoi resemble la fenêtre principale, qui est ouverte lorsque l'utilisateur démarre l'application : 
 
-![Fig 41. ](figures/settings3.png)
+![Fig 39. Fenêtre principale, menu d'aide](figures/help_menu.png)
 
-![Fig 42. ](figures/help_menu.png)
+Il s'agit en fait d'un menu d'aide pour guider les nouveaux utilisateurs aux principes de la visualisation de données présentée. Ce menu d'aide n'est en réalité qu'une liste d'images, et comme une présentation powerpoint l'usager peut changer l'image présentée, ou passer à la slide suivante, en appuyant sur la touche 'n'. À tout moment il peut cacher le menu d'aider avec la touche 'h', ce qui va révéler la vue principale, soit un simple cercle, car la visualisation n'a pas encore de source de données de sélectionée.
 
-![Fig 43. ](figures/start_data_viz.png)
+![Fig 40. Visualisation en attente de données](figures/start_data_viz.png)
 
-![Fig 44. ](figures/viz_started.png)
+Voici la fenêtre des paramètres de l'application. La navigation est organisée par onglets, le premier onglet étant les paramètres des sources de données. C'est ici que l'usager peut ajouter une nouvelle source de données, et par le fait même, établir une connexion vers un nouveau serveur. C'est également dans cet onglet que des filtres peuvent être appliqués à une source de donnée, il s'agit toutefois de filtres qui sont appliqués du côté serveur, directement à l'instance de Sysdig. Cela permet donc d'éviter le transfert de données inutiles sur le réseau. 
 
+![Fig 41. Onglet sélection sources de données](figures/settings1.png)
+
+Le second onglet permet de sélectionner comment seront représentées les données reçues, en permettant à l'usager d'associer une source de données à un cercle - où seront représentés les événements en temps réel. Il est possible sur cet onglet de sélectionner le nombre de cercles affichés à l'écran, en glissant le slider du haut pour ajouter d'autres cercles horizontalement, ou avec l'autre slider pour ajouter des cercles verticalement. Une fois le nombre de cercles désirés sélectionné, l'usager doit ensuite utiliser les deux menus de type dropdown pour sélectionner quel cercle doit afficher quelle source de données.
+
+![Fig 42. Onglet configuration de l'affichage](figures/settings2.png)
+
+Une fois une source de données associée à une cercle, la visualisation des données commence et ce cercle va afficher les événements reçus :
+
+![Fig 43. Visualisation démarrée avec quelques événements](figures/viz_started.png)
+
+Le 3e onglet permet d'ajuster différents paramètres reliés à l'affichage de la visualisation, que ce soit la couleur du fond, la taille des particules, la vitesses de celles-ci, etc.
+
+![Fig 44. Onglet avec différents paramètres de l'affichage](figures/settings3.png)
 
 
 ## Chapitre 7 : Discussion et conclusion
