@@ -588,7 +588,9 @@ Parmi ces quelques classes ajoutées, il y a notamment une classe pour gérer le
 
 ### 5.6 Déploiement du logiciel
 
-Tout le code du projet à 
+Tout le code du projet à été déposé sur Github, une plateforme qui permet de partager du code source suivi par Git. [Une page web](https://francisbonneau.github.io/lscv/) a également été réalisée pour montrer le projet, et sur ce site sont listés tous les différents répertoires Github qui contiennent le code source de l'application cliente [https://github.com/francisbonneau/lscv-client](https://github.com/francisbonneau/lscv-client), le module serveur [https://github.com/francisbonneau/lscv-server](https://github.com/francisbonneau/lscv-server) et le rapport présent [https://github.com/francisbonneau/lscv-doc](https://github.com/francisbonneau/lscv-doc).
+
+Sur ces pages web se retrouvent non seulement le code source, mais également les instructions à suivre pour installer les applications. L'application serveur se déploie présentement manuellement, mais il serait possible d'automatiser l'installation (c'est déjà fait pour des machines virtuelles avec Vagrant) pour différents OS ou de fournir des packages natifs .deb ou .rpm. Sinon l'application cliente est présentement distribuée sous forme de .jar exécutable, alors l'usager n'a qu'à télécharger le .jar et l'exécuter et l'application devrait fonctionner sous toutes les plateformes tant que Java est installé.
 
 
 ## Chapitre 6 : Démonstration de l'application finale
