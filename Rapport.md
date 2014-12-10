@@ -627,14 +627,100 @@ Le 3e onglet permet d'ajuster différents paramètres reliés à l'affichage de 
 
 ### 7.1 Dicussion
 
-Différents aspects du projets 
+Cette section est une réflexion sur les différents choix effectués au cours du projet, ainsi que les hypothèses faites, suite à la complétition du projet.
+
+#### 7.1.1 Décisions reliées à la visualisation
+
+Premièrement il s'est avéré que l'implémentation d'un outil de visualisation sur mesure demande beaucoup de travail. C'était à être anticipé, mais la vrai question est : est-ce que la quantité d'effort requise en vaut la peine considérant qu'il existe déjà plusieurs outils de visualisation de données disponibles ? Après avoir complété ce projet je dirais que cela dépend des cas; dans la majorité des projets lorsqu'il s'agit de visualisation standard c'est certain que pluieurs outils sont disponible et ceux-ci fonctionnent généralement bien. 
+
+Toutefois lorsqu'on veut réaliser quelque chose de différent, alors construire ses propres outils en vaut définitivement la peine, puisque c'est le seul moyen d'avoir un contrôle total et absolu sur tous les aspects de la visualisation, de l'analyse des données à la représentation graphique, pixel par pixel. Alors cela dépend de la situation, mais dans certains cas décider d'implémenter sa propre solution peut s'avérer un très bon choix malgré l'effort supplémentaire requis.
+
+
+
+
+#### 7.1.2 Processing versus C/C++ 
+
+Comme la performance était un enjeu important pour l'application cliente, quelques recherches ont été effectutées pour déterminer quels sont les langages et outils utilisés dans de telles situations. Or typiquement de telles applications sont écrites en C ou C++ pour s'exécuter le plus rapidement possible, et être proche du matériel. Toutefois écrire du C/C++ peut s'avérer plus demandant en temps que certains langages plus modernes comme Java, qui possède différents outils pour réutiliser le code ou accélérer le développement. Alors de crainte que l'écriture de prototype initiale prenne trop de temps, et que cela rende l'expérimentation plus difficile le choix à été fait de rester avec le langage Java pour le prototype, quitte à s'exposer à des problèmes de performance plus tard, en considérant que d'autres stratégies pourraient être considérées pour améliorer la performance le cas échant. 
+
+Après avoir complété le prototype, il s'est avéré que la performance de Java était très satisfaisante, même dans des cas demandant beaucoup de calcul graphique. Une des mesures principales utilisées pour juger de la performance, était le nombre d'images affichées par seconde (FPS), et pour la plupart du temps le FPS de l'application était suffisant que l'application soit considérée comme étant fluide par l'usager. Ce n'est que lorsqu'un très grand nombre d'événements que la performance peut s'avérer problématique, mais certaines stratégies comme l'accélération par OpenGL ont pu aider à améliorer la performance gobale de l'application. Alors il semble que cette hypothèse de départ ait été bonne, puisque le développement à pu s'effectuer plus rapidement.
+
+#### 7.1.3 Interface utilisateur
+
+
+
+
+#### 7.1.4 Améliorations futures
+
+
 
 
 ### 7.2 Recommandations
 
 
+
+
 ### 7.3 Conclusion
 
+
+## Bibliographie
+
+### Web
+
+[Ref 01] CONTRIBUTEURS DE WIKIPÉDIA. «  Linux ». Dans *Wikipedia*. [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 20 septembre 2014.
+
+[Ref 02] CONTRIBUTEURS DE WIKIPÉDIA. « Appel système ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 20 septembre 2014.
+
+[Ref 03] CONTRIBUTEURS DE WIKIPÉDIA. « Temps réel ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 22 septembre 2014.
+
+[Ref 04] CONTRIBUTEURS DE STACKOVERFLOW. « What is the definition of realtime, near realtime and batch? ». Dans *stackoverflow*. [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 22 septembre 2014.
+
+[Ref 05] CONTRIBUTEURS DE WIKIPÉDIA. « Visualisation d'informations ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
+
+[Ref 06] GREGG, Bredan (2014). « Linux Performance ». [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.
+
+[Ref 07] GREGG, Bredan (2014). « Flame Graphs ». [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.
+
+[Ref 08] XIAO, Han (2013). « vistrace: a visualization of strace ». [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
+
+[Ref 09] WILLIAMS, Alex (2010). « What is Data Visualization? [Infographic] ». Dans *readwrite*. [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
+
+[Ref 20] ILIINSKY, Noah. « Properties and Best Uses of Visual Encodings». Dans *Complex Diagrams*. [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 8 octobre 2014.
+
+[Ref 21] GREGG, Bredan (2014). « Latency Heat Maps ». [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 10 octobre 2014. 
+
+[Ref 23] SHIFFMAN, Daniel. « Chapter 4. Particle Systems ». Dans *The Nature of Code*. [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 10 octobre 2014.
+
+[Ref 24] CONTRIBUTEURS DE WIKIPÉDIA. « Publish–subscribe pattern ». Dans *Wikipedia*. [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 7 octobre 2014.
+
+[Ref 25] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 7 octobre 2014.
+ 
+[Ref 26] TULLEKEN, Herman (2012). « How to Choose Colours Procedurally (Algorithms) ». Dans *DEVMAG*. [En ligne]. http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/. Consulté le 5 octobre 2014.
+
+[Ref 27] ANKERL, Matrin (2009). « How to generate random colors programmatically ». Dans *Martin Ankerl Blog*. [En ligne], http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/. Consulté le 5 octobre 2014.
+
+### Livres
+
+[Ref 10] CILIENDO, Eduardo; Kunimasa, Takechika (2007). *Linux Performance and Tuning Guidelines*, IBM: IBM, Coll. « Redpaper ».
+
+[Ref 11] FRY, Ben (2008). *Visualizing data*, Beijing; Cambridge: O'Reilly Media, Inc.
+
+[Ref 12] GREENBERG, Ira (2007). *Processing creative coding and computational art*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
+
+[Ref 13] GREGG, Brendan (2013). *Systems performance enterprise and the cloud*, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
+
+[Ref 14] KIRK, Andy (2012). *Data Visualization a successful design process*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
+
+[Ref 15] REAS, Casey et Ben FRY (2007). *Processing : a programming handbook for visual designers and artists*, Cambridge, Mass.: MIT Press.
+
+[Ref 16] SHIFFMAN, Daniel (2008). *Learning Processing : a beginner's guide to programming images, animation, and interaction*, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
+
+[Ref 17] TUFTE, Edward R. (1983). *The visual display of quantitative information*, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
+
+[Ref 18] TUFTE, Edward R. (2006). *Beautiful evidence*, Cheshire, Conn.: Graphics Press.
+
+[Ref 19] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). *Beautiful code*. Sebastopol, CA: O'Reilly.
+
+[Ref 22] ABELA, Andrew (2013). *Advanced Presentations by Design: Creating Communication that Drives Action*, San Francisco : Pfeiffer, a Wiley brand.
 
 ## Annexe
 
@@ -759,63 +845,3 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 ###### Kilobytes per second read/write
 
 > Reads and writes from/to the block device in kilobytes represent the amount of actual data transferred to and from the block device.
-
-## Bibliographie
-
-### Web
-
-[Ref 01] CONTRIBUTEURS DE WIKIPÉDIA. «  Linux ». Dans *Wikipedia*. [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 20 septembre 2014.
-
-[Ref 02] CONTRIBUTEURS DE WIKIPÉDIA. « Appel système ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 20 septembre 2014.
-
-[Ref 03] CONTRIBUTEURS DE WIKIPÉDIA. « Temps réel ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 22 septembre 2014.
-
-[Ref 04] CONTRIBUTEURS DE STACKOVERFLOW. « What is the definition of realtime, near realtime and batch? ». Dans *stackoverflow*. [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 22 septembre 2014.
-
-[Ref 05] CONTRIBUTEURS DE WIKIPÉDIA. « Visualisation d'informations ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
-
-[Ref 06] GREGG, Bredan (2014). « Linux Performance ». [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.
-
-[Ref 07] GREGG, Bredan (2014). « Flame Graphs ». [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.
-
-[Ref 08] XIAO, Han (2013). « vistrace: a visualization of strace ». [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
-
-[Ref 09] WILLIAMS, Alex (2010). « What is Data Visualization? [Infographic] ». Dans *readwrite*. [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
-
-[Ref 20] ILIINSKY, Noah. « Properties and Best Uses of Visual Encodings». Dans *Complex Diagrams*. [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 8 octobre 2014.
-
-[Ref 21] GREGG, Bredan (2014). « Latency Heat Maps ». [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 10 octobre 2014. 
-
-[Ref 23] SHIFFMAN, Daniel. « Chapter 4. Particle Systems ». Dans *The Nature of Code*. [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 10 octobre 2014.
-
-[Ref 24] CONTRIBUTEURS DE WIKIPÉDIA. « Publish–subscribe pattern ». Dans *Wikipedia*. [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 7 octobre 2014.
-
-[Ref 25] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 7 octobre 2014.
- 
-[Ref 26] TULLEKEN, Herman (2012). « How to Choose Colours Procedurally (Algorithms) ». Dans *DEVMAG*. [En ligne]. http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/. Consulté le 5 octobre 2014.
-
-[Ref 27] ANKERL, Matrin (2009). « How to generate random colors programmatically ». Dans *Martin Ankerl Blog*. [En ligne], http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/. Consulté le 5 octobre 2014.
-
-### Livres
-
-[Ref 10] CILIENDO, Eduardo; Kunimasa, Takechika (2007). *Linux Performance and Tuning Guidelines*, IBM: IBM, Coll. « Redpaper ».
-
-[Ref 11] FRY, Ben (2008). *Visualizing data*, Beijing; Cambridge: O'Reilly Media, Inc.
-
-[Ref 12] GREENBERG, Ira (2007). *Processing creative coding and computational art*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
-
-[Ref 13] GREGG, Brendan (2013). *Systems performance enterprise and the cloud*, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
-
-[Ref 14] KIRK, Andy (2012). *Data Visualization a successful design process*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
-
-[Ref 15] REAS, Casey et Ben FRY (2007). *Processing : a programming handbook for visual designers and artists*, Cambridge, Mass.: MIT Press.
-
-[Ref 16] SHIFFMAN, Daniel (2008). *Learning Processing : a beginner's guide to programming images, animation, and interaction*, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
-
-[Ref 17] TUFTE, Edward R. (1983). *The visual display of quantitative information*, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
-
-[Ref 18] TUFTE, Edward R. (2006). *Beautiful evidence*, Cheshire, Conn.: Graphics Press.
-
-[Ref 19] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). *Beautiful code*. Sebastopol, CA: O'Reilly.
-
-[Ref 22] ABELA, Andrew (2013). *Advanced Presentations by Design: Creating Communication that Drives Action*, San Francisco : Pfeiffer, a Wiley brand.
