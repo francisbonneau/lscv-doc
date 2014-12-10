@@ -563,8 +563,11 @@ Comme cette embûche technique ralentissait la progression du premier prototype 
 
 #### 5.3.3 Génération d'une palette de couleurs
 
+Un autre des défis de la visualisation était de trouver une méthode pour générer algorithmiquement des couleurs sur demande. Comme les couleurs sont utilisées pour identifier différentes catégories des données dans la visualisation, il faut que celles-ci soient facilement distinguable entre elles. Or différentes approches à ce problème sont possible, souvent on peut choisir à l'avance une palette de couleur et coder celle-ci dans l'application. Cela n'était toutefois pas possible dans le contexte présent en raison de la quantité variable de catégories à représenter. 
 
+En effet, comme les couleurs seront utilisées principalement dans l'application pour distinguer les différents processus fonctionnant sur le ou les systèmes analysés, il est impossible de prédire à l'avance le nombre de processus qui sont exécutés, ce nombre peut varier d'une dizaine de processus à plusieurs centaines. C'est donc difficile d'utiliser la couleur pour réprésenter autant de catégories, il faut faire des compromis et idéalement utiliser un système de couleur qui rend celles-ci facile à distinguer pour l'usager.
 
+L'approche choisie pour résoudre ce problème à donc été d'utiliser un algorithme pour générer des couleurs sur demande, en essayant d'espacer les couleurs entre elles le plus possible (dans le modèle de couleur HSV). Quelques algorithmes sont déjà décrits pour arriver à ce résultat, il y a notemment [un article](http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/) dans le magazine en ligne Devmag^[Ref 26] qui décrit plusieurs algorithmes à cet effet, et [cet article](http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/) de Martin Ankerl^[Ref 27] explique aussi quelques uns de ces algorithmes. L'algorithme retenu c'est inspiré de ces solutions pour déterminer des couleurs uniques, différentes les unes des autres en incrémentant la distance dans l'espace de couleurs par le *Golden Ratio*, un nombre (0.6180339) qui produit des couleurs vibrantes à l'oeil. D'autres optimisations ont été ajoutées pour éviter certaines couleurs, tel le bleu foncé, qui seraient difficile à distinguer sur un fond noir comme celui de l'application
 
 
 #### 5.3.4 Performance - affichage graphique
@@ -789,6 +792,11 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 [Ref 24] CONTRIBUTEURS DE WIKIPÉDIA Publish–subscribe pattern, [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 15 novembre 2014.
 
 [Ref 25] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 15 novembre 2014.
+
+[Ref 26] http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/
+
+[Ref 27] http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+
 
 
 ### Livres
