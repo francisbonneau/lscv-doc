@@ -569,7 +569,6 @@ En effet, comme les couleurs seront utilisées principalement dans l'application
 
 L'approche choisie pour résoudre ce problème à donc été d'utiliser un algorithme pour générer des couleurs sur demande, en essayant d'espacer les couleurs entre elles le plus possible (dans le modèle de couleur HSV). Quelques algorithmes sont déjà décrits pour arriver à ce résultat, il y a notemment [un article](http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/) dans le magazine en ligne Devmag^[Ref 26] qui décrit plusieurs algorithmes à cet effet, et [cet article](http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/) de Martin Ankerl^[Ref 27] explique aussi quelques uns de ces algorithmes. L'algorithme retenu c'est inspiré de ces solutions pour déterminer des couleurs uniques, différentes les unes des autres en incrémentant la distance dans l'espace de couleurs par le *Golden Ratio*, un nombre (0.6180339) qui produit des couleurs vibrantes à l'oeil. D'autres optimisations ont été ajoutées pour éviter certaines couleurs, tel le bleu foncé, qui seraient difficile à distinguer sur un fond noir comme celui de l'application
 
-
 #### 5.3.4 Performance - affichage graphique
 
 Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de *frames per second* (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Suivre la position de dizaines voire centaines de milliers de particules, et mettre à jour celles-ci au minimum 30 fois par seconde demande beaucoup de ressources. Toutefois une chute du fps de l'application risque de briser l'intéractivité de celle-ci avec l'usager, quitte à être complètement inutilisable. 
@@ -579,7 +578,6 @@ L'avantage d'utiliser le framework Processing et le langage Java pour l'applicat
 Premièrement au niveau de la visualisation de données elle-même, en utilisant la technique empruntée des heat maps de regrouper les événements similaires, cela permet d'avoir à afficher moins de particules, du fait qu'une seule particule d'aire plus importante peut en représenter plusieurs. L'échelle qui détermine les seuils auxquels sont regroupé plusieurs événements peut également être ajustée dynamiquement, pour avoir une plus grande précision, quitte à ce que plus d'événements soient affichés et que cela demande plus de ressources, ou l'inverse pour que cela regroupe plus d'événements et demande moins de ressources.
 
 Ensuite l'autre méthode utilisée pour s'assurer de la performance a été d'expérimenter avec les différents systèmes de rendus graphique supportés par Processing. En effet, Processing supporte différents moteurs de rendus graphique, le moteur par défaut, P2D, P3D et PDF. Par défault Processing utilise un moteur qui utilise les librairies Java 2D pour supporter l'affichage en deux dimensions, ce qui est suffisant dans le cas présent. Toutefois après quelques essais il s'est avéré que le nombre de frames par secondes est plus stable et plus élevé en utilisant soit P2D ou P3D au lieu du défault. Les deux moteurs sont sensés utiliser l'accélération matérielle via OpenGL lorsque disponible, mais il semble que pour un affichage composé uniquement de formes simples, telles des particules dans notre cas, P2D et P3D supportent mieux la charge que le moteur par défaut.
-
 
 ### 5.5 Architecture finale
 
@@ -627,8 +625,9 @@ Le 3e onglet permet d'ajuster différents paramètres reliés à l'affichage de 
 
 ## Chapitre 7 : Discussion et conclusion
 
-
 ### 7.1 Dicussion
+
+Différents aspects du projets 
 
 
 ### 7.2 Recommandations
@@ -765,62 +764,58 @@ Définitions tirées du Redpaper d'IBM [Linux Performance and Tuning Guidelines]
 
 ### Web
 
-[Ref 01] CONTRIBUTEURS DE WIKIPÉDIA Linux, [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 18 novembre 2014.
+[Ref 01] CONTRIBUTEURS DE WIKIPÉDIA. «  Linux ». Dans *Wikipedia*. [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 20 septembre 2014.
 
-[Ref 02] CONTRIBUTEURS DE WIKIPÉDIA Appel système, [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 18 novembre 2014.
+[Ref 02] CONTRIBUTEURS DE WIKIPÉDIA. « Appel système ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 20 septembre 2014.
 
-[Ref 03] CONTRIBUTEURS DE WIKIPÉDIA Temps réel, [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 15 novembre 2014.
+[Ref 03] CONTRIBUTEURS DE WIKIPÉDIA. « Temps réel ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 22 septembre 2014.
 
-[Ref 04] CONTRIBUTEURS DE STACKOVERFLOW What is the definition of realtime, near realtime and batch?, [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 15 novembre 2014.
+[Ref 04] CONTRIBUTEURS DE STACKOVERFLOW. « What is the definition of realtime, near realtime and batch? ». Dans *stackoverflow*. [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 22 septembre 2014.
 
-[Ref 05] CONTRIBUTEURS DE WIKIPÉDIA Visualisation d'informations, [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
+[Ref 05] CONTRIBUTEURS DE WIKIPÉDIA. « Visualisation d'informations ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
 
-[Ref 06] GREGG, Bredan Linux Performance, [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.
+[Ref 06] GREGG, Bredan (2014). « Linux Performance ». [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.
 
-[Ref 07] GREGG, Bredan Flame Graphs, [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.
+[Ref 07] GREGG, Bredan (2014). « Flame Graphs ». [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.
 
-[Ref 08] XIAO, Han vistrace: a visualization of strace, [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
+[Ref 08] XIAO, Han (2013). « vistrace: a visualization of strace ». [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
 
-[Ref 09] What is Data Visualization? [Infographic], [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
+[Ref 09] WILLIAMS, Alex (2010). « What is Data Visualization? [Infographic] ». Dans *readwrite*. [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
 
-[Ref 20] Noah Iliinsky Properties and Best Uses of Visual Encodings, [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 19 novembre 2014.
+[Ref 20] ILIINSKY, Noah. « Properties and Best Uses of Visual Encodings». Dans *Complex Diagrams*. [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 8 octobre 2014.
 
-[Ref 21] GREGG, Bredan Latency Heat Maps, [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 18 novembre 2014. 
+[Ref 21] GREGG, Bredan (2014). « Latency Heat Maps ». [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 10 octobre 2014. 
 
-[Ref 23] SHIFFMAN, Daniel The Nature of Code, [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 20 novembre 2014.
+[Ref 23] SHIFFMAN, Daniel. « Chapter 4. Particle Systems ». Dans *The Nature of Code*. [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 10 octobre 2014.
 
-[Ref 24] CONTRIBUTEURS DE WIKIPÉDIA Publish–subscribe pattern, [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 15 novembre 2014.
+[Ref 24] CONTRIBUTEURS DE WIKIPÉDIA. « Publish–subscribe pattern ». Dans *Wikipedia*. [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 7 octobre 2014.
 
-[Ref 25] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 15 novembre 2014.
+[Ref 25] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 7 octobre 2014.
+ 
+[Ref 26] TULLEKEN, Herman (2012). « How to Choose Colours Procedurally (Algorithms) ». Dans *DEVMAG*. [En ligne]. http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/. Consulté le 5 octobre 2014.
 
-[Ref 26] http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/
-
-[Ref 27] http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
-
-
+[Ref 27] ANKERL, Matrin (2009). « How to generate random colors programmatically ». Dans *Martin Ankerl Blog*. [En ligne], http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/. Consulté le 5 octobre 2014.
 
 ### Livres
 
-[Ref 10] CILIENDO, Eduardo; Kunimasa, Takechika (2007). Linux Performance and Tuning Guidelines, IBM: IBM, Coll. « Redpaper ».
+[Ref 10] CILIENDO, Eduardo; Kunimasa, Takechika (2007). *Linux Performance and Tuning Guidelines*, IBM: IBM, Coll. « Redpaper ».
 
-[Ref 11] FRY, Ben (2008). Visualizing data, Beijing; Cambridge: O'Reilly Media, Inc.
+[Ref 11] FRY, Ben (2008). *Visualizing data*, Beijing; Cambridge: O'Reilly Media, Inc.
 
-[Ref 12] GREENBERG, Ira (2007). Processing creative coding and computational art, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
+[Ref 12] GREENBERG, Ira (2007). *Processing creative coding and computational art*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
 
-[Ref 13] GREGG, Brendan (2013). Systems performance enterprise and the cloud, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
+[Ref 13] GREGG, Brendan (2013). *Systems performance enterprise and the cloud*, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
 
-[Ref 14] KIRK, Andy (2012). Data Visualization a successful design process, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
+[Ref 14] KIRK, Andy (2012). *Data Visualization a successful design process*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
 
-[Ref 15] REAS, Casey et Ben FRY (2007). Processing : a programming handbook for visual designers and artists, Cambridge, Mass.: MIT Press.
+[Ref 15] REAS, Casey et Ben FRY (2007). *Processing : a programming handbook for visual designers and artists*, Cambridge, Mass.: MIT Press.
 
-[Ref 16] SHIFFMAN, Daniel (2008). Learning Processing : a beginner's guide to programming images, animation, and interaction, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
+[Ref 16] SHIFFMAN, Daniel (2008). *Learning Processing : a beginner's guide to programming images, animation, and interaction*, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
 
-[Ref 17] TUFTE, Edward R. (1983). The visual display of quantitative information, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
+[Ref 17] TUFTE, Edward R. (1983). *The visual display of quantitative information*, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
 
-[Ref 18] TUFTE, Edward R. (2006). Beautiful evidence, Cheshire, Conn.: Graphics Press.
+[Ref 18] TUFTE, Edward R. (2006). *Beautiful evidence*, Cheshire, Conn.: Graphics Press.
 
-[Ref 19] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). Beautiful code. Sebastopol, CA: O'Reilly. ISBN 0-596-51004-7.
+[Ref 19] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). *Beautiful code*. Sebastopol, CA: O'Reilly.
 
-[Ref 22] ABELA, Andrew. Advanced Presentations by Design: Creating Communication that Drives Action
-
-
+[Ref 22] ABELA, Andrew (2013). *Advanced Presentations by Design: Creating Communication that Drives Action*, San Francisco : Pfeiffer, a Wiley brand.
