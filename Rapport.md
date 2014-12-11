@@ -100,7 +100,7 @@ Tel qu'illustré sur la figure précédente, les applications exécutées par le
 Le principal avantage d'une telle architecture est qu'elle permet d'éviter ou de limiter la duplication d'effort. En effet, les développeurs d'applications peuvent se fier aux services offerts par le système d'exploitation et n'ont pas besoin de ce soucier de problèmes liés à la gestion du matériel par exemple, et éviter d'y consacrer des efforts puisque ces problèmes sont déjà gérés par l'OS. Tel que l'a souvent répété [David Wheeler](https://en.wikipedia.org/wiki/David_Wheeler_(British_computer_scientist)), un éminent chercheur en informatique :
 
 > All problems in computer science can be solved by another level of indirection  
-­*-- David Wheeler*^[Ref 19]
+­*-- David Wheeler*^[Ref 06]
 
 Les couches d'abstractions offertes par les OS suivent également cette idée.
 
@@ -113,7 +113,7 @@ Toutefois, lorsque l'objectif est d'améliorer la performance d'une application 
 
 Ce projet s'intéresse principalement aux analyses de performance reliées à l'amélioration ou la résolution de problèmes, et l'objectif final est de permettre à l'utilisateur d'en apprendre plus sur son application et la façon dont elle interagit avec l'OS pour améliorer celle-ci. L'établissement d'indices de performance, ou *benchmarks* ne sera pas considéré. Ceci dit, explorons les différentes techniques liées à ces types d'analyses. 
 
-Dans son livre *Systems Performance: Enterprise and the Cloud*^[Ref 13], Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur [son site web](http://www.brendangregg.com/methodology.html). En voici quelques-unes : 
+Dans son livre *Systems Performance: Enterprise and the Cloud*^[Ref 07], Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur [son site web](http://www.brendangregg.com/methodology.html). En voici quelques-unes : 
 
 > 6. Ad Hoc Checklist Method
 > 7. Problem Statement Method
@@ -137,7 +137,7 @@ En effet, la solution proposée devrait permettre à un utilisateur de voir une 
 
 Les métriques de performance sont des statistiques qui mesurent l'activité de différentes parties du système. Généralement il s'agit d'un pourcentage d'utilisation, un nombre d'opérations par intervalle de temps (typiquement des secondes, ex : IOPS, I/O operations per second), ou alors le temps de latence associé à une certaine opération. Les métriques peuvent être calculés directement par le système d'exploitation ou par des applications distinctes. 
 
-Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifiques aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le *Redpaper* de IBM intitulé [*Linux Performance and Tuning Guidelines*](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) décrit pour Linux les métriques suivants^[Ref 10] (descriptions en annexe) :
+Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifiques aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le *Redpaper* de IBM intitulé [*Linux Performance and Tuning Guidelines*](http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf) décrit pour Linux les métriques suivants^[Ref 08] (descriptions en annexe) :
 
 Métriques du processeur                                     Métriques de la mémoire
 --------------------------                                  --------------------------
@@ -260,7 +260,7 @@ Sysdig est intéressant puisqu'il est relativement simple d'utilisation, et donn
 
 #### 2.5.4 Diagramme des outils disponibles
 
-Pour résumer cette section sur les différents outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer bon nombre d'outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisés pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails^[Ref 06].
+Pour résumer cette section sur les différents outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer bon nombre d'outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisés pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails^[Ref 09].
 
 ![Fig 17. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
 
@@ -294,18 +294,18 @@ Outre les interfaces graphiques aux outils existants, plusieurs autres façons d
 
 ##### 2.6.3.1 Flame Graphs
 
-Une façon différente de représenter l'historique de la pile d'exécution d'un processus à un instant donné, collecté par les outils de traçage comme Dtrace à été développée par Bredan Gregg^[Ref 07], il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
+Une façon différente de représenter l'historique de la pile d'exécution d'un processus à un instant donné, collecté par les outils de traçage comme Dtrace à été développée par Bredan Gregg^[Ref 10], il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
 
 ![Fig 22. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs](figures/flame_graphs.png)
 
 Voici comment interpréter un Flame Graph : 
 
 > The x-axis shows the stack profile population, sorted alphabetically (it is not the passage  of time), and the y-axis shows stack depth. Each rectangle represents a stack frame. The wider a frame is is, the more often it was present in the stacks. The top edge shows what is on-CPU, and beneath it is its ancestry. The colors are usually not significant, picked randomly to differentiate frames.  
--- Bredan Cregg^[Ref 07]
+-- Bredan Cregg^[Ref 10]
 
 ##### 2.6.3.2 vistrace
 
-*[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao^[Ref 08]. vistrace affiche les différents appels systèmes capturés sur un graphe circulaire, puis met en évidence l'ordre des appels et le délai entre la requête d'un appel système ainsi que la réponse retournée par le système - en reliant ces deux événements par une ligne. 
+*[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao^[Ref 11]. vistrace affiche les différents appels systèmes capturés sur un graphe circulaire, puis met en évidence l'ordre des appels et le délai entre la requête d'un appel système ainsi que la réponse retournée par le système - en reliant ces deux événements par une ligne. 
 
 ![Fig 23. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html](figures/vistrace.png)
 
@@ -317,7 +317,7 @@ Voici la description de la visualisation par Han Xiao  :
 > A line is plotted between two functions if the return value of the first function was used as an argument of the second function;  
 > Functions that returned -1 (error) were omitted;  
 > Maximum 2000 system calls were plotted.  
--- Han Xiao^[Ref 08]
+-- Han Xiao^[Ref 11]
 
 ### 2.7 Description de l'approche de collecte de données choisie
 
@@ -339,7 +339,7 @@ Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nomm
 
 ### 3.1 Objectif
 
-La visualisation de données comporte de nombreux aspects, qui sont éloquemment représentés par cet infographique réalisé par la firme FFunction^[Ref 09] :
+La visualisation de données comporte de nombreux aspects, qui sont éloquemment représentés par cet infographique réalisé par la firme FFunction^[Ref 12] :
  
 ![Fig 24. What is Data Visualisation? Infographique par FFunction](figures/data_visualization.jpg)
 
@@ -347,7 +347,7 @@ Or l'objectif de l'utilisation de la visualisation de données dans le contexte 
 
 ### 3.2 Bonnes pratiques
 
-La visualisation de données, bien qu'elle aide généralement à l'analyse et la compréhension, n'est pas infaillible. Des erreurs liées à la représentation peuvent confondre l'usager sur le phénomène observé, et mener à des fausses conclusions. La référence probablement la plus reconnue sur le sujet est le livre de Edward Tufte, The Visual Display of Quantitative Information. Dans ce livre Tufte présente plusieurs bonnes pratiques à suivre lors de la création d'une représentation graphique de données. En voici quelques unes énumérées dans le premier chapitre^[Ref 17], et une interprétation de celles-ci : 
+La visualisation de données, bien qu'elle aide généralement à l'analyse et la compréhension, n'est pas infaillible. Des erreurs liées à la représentation peuvent confondre l'usager sur le phénomène observé, et mener à des fausses conclusions. La référence probablement la plus reconnue sur le sujet est le livre de Edward Tufte, *The Visual Display of Quantitative Information*. Dans ce livre Tufte présente plusieurs bonnes pratiques à suivre lors de la création d'une représentation graphique de données. En voici quelques unes énumérées dans le premier chapitre^[Ref 13], et une interprétation de celles-ci : 
 
 * Montrer les données : le graphique doit avant tout illustrer les données, dans un contexte qui facilite la compréhension de celles-ci.
 
@@ -373,7 +373,7 @@ Suite à l'analyse précédente des différentes métriques disponibles, il à �
 
 * Chaque dimension comporte plusieurs catégories, voire un très grand nombre de catégories. Le nombre de systèmes surveillés dépendra des choix de l'utilisateur, toutefois le nombre de processus sur la machine analysée peut varier considérablement, typiquement entre 10 et 100 processus, mais peut être beaucoup plus élevé. Le nombre d'appels systèmes est fixe, mais il y a environ 300 catégories de différents appels systèmes. Il sera difficile de représenter visuellement autant de catégories, si on prend des couleurs à titre d'exemple, il est typiquement difficile de les distinguer passé 6-8 couleurs. 
 
-Différents approches peuvent être envisagées pour contourner le problème de la grande quantité de dimensions et de catégories, du fait que certaines propriétés visuelles de la représentation (telles la position, la taille, la couleur, etc.) peuvent représenter fidèlement plus de valeurs de que d'autre. Autrement dit, certaines propriétés visuelles d'un graphique peuvent être plus facilement distinguées par l'utilisateur, elles peuvent donc représenter plus de valeurs. Le diagramme suivant par Noahg Iliinsky^[Ref 20] liste ces différentes propriétés et une estimation du nombre de valeurs différentes qu'elles peuvent représenter :
+Différents approches peuvent être envisagées pour contourner le problème de la grande quantité de dimensions et de catégories, du fait que certaines propriétés visuelles de la représentation (telles la position, la taille, la couleur, etc.) peuvent représenter fidèlement plus de valeurs de que d'autre. Autrement dit, certaines propriétés visuelles d'un graphique peuvent être plus facilement distinguées par l'utilisateur, elles peuvent donc représenter plus de valeurs. Le diagramme suivant par Noahg Iliinsky^[Ref 14] liste ces différentes propriétés et une estimation du nombre de valeurs différentes qu'elles peuvent représenter :
 
 ![Fig 25. Différentes propriétés visuelles et leur caractéristiques](figures/visual_encoding.png)
 
@@ -393,7 +393,7 @@ Premièrement avec grand nombre de points à chaque tranche de temps (axe des X)
 
 Le diagramme à nuage de points risque d'être plus facile à lire dans ce cas, et il permettra de voir rapidement les groupes et concentrations de points. Toutefois ce n'est pas garanti que le graphique va rester lisible si on dessine les 35 000 points par intervalle de temps, si les points sont très rapprochés, voir superposés, on perd alors une partie de la qualité de la visualisation car on n'est plus en mesure d'évaluer facilement la quantité relative de points à des positions différentes. De plus, cela demande beaucoup de ressources pour afficher autant de points, ce qui est moins intéressant si on veut avoir une visualisation en temps réel. 
 
-Une possible alternative serait alors de considérer un diagramme de type *heat map*, qui est très similaire aux nuages de points, sauf que l'espace du graphique est divisé en rectangles, et les points dans le même rectangle (dans le même intervalle de valeurs) sont regroupés, et ce rectangle prend alors une couleur qui représente la quantité de points présents dans cette zone. L'avantage principal des heat maps est que ceux-ci restent faciles à lire peut importe la quantité de points représentés et demandent également beaucoup moins de ressources lors de l'affichage. Brendan Gregg à notamment développé plusieurs outils pour réaliser des heat maps à partir de captures d'outils de traçage, voici un exemple tiré de son site web^[Ref 21] : 
+Une possible alternative serait alors de considérer un diagramme de type *heat map*, qui est très similaire aux nuages de points, sauf que l'espace du graphique est divisé en rectangles, et les points dans le même rectangle (dans le même intervalle de valeurs) sont regroupés, et ce rectangle prend alors une couleur qui représente la quantité de points présents dans cette zone. L'avantage principal des heat maps est que ceux-ci restent faciles à lire peut importe la quantité de points représentés et demandent également beaucoup moins de ressources lors de l'affichage. Brendan Gregg à notamment développé plusieurs outils pour réaliser des heat maps à partir de captures d'outils de traçage, voici un exemple tiré de son site web^[Ref 15] : 
 
 ![Fig 28. Exemple de heat map, realisée par Bredan Gregg](figures/latency_heatmap.png)
 
@@ -401,7 +401,7 @@ Toutefois, un des requis de la solution est de permettre la comparaison des donn
 
 Par contre, il est certain qu'avec un grand nombre de catégories, placer tout cela sur le même diagramme va résulter également avec quelque chose de peu lisible, peu importe que ce soit des points ou des lignes. Il faut alors considérer de répartir les données sur plusieurs diagrammes, chaque diagramme représentant une dimension ou un aspect des données différent. Cette technique n'est pas mauvaise en soi, cela va donner un tableau de bord ou *dashboard*, ce qui est de plus en plus utilisé. Cela reste tout de même un compromis entre représenter moins d'information pour que celle-ci soit claire, et perdre une partie de la vue complète du système.
 
-Il n'y a pas de solution idéale à ce problème de représentation des données, étant donné la quantité de données, le nombre de catégories et de dimension, c'est effectivement un problème difficile à résoudre sans faire de compromis. Peu importe le type de visualisation, il faut considérer le contexte de celle-ci, c'est-à-dire la question qu'on cherche à répondre, et trouver la technique de représentation qui convient le mieux. Sur le sujet, le diagramme réalisé par Andrew Abela^[Ref 22] est fort intéressant Pisqu'il indique quels sont les différents types de graphiques qui sont le plus approprié selon l'objectif de la visualisation : 
+Il n'y a pas de solution idéale à ce problème de représentation des données, étant donné la quantité de données, le nombre de catégories et de dimension, c'est effectivement un problème difficile à résoudre sans faire de compromis. Peu importe le type de visualisation, il faut considérer le contexte de celle-ci, c'est-à-dire la question qu'on cherche à répondre, et trouver la technique de représentation qui convient le mieux. Sur le sujet, le diagramme réalisé par Andrew Abela^[Ref 16] est fort intéressant Pisqu'il indique quels sont les différents types de graphiques qui sont le plus approprié selon l'objectif de la visualisation : 
 
 ![Fig 29. Différents types de diagrammes organisés par objectif, par Andrew Abela](figures/data_chart_type.png)
 
@@ -413,7 +413,7 @@ Après avoir exploré les différents techniques de visualisation de données po
 
 Comme on peut le constater sur la figure 30, dès le début les différentes dimensions ont été identifiées et quelques idées ont été émises sur les attributs visuels qui pourraient les représenter, telles la couleur, la position, etc. Comme il s'agit de représenter l'activité d'une section de l'architecture du Kernel Linux, l'idée de se servir d'un cercle pour illustrer le Kernel à été reprise de nombreux diagrammes qui documentent cette architecture.
 
-Toutefois comme la visualisation vise à afficher l'activité en temps réel, ce cercle ne sera pas statique, mais va plutôt s'animer de façon à représenter les événements qui traversent le Kernel. Considérant la quantité d'événements à afficher, une des façons les plus courantes d'aborder le problème est de représenter chaque événement comme une simple forme tel un point, couramment appelée *particule*, pour former un *système de particules*. Le livre [*The Nature of Code*](http://natureofcode.com/) de Daniel Shiffman a d'ailleurs un très bon chapitre^[Ref 23] sur le sujet. 
+Toutefois comme la visualisation vise à afficher l'activité en temps réel, ce cercle ne sera pas statique, mais va plutôt s'animer de façon à représenter les événements qui traversent le Kernel. Considérant la quantité d'événements à afficher, une des façons les plus courantes d'aborder le problème est de représenter chaque événement comme une simple forme tel un point, couramment appelée *particule*, pour former un *système de particules*. Le livre [*The Nature of Code*](http://natureofcode.com/) de Daniel Shiffman a d'ailleurs un très bon chapitre^[Ref 17] sur le sujet. 
 
 ![Fig 31. Exploration de l'interactivité et interface de filtrage ](figures/sketch2.jpeg)
 
@@ -467,7 +467,7 @@ Tel que mentionné précédemment, le serveur doit être en mesure d'accepter de
 La technique choisie pour gérer ces connexions est le patron de conception publish-subscribe : 
 
 > In software architecture, publish–subscribe is a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers.  
-> -- Wikipedia^[Ref 24].
+> -- Wikipedia^[Ref 18].
 
 Ce patron de conception convient parfaitement au problème courant puisqu'il offre la flexibilité nécessaire pour permettre des connexions dynamiques entre les clients et serveur. Différentes implémentations de ce patron sont disponibles, mais après quelques recherches il s'est avéré qu'une façon simple d'ajouter la fonctionnalité au module serveur serait de recourir à un service dont le protocole serait supporté par presque tous les langages de programmation, l'idéal pour bâtir un pont entre la collecte de données de Sysdig et le reste de l'application. 
 
@@ -479,7 +479,7 @@ De cette façon les données sont encodées ou sérialisées à la source par le
 
 Le processus de Redis est géré (démarrage automatique et statuts avec /etc/init.d/) par défaut avec les scripts fournis, alors il ne va rester qu'à écrire le script d'envoi des données (lscv-chisel) ainsi que du code pour encadrer le fonctionnement de Sysdig et le chargement du script.
 
-La performance est un enjeu important du projet, du fait qu'une grande quantité d'événements peut être reçue en peu temps. Or le choix de Redis dans ce scénario est également confirmé par sa réputation,  Redis est généralement considéré comme étant très performant. Selon la documentation officielle de Redis, la complexité de l'opération d'envoi de message est O(N+M)^[Ref 25] où N est le nombre de clients connectés au canal et M le nombre de clients connectés au total. Il reste à voir si cela va suffire pour traiter toutes les données, ou si un autre module va agir comme goulot d'étranglement.
+La performance est un enjeu important du projet, du fait qu'une grande quantité d'événements peut être reçue en peu temps. Or le choix de Redis dans ce scénario est également confirmé par sa réputation,  Redis est généralement considéré comme étant très performant. Selon la documentation officielle de Redis, la complexité de l'opération d'envoi de message est O(N+M)^[Ref 19] où N est le nombre de clients connectés au canal et M le nombre de clients connectés au total. Il reste à voir si cela va suffire pour traiter toutes les données, ou si un autre module va agir comme goulot d'étranglement.
 
 ### 4.2.3 Architecture module client
 
@@ -507,20 +507,20 @@ Différents outils ont été utilisés au cours de la réalisation de ce projet,
 
 Outils liés au développement
 
-* [Eclipse](https://eclipse.org/), développement Java
-* [Sublime Text](http://www.sublimetext.com/), développement Lua et autres scripts
-* [Git](http://git-scm.com/), gestion du code source 
-* [VirtualBox](https://www.virtualbox.org/), création de machines virtuelles
-* [Vagrant](https://www.vagrantup.com/), gestion de machines virtuelles
+* [Eclipse](https://eclipse.org/) - développement Java
+* [Sublime Text](http://www.sublimetext.com/) - développement Lua et autres scripts
+* [Git](http://git-scm.com/) - gestion du code source 
+* [VirtualBox](https://www.virtualbox.org/) - création de machines virtuelles
+* [Vagrant](https://www.vagrantup.com/) - gestion de machines virtuelles
 
 Écriture du rapport et de la documentation
 
-* [Markdown](http://daringfireball.net/projects/markdown/syntax), syntaxe simplifiée pour le formatage
-* [Pandoc](http://johnmacfarlane.net/pandoc/), outil de conversion de différents formats
+* [Markdown](http://daringfireball.net/projects/markdown/syntax) - syntaxe simplifiée pour le formatage
+* [Pandoc](http://johnmacfarlane.net/pandoc/) - outil de conversion de différents formats
 
 Autre
 
-* [Dropbox](https://www.dropbox.com/), partage des fichiers entre différentes machines
+* [Dropbox](https://www.dropbox.com/) - partage des fichiers entre différentes machines
 
 ### 5.2 Méthodologie de travail
 
@@ -577,15 +577,15 @@ Un autre des défis de la visualisation était de trouver une méthode pour gén
 
 En effet, comme les couleurs seront utilisées principalement dans l'application pour distinguer les différents processus fonctionnant sur le ou les systèmes analysés, il est impossible de prédire à l'avance le nombre de processus qui sont exécutés, ce nombre peut varier d'une dizaine de processus à plusieurs centaines. C'est donc difficile d'utiliser la couleur pour réprésenter autant de catégories, il faut faire des compromis et idéalement utiliser un système de couleur qui rend celles-ci facile à distinguer pour l'usager.
 
-L'approche choisie pour résoudre ce problème à donc été d'utiliser un algorithme pour générer des couleurs sur demande, en essayant d'espacer les couleurs entre elles le plus possible (dans le modèle de couleur HSV). Quelques algorithmes sont déjà décrits pour arriver à ce résultat, il y a notemment [un article](http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/) dans le magazine en ligne Devmag^[Ref 26] qui décrit plusieurs algorithmes à cet effet, et [cet article](http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/) de Martin Ankerl^[Ref 27] explique aussi quelques uns de ces algorithmes. L'algorithme retenu c'est inspiré de ces solutions pour déterminer des couleurs uniques, différentes les unes des autres en incrémentant la distance dans l'espace de couleurs par le *Golden Ratio*, un nombre (0.6180339) qui produit des couleurs vibrantes à l'oeil. D'autres optimisations ont été ajoutées pour éviter certaines couleurs, tel le bleu foncé, qui seraient difficile à distinguer sur un fond noir comme celui de l'application
+L'approche choisie pour résoudre ce problème à donc été d'utiliser un algorithme pour générer des couleurs sur demande, en essayant d'espacer les couleurs entre elles le plus possible (dans le modèle de couleur HSV). Quelques algorithmes sont déjà décrits pour arriver à ce résultat, il y a notemment [un article](http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/) dans le magazine en ligne Devmag^[Ref 20] qui décrit plusieurs algorithmes à cet effet, et [cet article](http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/) de Martin Ankerl^[Ref 21] explique aussi quelques uns de ces algorithmes. L'algorithme retenu est inspiré de ces solutions pour choisir des couleurs uniques, différentes les unes des autres en incrémentant la distance dans l'espace de couleurs par le *Golden Ratio*, un nombre (0.6180339) qui produit des couleurs vibrantes. D'autres optimisations ont été ajoutées pour éviter certaines couleurs, tel le bleu foncé, qui seraient difficile à distinguer sur un fond noir comme celui de l'application
 
 #### 5.3.4 Performance - affichage graphique
 
-Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de *frames per second* (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Suivre la position de dizaines voire centaines de milliers de particules, et mettre à jour celles-ci au minimum 30 fois par seconde demande beaucoup de ressources. Toutefois une chute du fps de l'application risque de briser l'intéractivité de celle-ci avec l'usager, quitte à être complètement inutilisable. 
+Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de *frames per second* (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Suivre la position de dizaines voire centaines de milliers de particules, et mettre à jour celles-ci au minimum 30 fois par seconde demande beaucoup de ressources. Une chute du fps de l'application risque de briser l'intéractivité de celle-ci avec l'usager, quitte à être complètement inutilisable. 
 
 L'avantage d'utiliser le framework Processing et le langage Java pour l'application est que cela permettre d'expérimenter plus rapidement, mais le prix à payer est que l'affichage graphique est plus lent qu'une application native écrite en C ou C++. La plupart des applications qui sont très demandantes graphiquement sont écrites dans ces languages pour justement avoir un plus grand contrôle sur la pipeline graphique, et avoir une meilleure performance. Différentes techniques ont donc dû être utilisées pour s'assurer que l'application reste la plus fluide possible et garder le fps élevé. 
 
-Premièrement au niveau de la visualisation de données elle-même, en utilisant la technique empruntée des heat maps de regrouper les événements similaires, cela permet d'avoir à afficher moins de particules, du fait qu'une seule particule d'aire plus importante peut en représenter plusieurs. L'échelle qui détermine les seuils auxquels sont regroupé plusieurs événements peut également être ajustée dynamiquement, pour avoir une plus grande précision, quitte à ce que plus d'événements soient affichés et que cela demande plus de ressources, ou l'inverse pour que cela regroupe plus d'événements et demande moins de ressources.
+Premièrement au niveau de la visualisation de données elle-même, en utilisant la technique empruntée des heat maps de regrouper les événements similaires, cela permet d'avoir à afficher moins de particules, du fait qu'une seule particule d'aire plus importante peut en représenter plusieurs. L'échelle qui détermine les seuils auxquels sont regroupé plusieurs événements peut également être ajustée dynamiquement, pour obtenir une plus grande précision, quitte à ce que plus d'événements soient affichés et que cela demande plus de ressources, ou l'inverse pour que cela regroupe plus d'événements et demande moins de ressources.
 
 Ensuite l'autre méthode utilisée pour s'assurer de la performance a été d'expérimenter avec les différents systèmes de rendus graphique supportés par Processing. En effet, Processing supporte différents moteurs de rendus graphique, le moteur par défaut, P2D, P3D et PDF. Par défault Processing utilise un moteur qui utilise les librairies Java 2D pour supporter l'affichage en deux dimensions, ce qui est suffisant dans le cas présent. Toutefois après quelques essais il s'est avéré que le nombre de frames par secondes est plus stable et plus élevé en utilisant soit P2D ou P3D au lieu du défault. Les deux moteurs sont sensés utiliser l'accélération matérielle via OpenGL lorsque disponible, mais il semble que pour un affichage composé uniquement de formes simples, telles des particules dans notre cas, P2D et P3D supportent mieux la charge que le moteur par défaut.
 
@@ -601,7 +601,7 @@ Parmi ces quelques classes ajoutées, il y a notamment une classe pour gérer le
 
 Tout le code du projet à été déposé sur Github, une plateforme qui permet de partager du code source suivi par Git. [Une page web](https://francisbonneau.github.io/lscv/) a également été réalisée pour montrer le projet, et sur ce site sont listés tous les différents répertoires Github qui contiennent le code source de l'application cliente [https://github.com/francisbonneau/lscv-client](https://github.com/francisbonneau/lscv-client), le module serveur [https://github.com/francisbonneau/lscv-server](https://github.com/francisbonneau/lscv-server) et le rapport présent [https://github.com/francisbonneau/lscv-doc](https://github.com/francisbonneau/lscv-doc).
 
-Sur ces pages web se retrouvent non seulement le code source, mais également les instructions à suivre pour installer les applications. L'application serveur se déploie présentement manuellement, mais il serait possible d'automatiser l'installation (c'est déjà fait pour des machines virtuelles avec Vagrant) pour différents OS ou de fournir des packages natifs .deb ou .rpm. Sinon l'application cliente est présentement distribuée sous forme de .jar exécutable, alors l'usager n'a qu'à télécharger le .jar et l'exécuter et l'application devrait fonctionner sous toutes les plateformes tant que Java est installé.
+Sur ces pages web se retrouvent non seulement le code source, mais également les instructions à suivre pour installer les applications. Présentement l'application serveur se déploie manuellement, mais il serait possible d'automatiser l'installation (c'est déjà fait pour des machines virtuelles avec Vagrant) pour différents OS ou de fournir des packages natifs .deb ou .rpm. Sinon l'application cliente est présentement distribuée sous forme de .jar exécutable, alors l'usager n'a qu'à télécharger le .jar et l'exécuter et l'application devrait fonctionner sous toutes les plateformes tant que Java est installé.
 
 
 ## Chapitre 6 : Démonstration de l'application finale
@@ -624,7 +624,7 @@ Le second onglet permet de sélectionner comment seront représentées les donn�
 
 ![Fig 42. Onglet configuration de l'affichage](figures/settings2.png)
 
-Une fois une source de données associée à un cercle, la visualisation des données commence et ce cercle va afficher les événements reçus :
+Une fois une source de données associée à un cercle, la visualisation des données débute et ce cercle va afficher les événements reçus :
 
 ![Fig 43. Visualisation démarrée avec quelques événements](figures/viz_started.png)
 
@@ -645,23 +645,28 @@ Premièrement il s'est avéré que l'implémentation d'un outil de visualisation
 
 Toutefois lorsqu'on veut réaliser quelque chose de différent, alors construire ses propres outils en vaut définitivement la peine, puisque c'est le seul moyen d'avoir un contrôle total et absolu sur tous les aspects de la visualisation, de l'analyse des données à la représentation graphique, pixel par pixel. Alors cela dépend de la situation, mais dans certains cas décider d'implémenter sa propre solution peut s'avérer un très bon choix malgré l'effort supplémentaire requis.
 
-
-
+Plusieurs décisions ont été prises quant à la représentation des données, or bien que ces décisions ont été prises en essayant de répondre le mieux possible aux objectifs du projet, il se peut fort bien que la façon présente de représenter les données ne soit pas idéale pour certains utilisateurs, pour différentes raisons. Conscient de cette réalité, c'est pourquoi l'interface utilisateur comporte différents onglets, qui permettent d'ajuster une variété de paramètres reliés à l'affichage des données. C'est certain qu'il est impossible de répondre à tous les besoins, mais l'idée est tout de même de donner le plus possible le contrôle à l'utilisateur final de l'application sur la façon qu'il désire représenter ces données.
 
 #### 7.1.2 Processing versus C/C++ 
 
-Comme la performance était un enjeu important pour l'application cliente, quelques recherches ont été effectutées pour déterminer quels sont les langages et outils utilisés dans de telles situations. Or typiquement de telles applications sont écrites en C ou C++ pour s'exécuter le plus rapidement possible, et être proche du matériel. Toutefois écrire du C/C++ peut s'avérer plus demandant en temps que certains langages plus modernes comme Java, qui possède différents outils pour réutiliser le code ou accélérer le développement. Alors de crainte que l'écriture de prototype initiale prenne trop de temps, et que cela rende l'expérimentation plus difficile le choix à été fait de rester avec le langage Java pour le prototype, quitte à s'exposer à des problèmes de performance plus tard, en considérant que d'autres stratégies pourraient être considérées pour améliorer la performance le cas échant. 
+Comme la performance était un enjeu important pour l'application cliente, quelques recherches ont été effectuées pour déterminer quels sont les langages et outils utilisés dans de telles situations. Or typiquement de telles applications sont écrites en C ou C++ pour s'exécuter le plus rapidement possible, et être proche du matériel. Toutefois écrire du C/C++ peut s'avérer plus demandant en temps que certains langages plus modernes comme Java, qui possède différents outils pour réutiliser le code ou accélérer le développement. Alors de crainte que l'écriture de prototype initiale prenne trop de temps, et que cela rende l'expérimentation plus difficile le choix à été fait de rester avec le langage Java pour le prototype, quitte à s'exposer à des problèmes de performance plus tard, en considérant que d'autres stratégies pourraient être considérées pour améliorer la performance le cas échant. 
 
 Après avoir complété le prototype, il s'est avéré que la performance de Java était très satisfaisante, même dans des cas demandant beaucoup de calcul graphique. Une des mesures principales utilisées pour juger de la performance, était le nombre d'images affichées par seconde (FPS), et pour la plupart du temps le FPS de l'application était suffisant que l'application soit considérée comme étant fluide par l'usager. Ce n'est que lorsqu'un très grand nombre d'événements que la performance peut s'avérer problématique, mais certaines stratégies comme l'accélération par OpenGL ont pu aider à améliorer la performance gobale de l'application. Alors il semble que cette hypothèse de départ ait été bonne, puisque le développement à pu s'effectuer plus rapidement.
 
 #### 7.1.3 Interface utilisateur
 
+Tel que mentionné précédemment, l'interface utilisateur de l'application cliente comporte deux fenêtres, une pour la visualisation et l'autre pour les réglages de l'application, comme les sources de données, et autres paramètres. Les éléments de cette interface ont été réalisé avec la libraire ControlP5, ce qui donne une certaine flexibilité sur le contrôle de ceux-ci. Par contre, il serait bien de pouvoir se passer carrément de cette fenêtre de réglages. 
 
-
+En effet, dans certaines situations comme l'utilisation de l'application comme tableau de bord sur un écran dédié, il peut s'avérer peu pratique devoir se connecter à distance sur la machine pour accéder à ces réglages. Idéalement dans le futur il faudrait implémenter une interface ou API qui permettrait d'avoir accès aux réglages sans avoir à utiliser l'interface actuelle. Cela donnerait une flexibilité totale aux usagers de créer par la suite d'autres interfaces par dessus l'API, comme une application mobile ou une interface web, qui permetteraient de changer les paramètres de la visualisation à distance. 
 
 #### 7.1.4 Améliorations futures
 
+Bien que l'application actuelle réponde à la plupart des objectifs du projet, celle-ci est loin d'être parfaite et pourrait être améliorée de plusieurs façons. Voici quelques suggestions : 
 
+* 
+* Supporter différentes méthodes pour naviguer dans le temps
+* Implémentation d'un mécanisme de sauvegarde et chargement des paramètres
+* Implémentation d'un API pour contrôler l'application à distance
 
 
 ### 7.2 Recommandations
@@ -674,7 +679,7 @@ Après avoir complété le prototype, il s'est avéré que la performance de Jav
 
 ## Bibliographie
 
-### Web
+Organisée selon l'ordre de référence : 
 
 [Ref 01] CONTRIBUTEURS DE WIKIPÉDIA. «  Linux ». Dans *Wikipedia*. [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 20 septembre 2014.
 
@@ -686,51 +691,52 @@ Après avoir complété le prototype, il s'est avéré que la performance de Jav
 
 [Ref 05] CONTRIBUTEURS DE WIKIPÉDIA. « Visualisation d'informations ». Dans *Wikipedia*. [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.
 
-[Ref 06] GREGG, Bredan (2014). « Linux Performance ». [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.
+[Ref 06] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). *Beautiful code*. Sebastopol, CA: O'Reilly.
 
-[Ref 07] GREGG, Bredan (2014). « Flame Graphs ». [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.
+[Ref 07] GREGG, Brendan (2013). *Systems performance enterprise and the cloud*, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
 
-[Ref 08] XIAO, Han (2013). « vistrace: a visualization of strace ». [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
+[Ref 08] CILIENDO, Eduardo; Kunimasa, Takechika (2007). *Linux Performance and Tuning Guidelines*, IBM: IBM, Coll. « Redpaper ».
 
-[Ref 09] WILLIAMS, Alex (2010). « What is Data Visualization? [Infographic] ». Dans *readwrite*. [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
+[Ref 09] GREGG, Bredan (2014). « Linux Performance ». [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.
 
-[Ref 20] ILIINSKY, Noah. « Properties and Best Uses of Visual Encodings». Dans *Complex Diagrams*. [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 8 octobre 2014.
+[Ref 10] GREGG, Bredan (2014). « Flame Graphs ». [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.
 
-[Ref 21] GREGG, Bredan (2014). « Latency Heat Maps ». [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 10 octobre 2014. 
+[Ref 11] XIAO, Han (2013). « vistrace: a visualization of strace ». [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.
 
-[Ref 23] SHIFFMAN, Daniel. « Chapter 4. Particle Systems ». Dans *The Nature of Code*. [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 10 octobre 2014.
+[Ref 12] WILLIAMS, Alex (2010). « What is Data Visualization? [Infographic] ». Dans *readwrite*. [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.
 
-[Ref 24] CONTRIBUTEURS DE WIKIPÉDIA. « Publish–subscribe pattern ». Dans *Wikipedia*. [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 7 octobre 2014.
+[Ref 13] TUFTE, Edward R. (1983). *The visual display of quantitative information*, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
 
-[Ref 25] DOCUMENTATION OFFICIELLE DE REDIS PUBSUB subcommand, [En ligne], http://redis.io/commands/pubsub. Consulté le 7 octobre 2014.
- 
-[Ref 26] TULLEKEN, Herman (2012). « How to Choose Colours Procedurally (Algorithms) ». Dans *DEVMAG*. [En ligne]. http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/. Consulté le 5 octobre 2014.
+[Ref 14] ILIINSKY, Noah. « Properties and Best Uses of Visual Encodings». Dans *Complex Diagrams*. [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 8 octobre 2014.
 
-[Ref 27] ANKERL, Matrin (2009). « How to generate random colors programmatically ». Dans *Martin Ankerl Blog*. [En ligne], http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/. Consulté le 5 octobre 2014.
+[Ref 15] GREGG, Bredan (2014). « Latency Heat Maps ». [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 10 octobre 2014. 
 
-### Livres
+[Ref 16] ABELA, Andrew (2013). *Advanced Presentations by Design: Creating Communication that Drives Action*, San Francisco : Pfeiffer, a Wiley brand.
 
-[Ref 10] CILIENDO, Eduardo; Kunimasa, Takechika (2007). *Linux Performance and Tuning Guidelines*, IBM: IBM, Coll. « Redpaper ».
+[Ref 17] SHIFFMAN, Daniel. « Chapter 4. Particle Systems ». Dans *The Nature of Code*. [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 10 octobre 2014.
 
-[Ref 11] FRY, Ben (2008). *Visualizing data*, Beijing; Cambridge: O'Reilly Media, Inc.
+[Ref 18] CONTRIBUTEURS DE WIKIPÉDIA. « Publish–subscribe pattern ». Dans *Wikipedia*. [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 7 octobre 2014.
 
-[Ref 12] GREENBERG, Ira (2007). *Processing creative coding and computational art*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
+[Ref 19] « PUBSUB subcommand ». Dans *Redis Documentation*, [En ligne], http://redis.io/commands/pubsub. Consulté le 7 octobre 2014.
 
-[Ref 13] GREGG, Brendan (2013). *Systems performance enterprise and the cloud*, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.
+[Ref 20] TULLEKEN, Herman (2012). « How to Choose Colours Procedurally (Algorithms) ». Dans *DEVMAG*. [En ligne]. http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/. Consulté le 5 octobre 2014.
 
-[Ref 14] KIRK, Andy (2012). *Data Visualization a successful design process*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
+[Ref 21] ANKERL, Matrin (2009). « How to generate random colors programmatically ». Dans *Martin Ankerl Blog*. [En ligne], http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/. Consulté le 5 octobre 2014.
 
-[Ref 15] REAS, Casey et Ben FRY (2007). *Processing : a programming handbook for visual designers and artists*, Cambridge, Mass.: MIT Press.
+**Autres ouvrages consultés**  
 
-[Ref 16] SHIFFMAN, Daniel (2008). *Learning Processing : a beginner's guide to programming images, animation, and interaction*, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
+[Ref 22] FRY, Ben (2008). *Visualizing data*, Beijing; Cambridge: O'Reilly Media, Inc.
 
-[Ref 17] TUFTE, Edward R. (1983). *The visual display of quantitative information*, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.
+[Ref 23] GREENBERG, Ira (2007). *Processing creative coding and computational art*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.
 
-[Ref 18] TUFTE, Edward R. (2006). *Beautiful evidence*, Cheshire, Conn.: Graphics Press.
+[Ref 24] KIRK, Andy (2012). *Data Visualization a successful design process*, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.
 
-[Ref 19] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). *Beautiful code*. Sebastopol, CA: O'Reilly.
+[Ref 25] REAS, Casey et Ben FRY (2007). *Processing : a programming handbook for visual designers and artists*, Cambridge, Mass.: MIT Press.
 
-[Ref 22] ABELA, Andrew (2013). *Advanced Presentations by Design: Creating Communication that Drives Action*, San Francisco : Pfeiffer, a Wiley brand.
+[Ref 26] SHIFFMAN, Daniel (2008). *Learning Processing : a beginner's guide to programming images, animation, and interaction*, Amsterdam; Boston: Morgan Kaufmann/Elsevier.
+
+[Ref 27] TUFTE, Edward R. (2006). *Beautiful evidence*, Cheshire, Conn.: Graphics Press.
+
 
 ## Annexe
 
