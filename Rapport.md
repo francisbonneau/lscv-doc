@@ -1,6 +1,5 @@
 <!-- Rapport final de PFE - Francis Bonneau, automne 2014 -->
 
-
 # Visualisation temps réel des appels systèmes Linux
 
 ## Sommaire
@@ -335,6 +334,7 @@ Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nomm
 
 À titre d'exemple, exécuter Sysdig sans arguments sur un système ordinaire Ubuntu Desktop pendant approximativement 1 minute à produit un fichier texte de **384 Mégaoctets**, soit **4 383 538 lignes de texte** (1 appel système par ligne). Analyser cette quantité de données directement demande un investissement considérable de temps par l'usager, et en pratique on n'a souvent pas le choix de mettre des filtres pour réduire cette quantité d'information à potentiellement ce qu'on recherche. On perd alors la vision globale de l'état du système. Or c'est des objectifs du projet, soit de proposer une alternative qui va permettre d'analyser ces données plus rapidement, par la visualisation de données.
 
+
 ## Chapitre 3 : Visualisation de données
 
 ### 3.1 Objectif
@@ -663,19 +663,21 @@ En effet, dans certaines situations comme l'utilisation de l'application comme t
 
 Bien que l'application actuelle réponde à la plupart des objectifs du projet, celle-ci est loin d'être parfaite et pourrait être améliorée de plusieurs façons. Voici quelques suggestions : 
 
-* 
+* Expérimenter avec d'autres formes pour représenter les événements, tel que des lignes dont la longueur pourrait être proportionnelle au temps de latence 
+* Calculer plus de statistiques sur les données collectées, telle que des pourcentiles
+* Explorer différentes façons d'afficher les statistiques, superposées aux catégories
 * Supporter différentes méthodes pour naviguer dans le temps
 * Implémentation d'un mécanisme de sauvegarde et chargement des paramètres
 * Implémentation d'un API pour contrôler l'application à distance
+* Support pour projeter la visualisation sur plusieurs écrans
 
+### 7.2 Conclusion
 
-### 7.2 Recommandations
+L'objetif ce de projet était d'explorer différentes façons de représenter des données collectées sur l'activité de processus ou systèmes d'exploitation en temps réel. Du fait que la grande majorité des outils existant sont en ligne de commande, le but était d'explorer une alternative graphique qui faciliterait l'analyse et la comparaison des données. L'architecture de la solution présentée se résume à un module serveur qui s'occupe de la collecte des données, et d'une application cliente qui analyse et affiche celles-ci. 
 
+Une fois le module client développé et que les données étaient prêtes à être représentées graphiquement, différentes interfaces graphiques ont été explorées sur papier pour trouver une méthode qui répondrait aux objectifs. Après différents essais, la méthode retenue à été implémentée en Java à l'aide du framework Processing. L'avantage de la solution comparée aux outils traditionnels est que celle-ci permet d'obtenir une vue d'ensemble de l'activité d'un ou plusieurs systèmes très rapidement. 
 
-
-
-### 7.3 Conclusion
-
+En conclusion, la solution implémentée dans le cadre du projet permet d'analyser rapidement beaucoup de données, mais en même temps son approche temps réel limite l'utilité de l'outil dans plusieurs scénarios d'analyse. Différentes techniques pourraient être envisagées dans le futur pour améliorer le contrôle du temps dans l'interface utilisateur.
 
 ## Bibliographie
 
