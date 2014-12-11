@@ -56,24 +56,26 @@ De plus, ce projet vise à explorer différentes techniques de visualisation de 
 
 ### 1.6 Terminologie
 
-Système d'exploitation : 
+Système d'exploitation : Un système d'exploitation (*operating system* ou OS) est un logiciel qui est prend en charge les ressources matérielles d'une machine et offre ces ressources et d'autres services aux applications des usagers.
+
+Noyau : Le noyau ou *Kernel* est le coeur d'un système d'exploitation, il s'occupe principalement de la gestion du processeur et de la mémoire, ressources qui sont sont partagées aux applications du système d'exploitation. 
 
 Linux : Nom couramment donné à tout système d'exploitation libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX qui respecte les spécifications POSIX.^[Ref 01]
 
-Processus : 
+Processus : Une instance d'un programme en train d'être exécutée.
 
+Daemon : Un processus qui fonctionne en arrière-plan, typiquement pour une durée indéterminée.
 
-Daemon : 
+Appel système : Un appel système (en anglais, *system call*, abrégé *syscall*) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).^[Ref 02]
 
-Appel système : Un appel système (en anglais, system call, abrégé en syscall) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).^[Ref 02]
+Descripteur de fichier : Un descripteur de fichier ou *file descriptor* est un terme qui désigne une référence à un fichier sur les systèmes POSIX.
+
+Pile d'exécution : la pile d'exécution est une liste des fonctions actives d'un programme. La pile peut également contenir d'autres informations reliées à ces fonctions, tel que l'horodatage et les adresses mémoires.
 
 Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements.^[Ref 03] ^[Ref 04]
 
 Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données.^[Ref 05]
 
-Tracing : 
-
-Stack Frame : 
 
 ## Chapitre 2 : Analyse de la performance sous Linux
 
@@ -87,7 +89,7 @@ Le matériel physique de la machine est donc géré par le système d'exploitati
 
 Les applications des usagers sont alors exécutées dans l'espace utilisateur, où les permissions sont restreintes, et doivent demander la permission au Kernel pour accéder aux ressources. Ces demandes sont nommées [appels systèmes](http://fr.wikipedia.org/wiki/Appel_syst%C3%A8me), ou *system calls* voire syscalls. Au débuts de UNIX il y avait approximativement 80 appels systèmes, aujourd'hui ce nombre s'élève à plus de 300. 
 
-Parmi les appels systèmes les plus courants il y a [*read*](http://linux.die.net/man/2/read) et son équivalent [*write*](http://linux.die.net/man/2/write) qui permet de lire et d'écrire dans un *file descriptor*, typiquement un fichier sur le disque. La liste complète est disponible sur plusieurs sites tels que [kernelgrok.com](http://syscalls.kernelgrok.com/), et de l'information spécifique sur chaque appel système est disponible dans le manuel de l'OS (man), typiquement dans la section numéro 2 (`man 2 read`).
+Parmi les appels systèmes les plus courants il y a [*read*](http://linux.die.net/man/2/read) et son équivalent [*write*](http://linux.die.net/man/2/write) qui permet de lire et d'écrire dans un descripteur de fichier ou *file descriptor*, typiquement un fichier sur le disque. La liste complète est disponible sur plusieurs sites tels que [kernelgrok.com](http://syscalls.kernelgrok.com/), et de l'information spécifique sur chaque appel système est disponible dans le manuel de l'OS (man), typiquement dans la section numéro 2 (`man 2 read`).
 
 Cette architecture divisée en espaces usager/kernel est souvent représentée de la façon suivante :
 
@@ -111,7 +113,7 @@ Toutefois, lorsque l'objectif est d'améliorer la performance d'une application 
 
 Ce projet s'intéresse principalement aux analyses de performance reliées à l'amélioration ou la résolution de problèmes, et l'objectif final est de permettre à l'utilisateur d'en apprendre plus sur son application et la façon dont elle interagit avec l'OS pour améliorer celle-ci. L'établissement d'indices de performance, ou *benchmarks* ne sera pas considéré. Ceci dit, explorons les différentes techniques liées à ces types d'analyses. 
 
-Dans son livre *Systems Performance: Enterprise and the Cloud*^[Ref 13], Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur son site web : [brendangregg.com/methodology.html](http://www.brendangregg.com/methodology.html). En voici quelques-unes : 
+Dans son livre *Systems Performance: Enterprise and the Cloud*^[Ref 13], Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur [son site web](http://www.brendangregg.com/methodology.html). En voici quelques-unes : 
 
 > 6. Ad Hoc Checklist Method
 > 7. Problem Statement Method
@@ -170,7 +172,9 @@ Une alternative pourrait être de collecter toutes les métriques durant une cer
 
 ### 2.4 Données fournies par le Kernel
 
-Les différentes métriques énoncées plus haut peuvent être calculées par défaut par le Kernel (par l'incrémentation de compteurs), ou calculées par d'autres programmes externes. Différentes interfaces sont offertes par le Kernel pour accéder aux données et métriques du système, les deux principales sont les répertoires /proc et /sys. En effet, puisque Linux prend à coeur la philosophie UNIX de *tout est un fichier*, ces données sont accessibles comme n'importe quel autre fichier ordinaire du système. /proc est toutefois créé dynamiquement par le Kernel au démarrage du système et n'existe qu'en mémoire vive, son contenu n'est enregistré sur aucun disque.
+Les différentes métriques énoncées plus haut peuvent être calculées par défaut par le Kernel (par l'incrémentation de compteurs), ou calculées par d'autres programmes externes. Différentes interfaces sont offertes par le Kernel pour accéder aux données et métriques du système, les deux principales sont les répertoires /proc et /sys. 
+
+En effet, puisque Linux prend à coeur la philosophie UNIX de *tout est un fichier*, ces données sont accessibles comme n'importe quel autre fichier ordinaire du système. /proc est toutefois créé dynamiquement par le Kernel au démarrage du système et n'existe qu'en mémoire vive, son contenu n'est enregistré sur aucun disque.
 
 À titre d'exemple, le répertoire /proc est organisé de la façon suivante : /proc contient un répertoire pour chaque processus sur le système et ce répertoire est nommé selon le pid du processus. 
 
@@ -244,25 +248,25 @@ Les outils présentés jusqu'à présent permettent de mesurer l'activité de di
 
 La définition d'un événement peut varier selon l'outil, mais typiquement il s'agit d'une interaction entre un processus et le système d'exploitation à un instant précis. Cette interaction prend souvent la forme d'un appel système, et dans ce cas il s'agit alors d'une requête par le processus suivie d'une réponse par le système quelques instants après. Par exemple un processus peut envoyer une requête de lecture *read* pour accéder aux derniers octets du fichier /var/log/syslog, et le système va répondre en envoyant les quelques octets demandés peu de temps après.
 
-Juste le fait de pouvoir observer en temps réel les différentes requêtes d'accès au système de fichiers ou au réseau permet d'en apprendre beaucoup sur l'état du processus et d'analyser son comportement pour voir si il réagit comme il le devrait. *strace* est un outil disponible par défaut sur presque tous les systèmes Linux et qui permet de faire exactement cela, il suffit de lui indiquer le pid du processus à analyser, et il va afficher les appels systèmes de ce processus au fur et à mesure.
+Juste le fait de pouvoir observer en temps réel les différentes requêtes d'accès au système de fichiers ou au réseau permet d'en apprendre beaucoup sur l'état du processus et d'analyser son comportement pour voir si il réagit comme il le devrait. *strace* est un outil disponible par défaut sur presque tous les systèmes Linux et qui permet de faire exactement cela, il suffit de lui indiquer le pid du processus à analyser, et il va afficher les appels systèmes de ce processus au fur et à mesure que ceux-ci surviennent.
 
 ![Fig 15. Quelques appels système interceptés avec strace](figures/strace.png)
 
-Il existe toutefois plusieurs autres outils similaires à strace qui ajoutent d'autres fonctionnalités plus avancées, tel que la possibilité d'injecter des sondes ou *probes* ( des fonctions personnalisées qui sont exécutées lorsque qu'un certain événement arrive) directement dans le kernel, afin de capturer des données plus spécifiques à certaines conditions. *[Dtrace](http://dtrace.org/blogs/about/)* est probablement l'un des outils les plus avancés de cette catégorie, mais comme il à été développé pour Solaris initialement son support Linux n'est pas aussi stable. Plusieurs outils similaires ont été développés pour Linux, tel *[SystemTap](https://sourceware.org/systemtap/)*, *[perf](https://perf.wiki.kernel.org/index.php/Main_Page)*, *[LTTng](https://lttng.org/)* et *[Sysdig](http://www.sysdig.org/)*.
+Il existe toutefois plusieurs autres outils similaires à strace qui ajoutent d'autres fonctionnalités plus avancées, tel que la possibilité d'injecter des sondes ou *probes* ( des fonctions personnalisées qui sont exécutées lorsque qu'un certain événement arrive) directement dans le kernel, afin de capturer des données plus spécifiques à certaines conditions. *[Dtrace](http://dtrace.org/blogs/about/)* est probablement l'un des outils les plus avancés de cette catégorie, mais comme il à été initialement développé pour Solaris son support Linux n'est pas aussi stable. Plusieurs outils similaires ont été développés pour Linux, tel *[SystemTap](https://sourceware.org/systemtap/)*, *[perf](https://perf.wiki.kernel.org/index.php/Main_Page)*, *[LTTng](https://lttng.org/)* et *[Sysdig](http://www.sysdig.org/)*.
 
-Sysdig est intéressant puisqu'il est relativement simple d'utilisation, et donne accès à une grande variété de fonctions déjà écrites (appelées *[Chisels](https://github.com/draios/sysdig/wiki/Chisels-User-Guide)*) pour afficher les données capturées. Par défaut lorsqu'il est exécuté il affiche tous les événements du système - voir figure suivante, de tous les processus, mais il offre une grande variété de filtres pour raffiner l'information affichée. Pour ces raisons, c'est l'outil qui sera utilisé dans ce projet la capture des données.
+Sysdig est intéressant puisqu'il est relativement simple d'utilisation, et donne accès à une grande variété de fonctions déjà écrites (appelées *[Chisels](https://github.com/draios/sysdig/wiki/Chisels-User-Guide)*) pour afficher les données capturées. Par défaut, lorsqu'il est exécuté, il affiche tous les événements du système (voir figure suivante) et de tous les processus, mais il offre une grande variété de filtres pour raffiner l'information affichée. En raison de ces fonctionnalités, c'est l'outil qui sera utilisé dans ce projet pour la capture des données.
 
 ![Fig 16. Capture d'événements avec sysdig](figures/sysdig.png)
 
 #### 2.5.4 Diagramme des outils disponibles
 
-Pour résumer cette section sur les différents outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer les différents outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisés pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails^[Ref 06].
+Pour résumer cette section sur les différents outils de capture de données disponible sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer bon nombre d'outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisés pour analyser cette section du système. Voir [brendangregg.com/linuxperf.html](http://www.brendangregg.com/linuxperf.html) pour plus de détails^[Ref 06].
 
 ![Fig 17. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg](figures/linux_observability_tools.png)
 
 ### 2.6 Approches graphiques
 
-Une grande majorité des outils disponibles pour l'analyse et la capture de données reliées à la performance de système Linux sont des outils en ligne de commande. Ceux-ci présentent l'information directement sous forme de texte, ou utilisent certaines techniques avec des caractères spéciaux pour afficher des diagrammes à barres ou des histogrammes directement dans le terminal.
+Une grande majorité des outils disponibles pour l'analyse et la capture de données reliées à la performance de système Linux sont des outils en ligne de commande. Ceux-ci présentent l'information directement sous forme de texte, ou utilisent certaines techniques avec des caractères spéciaux pour afficher des diagrammes à barres, ou des histogrammes directement dans le terminal.
 
 Les outils avec des interfaces graphiques complètes sont moins communs. Souvent une combinaison d'outils en ligne de commande pour la capture de données et un autre système tel que *[RRDtool](http://oss.oetiker.ch/rrdtool/)* ou *[Graphite](http://graphite.wikidot.com/)* pour le stockage et l'affichage de graphiques est la solution retenue pour sa flexibilité. Cette flexibilité s'avère utile lorsqu'il faut analyser la perfomance de plusieurs machines et pouvoir visualiser les données dans un contexte qui permet de les comparer.
 
@@ -270,15 +274,15 @@ Cette section présente donc quelques-uns des outils existants pour visualiser d
 
 #### 2.6.1 Logiciels intégrés
 
-Les logiciels avec interfaces graphiques dédiées à la performance les plus courants sont probablement les outils embarqués par défaut sur plusieurs systèmes d'exploitation. Ces outils sont généralement moins orientés serveurs, mais ceux-ci permettent typiquement de voir la liste des processus et leur activité processeur et mémoire, de façon similaire à top, mais avec une interface graphique. À titre d'exemple voici à quoi ressemblent le *Activity Monitor* de OSX et le *System Monitor* de Ubuntu.
+Les logiciels avec interfaces graphiques dédiées à la performance les plus courants sont probablement les outils embarqués par défaut sur plusieurs systèmes d'exploitation. Ces outils sont généralement moins orientés serveurs, et ceux-ci permettent typiquement de voir la liste des processus de façon similaire à top, mais avec une interface graphique. À titre d'exemple voici à quoi ressemblent le *Activity Monitor* de OSX et le *System Monitor* de Ubuntu.
 
 ![Fig 18. OSX Activity Monitor](figures/activity_monitor.png)
 
 ![Fig 19. Ubuntu System Monitor](figures/system_monitor.png)
 
-#### 2.6.2 Interfaces graphiques aux outils de tracing
+#### 2.6.2 Interfaces graphiques aux outils de traçage
 
-Il existe également quelques interfaces graphiques à certains outils mentionnés précédemment, tels les programmes de tracing comme Dtrace et System Tap. Ces interfaces graphiques sont intéressantes puisqu'elles peuvent aider à réduire la courbe d'apprentissage reliée à ces outils avancés, l'interface graphique peut offrir des raccourcis pour les analyses courantes et ainsi éviter à l'usager d'avoir à écrire lui-même ses fonctions (probes) pour arriver au résultat désiré. Apple offre notamment une interface graphique à Dtrace, nommée Instruments, qui permet d'instrumenter des applications sur OSX et d'afficher graphiquement le résultat. SystemTap GUI est un autre projet similaire pour SystemTap, et propose un environnement de développement intégré pour l'écriture de scripts et fonctions stap. 
+Il existe également quelques interfaces graphiques à certains outils mentionnés précédemment, tels les programmes de traçage comme Dtrace et System Tap. Ces interfaces graphiques sont intéressantes puisqu'elles peuvent aider à réduire la courbe d'apprentissage reliée à ces outils avancés. L'interface graphique peut offrir des raccourcis pour les analyses courantes et ainsi éviter à l'usager d'avoir à écrire lui-même ses fonctions (probes) pour arriver au résultat désiré. Apple offre notamment une interface graphique à Dtrace, nommée Instruments, qui permet d'instrumenter des applications sur OSX et d'afficher graphiquement le résultat. SystemTap GUI est un autre projet similaire pour SystemTap, et propose un environnement de développement intégré pour l'écriture de scripts et fonctions stap. 
 
 ![Fig 20. Aperçu de Apple Instruments sur OSX](figures/instruments.png)
 
@@ -290,7 +294,7 @@ Outre les interfaces graphiques aux outils existants, plusieurs autres façons d
 
 ##### 2.6.3.1 Flame Graphs
 
-Une autre façon de représenter les *stack frames*, ou l'historique de la pile d'exécution à un instant donné, collectés par les outils de tracing comme Dtrace à été développée par Bredan Gregg^[Ref 07], il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
+Une façon différente de représenter l'historique de la pile d'exécution d'un processus à un instant donné, collecté par les outils de traçage comme Dtrace à été développée par Bredan Gregg^[Ref 07], il s'agit des *[Flame Graphs](http://www.brendangregg.com/flamegraphs.html)*. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :
 
 ![Fig 22. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs](figures/flame_graphs.png)
 
@@ -301,7 +305,7 @@ Voici comment interpréter un Flame Graph :
 
 ##### 2.6.3.2 vistrace
 
-*[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao^[Ref 08]. vistrace affiche les différents appels systèmes capturés sur un graphe circulaire, et met en évidence l'ordre des appels, et le délai entre la requête d'un appel système et la réponse retournée par le système en reliant ces deux événements par une ligne. 
+*[vistrace](http://home.in.tum.de/~xiaoh/vistrace.html)* est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao^[Ref 08]. vistrace affiche les différents appels systèmes capturés sur un graphe circulaire, puis met en évidence l'ordre des appels et le délai entre la requête d'un appel système ainsi que la réponse retournée par le système - en reliant ces deux événements par une ligne. 
 
 ![Fig 23. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html](figures/vistrace.png)
 
@@ -317,17 +321,19 @@ Voici la description de la visualisation par Han Xiao  :
 
 ### 2.7 Description de l'approche de collecte de données choisie
 
-Comme l'objectif de ce projet est de permettre d'interpréter plus facilement les données liées à la performance d'un ou plusieurs systèmes, il faut évidemment collecter ces données. Or compte tenu du fait qu'il existe plusieurs outils très avancés pour la collecte des données, il a été choisi de réutiliser l'un des outils existants pour cette phase, quitte à bâtir un pont entre ce système et le reste de l'application - qui servira alors uniquement à interpréter et visualiser les données.
+Comme l'objectif de ce projet est de permettre d'interpréter plus facilement les données liées à la performance d'un ou plusieurs systèmes, il faut évidemment collecter ces données. Or compte tenu du fait qu'il existe plusieurs outils très avancés pour la collecte des données, il a été choisi de réutiliser un des outils existants pour cette phase, quitte à bâtir un pont entre ce système et le reste de l'application - qui servira alors uniquement à interpréter et visualiser les données.
 
-La question suivante se pose alors : quels types de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter un aperçu complet du système instrumenté il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément, et comme il faudrait également permettre à l'utilisateur de pouvoir 'raffiner' la visualisation sur un processus précis, l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisamment précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à privilégié à l'opposé d'un simple enregistrement du pourcentage d'activité d'un processus. L'outil qui à été retenu pour satisfaire ces conditions est Sysdig.
+La question suivante se pose alors : quels type de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter un aperçu complet du système instrumenté, il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément. De plus, il faudrait permettre à l'utilisateur de pouvoir 'raffiner' la visualisation sur un processus précis, ce qui implique que l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisamment précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à privilégier à l'opposé d'un simple enregistrement du pourcentage d'activité d'un processus. L'outil qui à été retenu pour satisfaire ces conditions est Sysdig.
 
 L'avantage des appels systèmes est que l'analyse de ceux-ci est très instructive sur les activités d'un processus, mais comment peut-on utiliser les appels systèmes pour effectuer des comparaisons ? Ou déterminer une amélioration ou régression de la performance d'un processus, outre regarder la quantité d'appels systèmes envoyés ? 
 
-Une solution potentielle serait d'examiner le temps de latence des appels systèmes. En effet, la différence de temps entre la requête et la réponse est nommée temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralentit. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. La latence varie également selon le matériel employé, un disque dur va certainement prendre plus de temps à récupérer les données d'un disque SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes. Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
+Une solution potentielle serait d'examiner le temps de latence des appels systèmes. En effet, la différence de temps entre la requête et la réponse est nommée temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralentit. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendament de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc. 
 
-Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nommmé *Chisels*, permet justement d'écrire une fonction qui va enregistrer les données d'intérêt, tel que le temps de latence pour chaque événement, et ces données pourront ensuite être envoyées vers le reste du système pour être analysée. Or c'est là que la visualisation des données va s'avérer très utile, car Sysdig et les outils de tracing produisent une très grande quantité de données en très peu de temps.
+La latence varie également selon le matériel employé, un disque dur ordinaire va certainement prendre plus de temps à récupérer les données qu'un disque de type SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes. Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes. 
 
-À titre d'exemple, exécuter Sysdig sans aucun argument sur un système ordinaire Ubuntu Desktop pendant une minute (60 secondes) à produit un fichier texte de **384 Mégaoctets**, soit **4 383 538 lignes de texte** (approximativement 1 appel système, ou événement, par ligne). Analyser cette quantité de données directement demande un investissement considérable de temps par l'usager, et bien qu'en pratique on n'a souvent pas le choix de mettre des filtres pour réduire cette quantité d'information à potentiellement ce qu'on recherche, on perd alors la vision globale de l'état du système. Or c'est le but du projet, de proposer une alternative qui va permettre d'analyser ces données plus rapidement, par la visualisation de données.
+Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nommmé *Chisels*, permet justement d'écrire une fonction capable d'enregistrer les données d'intérêt, tel que le temps de latence pour chaque événement, et ces données pourront ensuite être envoyées vers le reste du système pour être analysée. Or c'est là que la visualisation des données va s'avérer très utile, car Sysdig et les outils de traçage produisent une très grande quantité de données en très peu de temps.
+
+À titre d'exemple, exécuter Sysdig sans arguments sur un système ordinaire Ubuntu Desktop pendant approximativement 1 minute à produit un fichier texte de **384 Mégaoctets**, soit **4 383 538 lignes de texte** (1 appel système par ligne). Analyser cette quantité de données directement demande un investissement considérable de temps par l'usager, et en pratique on n'a souvent pas le choix de mettre des filtres pour réduire cette quantité d'information à potentiellement ce qu'on recherche. On perd alors la vision globale de l'état du système. Or c'est des objectifs du projet, soit de proposer une alternative qui va permettre d'analyser ces données plus rapidement, par la visualisation de données.
 
 ## Chapitre 3 : Visualisation de données
 
@@ -337,7 +343,7 @@ La visualisation de données comporte de nombreux aspects, qui sont éloquemment
  
 ![Fig 24. What is Data Visualisation? Infographique par FFunction](figures/data_visualization.jpg)
 
-Or l'objectif de l'utilisation de la visualisation de données dans le contexte de ce projet est principalement d'aider l'utilisateur à analyser les données sur les systèmes analysés, afin de mieux comprendre l'état de ceux-ci, identifier des problèmes potentiels de performance et de cibler la source de ces problèmes. Si en utilisant l'application l'usager peut augmenter ses connaissances du fonctionnement de Linux et des applications d'intérêt alors une grande partie de l'objectif sera atteint.
+Or l'objectif de l'utilisation de la visualisation de données dans le contexte de ce projet est principalement d'aider l'utilisateur à analyser les données sur les systèmes analysés, afin de mieux comprendre l'état de ceux-ci. Si possible, il faudrait également permettre l'identification de problèmes potentiels de performance, et de pouvoir cibler la source de ces problèmes. Si en utilisant l'application l'usager peut augmenter ses connaissances du fonctionnement de Linux et des applications d'intérêt alors une grande partie de l'objectif sera tout de même atteint.
 
 ### 3.2 Bonnes pratiques
 
@@ -379,19 +385,23 @@ Si on simplifie le problème un instant et qu'on imagine le cas le plus simple, 
 
 ![Fig 26. Simple diagramme à ligne - données aléatoires](figures/line_chart.png)
 
-Ce diagramme fait parfaitement le travail, puisqu'il permet de comparer la variation de la latence dans le temps, lorsqu'on n'a qu'une seule dimension - un seul appel système et un seul processus. Toutefois il y a déjà quelques inconvénients à l'utilisation de ce graphique en ligne, qui vont apparaitre avec une bonne quantité de données. Premièrement avec grand nombre de points à chaque tranche de temps (axe des X), s'il y a des variations considérables dans les données (si par exemple la moitié des appels systèmes ont une latence aux alentours de 100ns et l'autre moitié aux alentours de 400 ns), la ligne risque de tellement bouger qu'il sera impossible de la suivre. Même phénomène si la majorité des données est homogène, mais présente quelques importantes variations, ce qui arrive lorsque les temps des appels systèmes sont mesurés en nanosecondes. Pour remédier à cela, on peut soit utiliser des percentiles pour filtrer les variations trop importantes, ou alors oublier les lignes et simplement tracer les points : 
+Ce diagramme fait le travail, puisqu'il permet de comparer la variation de la latence dans le temps, lorsqu'on n'a qu'une seule dimension - un seul appel système et un seul processus. Toutefois il y a déjà quelques inconvénients à l'utilisation de ce graphique en ligne, qui vont apparaitre avec une bonne quantité de données. 
+
+Premièrement avec grand nombre de points à chaque tranche de temps (axe des X), s'il y a des variations considérables dans les données (si par exemple la moitié des appels systèmes ont une latence aux alentours de 100ns et l'autre moitié aux alentours de 400 ns), la ligne risque de tellement bouger qu'il sera impossible de la suivre. Le même phénomène survient si la majorité des données est homogène, mais présente quelques importantes variations. Ce qui peut arriver lorsque les temps des appels systèmes sont mesurés avec une très grande précision, tel que des nanosecondes. Pour remédier à cela, on peut soit utiliser des percentiles pour filtrer les variations trop importantes, ou alors oublier les lignes et simplement tracer les points : 
 
 ![Fig 27. Diagramme à nuage de points - mêmes données aléatoires](figures/scatterplot.png)
 
 Le diagramme à nuage de points risque d'être plus facile à lire dans ce cas, et il permettra de voir rapidement les groupes et concentrations de points. Toutefois ce n'est pas garanti que le graphique va rester lisible si on dessine les 35 000 points par intervalle de temps, si les points sont très rapprochés, voir superposés, on perd alors une partie de la qualité de la visualisation car on n'est plus en mesure d'évaluer facilement la quantité relative de points à des positions différentes. De plus, cela demande beaucoup de ressources pour afficher autant de points, ce qui est moins intéressant si on veut avoir une visualisation en temps réel. 
 
-Une possible alternative serait alors de considérer un diagramme de type *heat map*, qui est très similaire aux nuages de points, sauf que l'espace du graphique est divisé en rectangles, et les points dans le même rectangle (dans le même intervalle de valeurs) sont regroupés, et ce rectangle prend alors une couleur qui représente la quantité de points présents dans cette zone. L'avantage principal des heat maps est que ceux-ci restent faciles à lire peut importe la quantité de points représentés et demandent également beaucoup moins de ressources lors de l'affichage. Brendan Gregg à notamment développé plusieurs outils pour réaliser des heat maps à partir de captures d'outils de tracing, voici un exemple tiré de son site web^[Ref 21] : 
+Une possible alternative serait alors de considérer un diagramme de type *heat map*, qui est très similaire aux nuages de points, sauf que l'espace du graphique est divisé en rectangles, et les points dans le même rectangle (dans le même intervalle de valeurs) sont regroupés, et ce rectangle prend alors une couleur qui représente la quantité de points présents dans cette zone. L'avantage principal des heat maps est que ceux-ci restent faciles à lire peut importe la quantité de points représentés et demandent également beaucoup moins de ressources lors de l'affichage. Brendan Gregg à notamment développé plusieurs outils pour réaliser des heat maps à partir de captures d'outils de traçage, voici un exemple tiré de son site web^[Ref 21] : 
 
 ![Fig 28. Exemple de heat map, realisée par Bredan Gregg](figures/latency_heatmap.png)
 
-Toutefois, un des requis de la solution est de permettre la comparaison des données. Les heat maps sont très intéressants lorsque l'on à une seule dimension à visualiser, mais dans notre il faudrait pouvoir être en mesure de comparer et explorer les différentes dimensions des données, ce qui n'est pas possible avec une seule heat map. C'est possible avec les diagrammes à ligne et les diagrammes à nuages de points, car on peut ajouter d'autres lignes ou points de différentes couleurs pour la comparaison des catégories, alors que l'attribut de la couleur est déjà employé dans un heat map. Par contre il est certain qu'avec un grand nombre de catégories, placer tout cela sur le même diagramme va résulter également avec quelque chose de peu lisible, peu importe que ce soit des points ou des lignes. Il faut alors considérer de répartir les données sur plusieurs diagrammes, chaque diagramme représentant une dimension ou un aspect des données différent. Cette technique n'est pas mauvaise en soi, cela va donner un tableau de bord ou *dashboard*, ce qui est de plus en plus utilisé. Cela reste tout de même un compromis entre représenter moins d'information pour que celle-ci soit claire, et perdre une partie de la vue complète du système.
+Toutefois, un des requis de la solution est de permettre la comparaison des données. Les heat maps sont très intéressants lorsque l'on à une seule dimension à visualiser, mais dans notre il faudrait pouvoir être en mesure de comparer et explorer les différentes dimensions des données, ce qui n'est pas possible avec une seule heat map. C'est possible avec les diagrammes à ligne et les diagrammes à nuages de points, car on peut ajouter d'autres lignes ou points de différentes couleurs pour la comparaison des catégories, alors que l'attribut de la couleur est déjà employé dans un heat map. 
 
-Il n'y a pas de solution idéale à ce problème de représentation des données, étant donné la quantité de données, le nombre de catégories et de dimension, c'est effectivement un problème difficile à résoudre visuellement sans faire de sacrifices. Peu importe le type de visualisation, il faut considérer le contexte de celle-ci, c'est-à-dire la question qu'on cherche à répondre, et trouver la technique de représentation qui convient le mieux. Sur le sujet, le diagramme réalisé par Andrew Abela^[Ref 22] est fort intéressant Pisqu'il indique quels sont les différents types de graphiques qui sont le plus approprié selon l'objectif de la visualisation : 
+Par contre, il est certain qu'avec un grand nombre de catégories, placer tout cela sur le même diagramme va résulter également avec quelque chose de peu lisible, peu importe que ce soit des points ou des lignes. Il faut alors considérer de répartir les données sur plusieurs diagrammes, chaque diagramme représentant une dimension ou un aspect des données différent. Cette technique n'est pas mauvaise en soi, cela va donner un tableau de bord ou *dashboard*, ce qui est de plus en plus utilisé. Cela reste tout de même un compromis entre représenter moins d'information pour que celle-ci soit claire, et perdre une partie de la vue complète du système.
+
+Il n'y a pas de solution idéale à ce problème de représentation des données, étant donné la quantité de données, le nombre de catégories et de dimension, c'est effectivement un problème difficile à résoudre sans faire de compromis. Peu importe le type de visualisation, il faut considérer le contexte de celle-ci, c'est-à-dire la question qu'on cherche à répondre, et trouver la technique de représentation qui convient le mieux. Sur le sujet, le diagramme réalisé par Andrew Abela^[Ref 22] est fort intéressant Pisqu'il indique quels sont les différents types de graphiques qui sont le plus approprié selon l'objectif de la visualisation : 
 
 ![Fig 29. Différents types de diagrammes organisés par objectif, par Andrew Abela](figures/data_chart_type.png)
 
@@ -411,11 +421,11 @@ L'avantage d'un système de particule est que celui-ci peut offrir une vision co
 
 ![Fig 32. Division de l'espace pour afficher plusieurs systèmes](figures/sketch3.jpeg)
 
-Un des avantages des diagrammes circulaires de type *pie chart* est que ceux-ci sont relativement compacts, or cet aspect peut être utilisé pour représenter plusieurs systèmes d'exploitation différents en même temps, ce qui permettrait d'avoir une vue complète d'un groupe de serveurs, voire d'un centre de données au complet. 
+Un des avantages des diagrammes circulaires de type *pie chart* est que ceux-ci sont relativement compacts, or cet aspect peut être utilisé pour représenter plusieurs systèmes d'exploitation différents en même temps. Ce qui permettrait d'avoir une vue complète d'un groupe de serveurs, voire d'un centre de données au complet. 
 
 ![Fig 33. Esquisse de l'interface utilisateur ](figures/sketch4.jpeg)
 
-Avant de pouvoir traiter et afficher les données de différents serveurs, il faut que le logiciel soit en mesure de se connecter à ceux-ci pour récupérer l'information, or cette esquisse présente un aperçu de l'interface utilisateur qui sera développée pour permettre à l'utilisateur d'établir des connexions vers les serveurs à instrumenter, et ensuite régler le nombre de systèmes de particules en conséquence.
+Avant de pouvoir traiter et afficher les données de différents serveurs, il faut que le logiciel soit en mesure de se connecter à ceux-ci pour récupérer l'information. Or cette esquisse présente un aperçu de l'interface utilisateur qui sera développée pour permettre à l'utilisateur d'établir des connexions vers les serveurs à instrumenter, et ensuite régler le nombre de systèmes de particules en conséquence.
 
 Autre possibilité qui vient du fait de pouvoir afficher plusieurs systèmes de particules, ceux-ci peuvent également être utilisés pour représenter différemment l'information du même système, afficher par exemple la répartition des appels systèmes par processus dans un premier cercle, et la répartition des appels systèmes par type (read, write, etc.) dans un second cercle.
   
@@ -438,7 +448,7 @@ La solution souhaitée présente plusieurs défis qui devront être résolus par
 
 L'architecture du logiciel peut être divisée en deux principaux modules, un module serveur - responsable de la collecte des données, et un module client qui devra interpréter les données et afficher celles-ci. Or ces deux modules présentent des défis différents. Du point de vue serveur, le principal défi est de concevoir une méthode d'acheminer les données collectées au module client, un protocole qui sera idéalement assez flexible pour supporter des connexions de N clients à N serveurs, c'est-à-dire que l'application cliente doit pouvoir se connecter à plusieurs serveurs simultanément pour recevoir leurs données, et inversement un serveur doit pouvoir supporter plusieurs connexions clientes simultanément. De plus une certaine robustesse doit être présente dans le module serveur pour que les données soient idéalement disponibles sur demande, peut importe quand.
 
-Du côté client, le problème consiste plutôt à concevoir une architecture flexible pour que si des besoins additionnels sont manifestés par les usagers dans le futur, il doive être possible d'ajouter des fonctionnalités avec un minimum d'impact sur le code. Ces ajouts de fonctionnalités risquent fortement d'être au niveau de l'interface utilisateur ou de la visualisation de données, mais il peut s'agir également de changement au niveau du traitement des données, tel l'ajout du support pour d'autres sources de données.
+Du côté client, le problème consiste plutôt à concevoir une architecture flexible pour que si des besoins additionnels sont manifestés par les usagers dans le futur, il soit possible d'ajouter des fonctionnalités avec un minimum d'impact sur le code. Ces ajouts de fonctionnalités risquent fortement d'être au niveau de l'interface utilisateur ou de la visualisation de données, mais il peut s'agir également de changement au niveau du traitement des données, tel l'ajout du support pour d'autres sources de données.
 
 ### 4.2 Architecture choisie
 
@@ -459,9 +469,9 @@ La technique choisie pour gérer ces connexions est le patron de conception publ
 > In software architecture, publish–subscribe is a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers.  
 > -- Wikipedia^[Ref 24].
 
-Ce patron de conception convient parfaitement au problème courant puisqu'il offre la flexibilité nécessaire pour permettre des connexions dynamiques entre les clients et serveur. Différentes implémentations de ce patron sont disponibles, mais après quelques recherches il s'est avéré qu'une façon simple d'ajouter la fonctionnalité au module serveur serait de recourir à un serveur qui est supporté par presque tous les langages de programmation, l'idéal pour bâtir un pont entre la collecte de données de Sysdig et le reste de l'application. 
+Ce patron de conception convient parfaitement au problème courant puisqu'il offre la flexibilité nécessaire pour permettre des connexions dynamiques entre les clients et serveur. Différentes implémentations de ce patron sont disponibles, mais après quelques recherches il s'est avéré qu'une façon simple d'ajouter la fonctionnalité au module serveur serait de recourir à un service dont le protocole serait supporté par presque tous les langages de programmation, l'idéal pour bâtir un pont entre la collecte de données de Sysdig et le reste de l'application. 
 
-Ce serveur avec la fonctionnalité pusblish-subscribe est [Redis](http://redis.io/), qui offre un mécanisme nommé PUBSUB avec quelques commandes pour utiliser ce système d'envoi de message. Redis va donc s'occuper de gérer les connexions client et Sysdig lui de la collecte des données. Pour connecter les deux, c'est-à-dire envoyer les données collectées à Redis pour qu'elles soient consommées par les clients, il est possible de tirer avantage d'une fonctionnalité de Sysdig, qui permet d'écrire des scripts en Lua (nommés chisels) pour traiter les données - ou l'envoi de celles-ci a Redis. L'architecture du module serveur va donc ressembler à la figure suivante :
+Ce service (ou plus précisément, serveur de données) avec la fonctionnalité pusblish-subscribe est [Redis](http://redis.io/), qui offre un mécanisme nommé PUBSUB avec quelques commandes pour utiliser ce système d'envoi de message. Redis va donc s'occuper de gérer les connexions client et Sysdig lui de la collecte des données. Pour connecter les deux, c'est-à-dire envoyer les données collectées à Redis pour qu'elles soient consommées par les clients, il est possible de tirer avantage d'une fonctionnalité de Sysdig, qui permet d'écrire des scripts en Lua (nommés chisels) pour traiter les données - ou l'envoi de celles-ci à Redis. L'architecture du module serveur va donc ressembler à la figure suivante :
 
 ![Fig 36. Architecture du module serveur](figures/arch2.png)
 
@@ -473,7 +483,7 @@ La performance est un enjeu important du projet, du fait qu'une grande quantité
 
 ### 4.2.3 Architecture module client
 
-L'architecture du côté du client est plus complexe que le serveur à cause notamment de la gestion de l'intéraction avec l'utilisateur. Pour gérer cette complexité et aider à séparer les différentes fonctionnalités de l'application, son architecture est principalement basée sur le modèle MVC, ou Modèle-Vue-Contrôlleur. L'idée est de regrouper tout le code relié au traitement des données dans le modèle, le code de l'interface utilisateur dans les vues et l'interaction entre les deux est géré par les contrôleurs. Un existe plusieurs variantes de cette architecture, mais l'idée générale est de segmenter le code pour éviter d'avoir à tout modifier lors de changements liés à l'interface utilisateur. 
+L'architecture du côté du client est plus complexe que le serveur à cause notamment de la gestion de l'intéraction avec l'utilisateur. Pour gérer cette complexité, et aider à séparer les différentes fonctionnalités de l'application, son architecture est principalement basée sur le modèle MVC, Modèle-Vue-Contrôlleur. L'idée est de regrouper tout le code relié au traitement des données dans le modèle, le code de l'interface utilisateur dans les vues et l'interaction entre les deux est géré par les contrôleurs. Un existe plusieurs variantes de cette architecture, mais l'idée générale est de segmenter le code pour éviter d'avoir à tout modifier lors de changements liés à l'interface utilisateur. 
 
 Le schéma suivant montre la conception initiale de l'application. D'autres classes ont été ajoutées au cours de l'implémentation pour répondre à différents besoins, mais la structure est restée la même. 
 
