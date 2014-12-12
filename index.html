@@ -1,0 +1,831 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div id="TOC">
+<ul>
+<li><a href="#visualisation-temps-réel-des-appels-systèmes-linux">Visualisation temps réel des appels systèmes Linux</a><ul>
+<li><a href="#sommaire">Sommaire</a></li>
+<li><a href="#chapitre-1-introduction">Chapitre 1 : Introduction</a><ul>
+<li><a href="#description-du-projet-en-bref">1.1 Description du projet en bref</a></li>
+<li><a href="#contexte">1.2 Contexte</a></li>
+<li><a href="#problématique">1.3 Problématique</a></li>
+<li><a href="#objectif">1.4 Objectif</a></li>
+<li><a href="#résultats-attendus">1.5 Résultats attendus</a></li>
+<li><a href="#terminologie">1.6 Terminologie</a></li>
+</ul></li>
+<li><a href="#chapitre-2-analyse-de-la-performance-sous-linux">Chapitre 2 : Analyse de la performance sous Linux</a><ul>
+<li><a href="#revue-de-larchitecture-de-linux">2.1 Revue de l'architecture de Linux</a></li>
+<li><a href="#méthodologies-de-lanalyse-de-performance">2.2 Méthodologies de l'analyse de performance</a></li>
+<li><a href="#métriques-et-statistiques">2.3 Métriques et statistiques</a></li>
+<li><a href="#données-fournies-par-le-kernel">2.4 Données fournies par le Kernel</a></li>
+<li><a href="#revue-des-outils-existants">2.5 Revue des outils existants</a><ul>
+<li><a href="#processeur-et-mémoire">2.5.1 Processeur et mémoire</a></li>
+<li><a href="#disques-et-réseau">2.5.2 Disques et réseau</a></li>
+<li><a href="#capture-dévénements">2.5.3 Capture d'événements</a></li>
+<li><a href="#diagramme-des-outils-disponibles">2.5.4 Diagramme des outils disponibles</a></li>
+</ul></li>
+<li><a href="#approches-graphiques">2.6 Approches graphiques</a><ul>
+<li><a href="#logiciels-intégrés">2.6.1 Logiciels intégrés</a></li>
+<li><a href="#interfaces-graphiques-aux-outils-de-traçage">2.6.2 Interfaces graphiques aux outils de traçage</a></li>
+<li><a href="#autres-visualisations">2.6.3 Autres visualisations</a></li>
+</ul></li>
+<li><a href="#description-de-lapproche-de-collecte-de-données-choisie">2.7 Description de l'approche de collecte de données choisie</a></li>
+</ul></li>
+<li><a href="#chapitre-3-visualisation-de-données">Chapitre 3 : Visualisation de données</a><ul>
+<li><a href="#objectif-1">3.1 Objectif</a></li>
+<li><a href="#bonnes-pratiques">3.2 Bonnes pratiques</a></li>
+<li><a href="#description-des-défis-reliés-à-la-visualisation">3.3 Description des défis reliés à la visualisation</a></li>
+<li><a href="#revue-des-approches-courantes">3.4 Revue des approches courantes</a></li>
+<li><a href="#description-de-lapproche-de-visualisation-des-données-choisie">3.4 Description de l'approche de visualisation des données choisie</a></li>
+<li><a href="#attributs-de-la-visualisation-des-données-choisie">3.5 Attributs de la visualisation des données choisie</a></li>
+<li><a href="#avantages-et-inconvénients">3.6 Avantages et inconvénients</a></li>
+<li><a href="#alternatives-possibles">3.7 Alternatives possibles</a></li>
+</ul></li>
+<li><a href="#chapitre-4-conception-du-logiciel">Chapitre 4 : Conception du logiciel</a><ul>
+<li><a href="#défis-rencontrés">4.1 Défis rencontrés</a></li>
+<li><a href="#architecture-choisie">4.2 Architecture choisie</a></li>
+<li><a href="#vue-densemble">4.2.1 Vue d'ensemble</a></li>
+<li><a href="#architecture-module-serveur">4.2.2 Architecture module serveur</a></li>
+<li><a href="#architecture-module-client">4.2.3 Architecture module client</a></li>
+</ul></li>
+<li><a href="#chapitre-5-implémentation-du-logiciel">Chapitre 5 : Implémentation du logiciel</a><ul>
+<li><a href="#outils-utilisés">5.1 Outils utilisés</a></li>
+<li><a href="#méthodologie-de-travail">5.2 Méthodologie de travail</a></li>
+<li><a href="#problèmes-rencontrés">5.3 Problèmes rencontrés</a><ul>
+<li><a href="#gestion-des-dépendances">5.3.1 Gestion des dépendances</a></li>
+<li><a href="#transfert-des-données-sur-le-réseau">5.3.2 Transfert des données sur le réseau</a></li>
+<li><a href="#génération-dune-palette-de-couleurs">5.3.3 Génération d'une palette de couleurs</a></li>
+<li><a href="#performance---affichage-graphique">5.3.4 Performance - affichage graphique</a></li>
+</ul></li>
+<li><a href="#architecture-finale">5.5 Architecture finale</a></li>
+<li><a href="#déploiement-du-logiciel">5.6 Déploiement du logiciel</a></li>
+</ul></li>
+<li><a href="#chapitre-6-démonstration-de-lapplication-finale">Chapitre 6 : Démonstration de l'application finale</a></li>
+<li><a href="#chapitre-7-discussion-et-conclusion">Chapitre 7 : Discussion et conclusion</a><ul>
+<li><a href="#dicussion">7.1 Dicussion</a><ul>
+<li><a href="#décisions-reliées-à-la-visualisation">7.1.1 Décisions reliées à la visualisation</a></li>
+<li><a href="#processing-versus-cc">7.1.2 Processing versus C/C++</a></li>
+<li><a href="#interface-utilisateur">7.1.3 Interface utilisateur</a></li>
+<li><a href="#améliorations-futures">7.1.4 Améliorations futures</a></li>
+</ul></li>
+<li><a href="#conclusion">7.2 Conclusion</a></li>
+</ul></li>
+<li><a href="#bibliographie">Bibliographie</a></li>
+<li><a href="#annexe">Annexe</a><ul>
+<li><a href="#description-des-métriques">Description des métriques</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<!-- Rapport final de PFE - Francis Bonneau, automne 2014 -->
+
+<h1 id="visualisation-temps-réel-des-appels-systèmes-linux"><a href="#visualisation-temps-réel-des-appels-systèmes-linux">Visualisation temps réel des appels systèmes Linux</a></h1>
+<h2 id="sommaire"><a href="#sommaire">Sommaire</a></h2>
+<p>L'objectif de ce projet était d'explorer différentes techniques de visualisation de données pour proposer une méthode différente d'analyse des données reliées à la performance d'applications. L'accent principal était les applications fonctionnant sur Linux, en raison de l'ouverture du système d'exploitation et de sa popularité dans le monde des serveurs.</p>
+<p>Idéalement la solution retenue devait également permettre l'analyse de données provenant de plusieurs systèmes différents, afin de pouvoir analyser les systèmes distribués, et ces données seraient envoyées et interprétées en temps réel pour offrir une vue directe de l'activité des systèmes observés.</p>
+<p>Une fois interprétées, ces données seront ensuite affichées à l'usager via une visualisation de données interactive, qui offrirait une vue d'ensemble des données, mais que l'utilisateur aurait la possibilité de raffiner pour avoir plus de détails sur un segment des données. La visualisation de données choisie devrait également faciliter la comparaison des données, que ce soit entre différents systèmes ou différents processus sur le même système.</p>
+<p>Après quelques recherches sur les outils existants et différentes techniques pour accomplir ces objectifs, l'architecture élaborée pour y répondre consiste d'un module serveur responsable de la collecte de données, et d'un module client qui analyse les données et affiche celles-ci. Différents patrons de conceptions, tels les patron stratégie, observateur et singleton, ont été utilisés à travers ces modules pour favoriser l'extensibilité et la flexibilité de l'application.</p>
+<p>L'implémentation a donc été réalisée principalement en Java pour la partie client, en utilisant le framework Processing pour l'affichage graphique. La partie serveur utilise Sysdig pour la capture des données, et envoie les données à Redis en temps réel avec système publish-subscribe via un script écrit en Lua. Diverses autres librairies (dont ControlP5, Jedis, GSON, etc.) ont été utilisées au cours du projet pour maximiser la réutilisation de code.</p>
+<p>Somme toute, les différents défis reliés au projet, tel que la performance nécessaire vue la quantité de données à analyser et l'aspect temps réel de la visualisation, ont pu être dans l'ensemble résolus ou contournés pour arriver au résultat souhaité, une application capable de recevoir des données en temps réel de plusieurs systèmes et d'afficher celles-ci.</p>
+<p>La réalisation principale suite à la compétition du projet est que malgré l'effort considérable requis, l'utilisation d'un framework comme Processing offre des possibilités inégalées pour la visualisation de données, en raison du contrôle total sur tous les aspects de la représentation graphique, au pixel près. C'est toutefois une arme à deux tranchants, puisque ce contrôle demande beaucoup d'effort pour reproduire des visualisations simples qui sont directement intégrées dans d'autres outils. C'est toutefois une avenue qui mérite d'être explorée, surtout lorsque l'on veut expérimenter différentes approches uniques.</p>
+<h2 id="chapitre-1-introduction"><a href="#chapitre-1-introduction">Chapitre 1 : Introduction</a></h2>
+<h3 id="description-du-projet-en-bref"><a href="#description-du-projet-en-bref">1.1 Description du projet en bref</a></h3>
+<p>Ce projet consiste à explorer les différentes méthodes de visualisation de données reliées aux systèmes d'exploitation et de proposer une nouvelle option.</p>
+<h3 id="contexte"><a href="#contexte">1.2 Contexte</a></h3>
+<p>Grand nombre d’entreprises ont des applications en production dont la performance de celles-ci est critique. Les requis de performance de ces applications sont tels qu’une tendance actuelle est de concevoir des architectures de nature distribuées, afin que l’application soit exécutée en parallèle sur plusieurs machines. Or, lorsque cette application ne performe pas à la hauteur des attentes ou qu’un problème survient en production, les administrateurs systèmes et développeurs doivent effectuer un diagnostic et localiser la source du problème.</p>
+<h3 id="problématique"><a href="#problématique">1.3 Problématique</a></h3>
+<p>Diagnostiquer la source d’un problème de performance d’une application en production, surtout lorsqu'elle est exécutée en parallèle sur différentes machines, peut s’avérer une tâche ardue. D’autant plus si cette application fonctionne sur des systèmes d'exploitation (Operating system, ou OS) de type Linux, sur lesquels souvent le seul accès possible est via un simple terminal en mode texte.</p>
+<p>Plusieurs outils en ligne commande existent pour examiner l’activité d’un système Linux, ou l’utilisation des différentes ressources de ce système, mais ceux-ci sont généralement très spécifique, c’est-à-dire qu’ils présentent l’activité en détail qu’une seule partie du système ( comme l’activité sur le réseau ) ou alors ils sont plutôt généraliste et ne présentent qu’un simple aperçu de l’activité des différentes parties du système.</p>
+<h3 id="objectif"><a href="#objectif">1.4 Objectif</a></h3>
+<p>L’objectif du projet est de proposer une alternative aux outils de diagnostic existants afin de faciliter l’analyse et la recherche de problèmes liés à la performance. Cette alternative devrait simplifier la tâche d’interpréter l’activité sur un ou plusieurs systèmes Linux, notamment dans le cas où l’application d’intérêt est de nature distribuée.</p>
+<p>De plus, ce projet vise à explorer différentes techniques de visualisation de données afin de permettre à l’utilisateur d’explorer les résultats obtenus avec une interface graphique, une approche différente à la plupart des outils existants.</p>
+<h3 id="résultats-attendus"><a href="#résultats-attendus">1.5 Résultats attendus</a></h3>
+<ul>
+<li><p>Faciliter l’exploration et l’analyse des données</p></li>
+<li><p>Faciliter l’analyse de l’activité d’applications sur un ou plusieurs systèmes</p></li>
+<li><p>Diagnostic plus rapide des problèmes liés à la performance</p></li>
+<li><p>Gain de connaissances sur les applications et systèmes analysés</p></li>
+<li><p>Gain de productivité suite à l’amélioration de la performance</p></li>
+</ul>
+<h3 id="terminologie"><a href="#terminologie">1.6 Terminologie</a></h3>
+<p>Système d'exploitation : Un système d'exploitation (<em>operating system</em> ou OS) est un logiciel qui est prend en charge les ressources matérielles d'une machine et offre ces ressources et d'autres services aux applications des usagers.</p>
+<p>Noyau : Le noyau ou <em>Kernel</em> est le coeur d'un système d'exploitation, il s'occupe principalement de la gestion du processeur et de la mémoire, ressources qui sont partagées aux applications du système d'exploitation.</p>
+<p>Linux : Nom couramment donné à tout système d'exploitation libre fonctionnant avec le noyau Linux. Implémentation libre du système UNIX qui respecte les spécifications POSIX.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>Processus : Une instance d'un programme en train d'être exécutée.</p>
+<p>Daemon : Un processus qui fonctionne en arrière-plan, typiquement pour une durée indéterminée.</p>
+<p>Appel système : Un appel système (en anglais, <em>system call</em>, abrégé <em>syscall</em>) est une fonction primitive fournie par le noyau d'un système d'exploitation et utilisée par les programmes s'exécutant dans l'espace utilisateur (en d'autres termes, tous les processus distincts du noyau).<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<p>Descripteur de fichier : Un descripteur de fichier ou <em>file descriptor</em> est un terme qui désigne une référence à un fichier sur les systèmes POSIX.</p>
+<p>Pile d'exécution : la pile d'exécution est une liste des fonctions actives d'un programme. La pile peut également contenir d'autres informations reliées à ces fonctions, telles que l'horodatage et les adresses mémoires.</p>
+<p>Temps réel : Un système temps réel est une application ou plus généralement un système pour lequel le respect des contraintes temporelles dans l'exécution des traitements est aussi important que le résultat de ces traitements.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> <a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a></p>
+<p>Visualisation de données : Domaine informatique multidisciplinaire don’t l’objet d’étude est la représentation visuelle de données.<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a></p>
+<h2 id="chapitre-2-analyse-de-la-performance-sous-linux"><a href="#chapitre-2-analyse-de-la-performance-sous-linux">Chapitre 2 : Analyse de la performance sous Linux</a></h2>
+<h3 id="revue-de-larchitecture-de-linux"><a href="#revue-de-larchitecture-de-linux">2.1 Revue de l'architecture de Linux</a></h3>
+<p>Pour obtenir des données sur l'activité d'une application précise, il faut avoir en premier lieu une connaissance de l'environnement où est exécutée cette application, soit le système d'exploitation. Dans ce projet l'emphase est mise sur les systèmes d'exploitation UNIX de type Linux, mais les principes de base restent les mêmes entre les différents OS.</p>
+<p>De manière générale, un <a href="http://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27exploitation">système d'exploitation</a> sert d'interface entre l'accès aux ressources d'une machine et les usagers et applications qui veulent utiliser ces ressources. Grâce à cette interface, les applications peuvent bénéficier de plusieurs services offerts par le système d'exploitation, tel l'ordonnancement, le système de fichier, la sécurité, etc.</p>
+<p>Le matériel physique de la machine est donc géré par le système d'exploitation, ou plus précisément <a href="http://fr.wikipedia.org/wiki/Noyau_de_syst%C3%A8me_d%27exploitation">le <em>Kernel</em></a> ou noyau. En pratique, pour que cette abstraction entre le matériel et les applications soit respectée, le système d'exploitation est généralement divisé en deux sections, l'espace utilisateur et l'espace Kernel.</p>
+<p>Les applications des usagers sont alors exécutées dans l'espace utilisateur, où les permissions sont restreintes, et doivent demander la permission au Kernel pour accéder aux ressources. Ces demandes sont nommées <a href="http://fr.wikipedia.org/wiki/Appel_syst%C3%A8me">appels systèmes</a>, ou <em>system calls</em> voire syscalls. Aux débuts de UNIX il y avait approximativement 80 appels systèmes, aujourd'hui ce nombre s'élève à plus de 300.</p>
+<p>Parmi les appels systèmes les plus courants il y a <a href="http://linux.die.net/man/2/read"><em>read</em></a> et son équivalent <a href="http://linux.die.net/man/2/write"><em>write</em></a> qui permet de lire et d'écrire dans un descripteur de fichier ou <em>file descriptor</em>, typiquement un fichier sur le disque. La liste complète est disponible sur plusieurs sites tels que <a href="http://syscalls.kernelgrok.com/">kernelgrok.com</a>, et de l'information spécifique sur chaque appel système est disponible dans le manuel de l'OS (man), typiquement dans la section numéro 2 (<code>man 2 read</code>).</p>
+<p>Cette architecture divisée en espaces usager/kernel est souvent représentée de la façon suivante :</p>
+<div class="figure">
+<img src="figures/linux_arch.png" alt="Fig 01. Architecture de Linux" /><p class="caption">Fig 01. Architecture de Linux</p>
+</div>
+<p>Tel qu'illustré sur la figure précédente, les applications exécutées par les usagers d'une machine sont le dernier maillon de la chaine, et produisent le résultat attendu. Celles-ci ne peuvent toutefois fonctionner sans l'appui de tous les services implémentés par le système, services que l'application utilise par le biais de librairies ou d'appels systèmes directement.</p>
+<p>Le principal avantage d'une telle architecture est qu'elle permet d'éviter ou de limiter la duplication d'effort. En effet, les développeurs d'applications peuvent se fier aux services offerts par le système d'exploitation et n'ont pas besoin de se soucier de problèmes liés à la gestion du matériel par exemple, et éviter d'y consacrer des efforts puisque ces problèmes sont déjà gérés par l'OS. Tel que l'a souvent répété <a href="https://en.wikipedia.org/wiki/David_Wheeler_(British_computer_scientist)">David Wheeler</a>, un éminent chercheur en informatique :</p>
+<blockquote>
+<p>All problems in computer science can be solved by another level of indirection<br />­<em>-- David Wheeler</em><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a></p>
+</blockquote>
+<p>Les couches d'abstractions offertes par les OS suivent également cette idée.</p>
+<p>Puisqu'en pratique les applications n'ont pas besoin de se soucier de l'implémentation de ces couches sous-jacentes, pourquoi s'y intéresser lors de l'analyse de la performance de ces applications ? Cela dépend principalement du type d'analyse considéré. Lors de l'établissement d'indice de références, <em>benchmarks</em>, de la performance d'une application spécifique, le matériel et le système d'exploitation peuvent être ignorés - à la seule condition que les autres tests comparatifs soient réalisés sur exactement le même environnement.</p>
+<p>Toutefois, lorsque l'objectif est d'améliorer la performance d'une application donnée, ou de résoudre un problème lié à la performance, tout doit être pris en considération. Les résultats obtenus vont varier considérablement selon l'environnement, qu'il s'agisse des différentes couches logicielles - de l'application elle-même jusqu'au Kernel, ou alors du matériel de la machine. De plus, lors de problèmes de performance, si la cause est reliée à du matériel ou des périphériques fautifs, alors c'est au niveau de l'OS qu'il faut regarder, car l'application elle-même ne connait pas l'état de la machine sur laquelle elle fonctionne.</p>
+<h3 id="méthodologies-de-lanalyse-de-performance"><a href="#méthodologies-de-lanalyse-de-performance">2.2 Méthodologies de l'analyse de performance</a></h3>
+<p>Ce projet s'intéresse principalement aux analyses de performance reliées à l'amélioration ou la résolution de problèmes, et l'objectif final est de permettre à l'utilisateur d'en apprendre plus sur son application et la façon dont elle interagit avec l'OS pour améliorer celle-ci. L'établissement d'indices de performance, ou <em>benchmarks</em> ne sera pas considéré. Ceci dit, explorons les différentes techniques liées à ces types d'analyses.</p>
+<p>Dans son livre <em>Systems Performance: Enterprise and the Cloud</em><a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>, Bredan Gregg propose différentes méthodologies pour procéder à la résolution de problèmes de performance. Celles-ci sont également détaillées sur <a href="http://www.brendangregg.com/methodology.html">son site web</a>. En voici quelques-unes :</p>
+<blockquote>
+<ol start="6" style="list-style-type: decimal">
+<li>Ad Hoc Checklist Method</li>
+<li>Problem Statement Method</li>
+<li>Scientific Method</li>
+<li>Workload Characterization Method</li>
+<li>Drill-Down Analysis Method</li>
+<li>Five Whys Performance Method</li>
+<li>By-Layer Method</li>
+<li>Latency Analysis Method</li>
+<li>Tools Method</li>
+<li>USE Method<br />[...]</li>
+</ol>
+</blockquote>
+<p>Deux méthodologies seront principalement utilisées dans le cadre du projet, soit la méthode de caractérisation de la charge de travail <em>Workload Characterization Method</em>, et la méthode d'analyse par exploration <em>Drill-Down Analysis Method</em>. La caractérisation de la charge de travail consiste à identifier la source et la nature de la charge sur un système, et de suivre son évolution à travers le temps. Un changement soudain de la charge comparée à l'historique peut alors indiquer un problème potentiel, et l'identification du type de charge peut ensuite pointer vers la source. De manière générale, l'analyse par exploration, <em>Drill-Down</em>, consiste à examiner une vue d'ensemble d'un système, pour ensuite explorer plus en profondeur les détails d'un secteur d'intérêt en particulier.</p>
+<p>En effet, la solution proposée devrait permettre à un utilisateur de voir une vue d'ensemble du système analysé, et de permettre à cet utilisateur de sélectionner une partie du système qu'il l'intéresse, pour raffiner la vue affichée pour afficher les détails de cette partie. Une <em>vue</em> devrait idéalement permettre à l'usager de caractériser visuellement la charge de travail présente sur le système, et possiblement de comparer la charge actuelle à un historique.</p>
+<h3 id="métriques-et-statistiques"><a href="#métriques-et-statistiques">2.3 Métriques et statistiques</a></h3>
+<p>Les métriques de performance sont des statistiques qui mesurent l'activité de différentes parties du système. Généralement il s'agit d'un pourcentage d'utilisation, un nombre d'opérations par intervalle de temps (typiquement des secondes, ex : IOPS, I/O operations per second), ou alors le temps de latence associé à une certaine opération. Les métriques peuvent être calculées directement par le système d'exploitation ou par des applications distinctes.</p>
+<p>Une très grande quantité de métriques peut être collectée à un temps donné sur un système d'exploitation, sans parler des métriques spécifiques aux applications, cela peut résulter en une quantité considérable de données à analyser. Il est toutefois possible d'identifier quelques métriques clés qui peuvent donner une très bonne idée de l'état d'un système. À titre d'exemple, le <em>Redpaper</em> de IBM intitulé <a href="http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf"><em>Linux Performance and Tuning Guidelines</em></a> décrit pour Linux les métriques suivants<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> (descriptions en annexe) :</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Métriques du processeur</th>
+<th align="left">Métriques de la mémoire</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="#cpu-utilization">CPU utilization</a></td>
+<td align="left"><a href="#free-memory">Free memory</a></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#user-time">User time</a></td>
+<td align="left"><a href="#swap-usage">Swap usage</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#system-time">System time</a></td>
+<td align="left"><a href="#buffer-and-cache">Buffer and cache</a></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#waiting-time">Waiting time</a></td>
+<td align="left"><a href="#slabs">Slabs</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#idle-time">Idle time</a></td>
+<td align="left"><a href="#active-vs-inactive-memory">Active vs inactive memory</a></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#nice-time">Nice time</a></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#load-average">Load average</a></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#runnable-processes">Runable processes</a></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#blocked-processes">Blocked processes</a></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#context-swiches">Context switches</a></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#interrups">Interrupts</a></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Métrique des cartes réseau</th>
+<th align="left">Métriques des disques</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="#packets-received-and-sent">Packets received and sent</a></td>
+<td align="left"><a href="#iowait">IOwait</a></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#bytes-received-and-sent">Bytes received and sent</a></td>
+<td align="left"><a href="#average-queue-length">Average queue length</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#collisions-per-second">Collisions per second</a></td>
+<td align="left"><a href="#average-wait">Average wait</a></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#packets-dropped">Packets dropped</a></td>
+<td align="left"><a href="#transferts-per-second">Transfers per second</a></td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="#overruns">Overruns</a></td>
+<td align="left"><a href="#blocks-readwrite-per-second">Blocks read/write per second</a></td>
+</tr>
+<tr class="even">
+<td align="left"><a href="#errors">Errors</a></td>
+<td align="left"><a href="#kilobytes-per-second-readwrite">Kilobytes per second read/write</a></td>
+</tr>
+</tbody>
+</table>
+<p>Les métriques sont utiles lorsque l'on peut les comparer à un historique, et alors constater soit une dégradation ou une amélioration de la performance.</p>
+<p>En pratique, collecter une grande quantité de métriques sur un système en production peut s'avérer utile lors de la résolution de problèmes, mais cela à un certain coût additionnel sur le système instrumenté, qui peut performer moins efficacement dépendamment des cas.</p>
+<p>Une alternative pourrait être de collecter toutes les métriques durant une certaine période, cibler ceux qui sont réellement d'intérêt et de se limiter à ceux-là en production. Rien n'empêche également d'activer l'instrumentation complète suite à un changement dans le système tel un nouveau déploiement, et réduire par la suite l'instrumentation du système une fois sa stabilité établie.</p>
+<h3 id="données-fournies-par-le-kernel"><a href="#données-fournies-par-le-kernel">2.4 Données fournies par le Kernel</a></h3>
+<p>Les différentes métriques énoncées plus haut peuvent être calculées par défaut par le Kernel (par l'incrémentation de compteurs), ou calculées par d'autres programmes externes. Différentes interfaces sont offertes par le Kernel pour accéder aux données et métriques du système, les deux principales sont les répertoires /proc et /sys.</p>
+<p>En effet, puisque Linux prend à coeur la philosophie UNIX de <em>tout est un fichier</em>, ces données sont accessibles comme n'importe quel autre fichier ordinaire du système. /proc est toutefois créé dynamiquement par le Kernel au démarrage du système et n'existe qu'en mémoire vive, son contenu n'est enregistré sur aucun disque.</p>
+<p>À titre d'exemple, le répertoire /proc est organisé de la façon suivante : /proc contient un répertoire pour chaque processus sur le système et ce répertoire est nommé selon le pid du processus.</p>
+<div class="figure">
+<img src="figures/proc.png" alt="Fig 02. Aperçu de /proc/" /><p class="caption">Fig 02. Aperçu de /proc/</p>
+</div>
+<p>Ce répertoire contient ensuite quelques fichiers qui eux conservent les données reliées à ce processus, tels les arguments et statistiques.</p>
+<div class="figure">
+<img src="figures/proc2.png" alt="Fig 03. Contenu de /proc/1/" /><p class="caption">Fig 03. Contenu de /proc/1/</p>
+</div>
+<p>Quelques fichiers à la racine de /proc ne suivent pas cette nomenclature. Il s'agit soit de propriétés de sous-systèmes du Kernel, ou de fichiers contenant les statistiques globales du système, tel loadavg qui contient une métrique générique de la charge du système pour les dernières minutes.</p>
+<p>Beaucoup d'outils d'analyse de la performance utilisent les répertoires /proc et /sys du Kernel comme source de données sur l'état global du système. Toutefois pour certains besoins spécifiques, tel que la capture d'événements, d'autres interfaces sont offertes par le Kernel, telles les kprobes, ftrace, perf_event, etc. Cela dépend de la nature de l'outil et du besoin qu'il cherche à combler, tel que détaillé par la section suivante.</p>
+<h3 id="revue-des-outils-existants"><a href="#revue-des-outils-existants">2.5 Revue des outils existants</a></h3>
+<p>Une multitude d'outils existent pour identifier et diagnostiquer des problèmes de performance, ou pour simplement obtenir un portrait de l'activité d'un système. Cette section vise à présenter un aperçu des différents outils disponibles sous Linux.</p>
+<h4 id="processeur-et-mémoire"><a href="#processeur-et-mémoire">2.5.1 Processeur et mémoire</a></h4>
+<p>Commençons par les outils les plus génériques, installés par défaut sur tous les systèmes modernes. Ces outils permettent d'obtenir un aperçu de l'activité du système, au moment immédiat ou alors avec un historique, en présentant pour chaque processus son utilisation CPU et sa mémoire.</p>
+<p><em>ps</em>, pour process status est probablement le plus simple. Il affiche la liste des processus qui sont présents sur la machine et leurs paramètres, tel l'usager qui l'exécute, le process id, etc. ps affiche peu d'information reliée à la performance - à part l'utilisation CPU, mais c'est souvent le programme de choix pour voir rapidement ce qui fonctionne sur une machine.</p>
+<div class="figure">
+<img src="figures/ps.png" alt="Fig 04. Liste des processus par ps" /><p class="caption">Fig 04. Liste des processus par ps</p>
+</div>
+<p>Il y a plusieurs autres façons de représenter cette liste de processus, une représentation en arbre comme l'offre <em>pstree</em> est également commune. htop, présenté plus loin propose également cette représentation.</p>
+<div class="figure">
+<img src="figures/pstree.png" alt="Fig 05. Liste des processus en arbre par pstree" /><p class="caption">Fig 05. Liste des processus en arbre par pstree</p>
+</div>
+<p>L'autre outil le plus répandu est sans aucun doute <em>top</em>. top permet de voir comme ps la liste des processus qui tournent, et affiche pour chaque processus l'utilisation CPU et mémoire, en plus d'un indicateur global pour le système. Contrairement à ps, top s'actualise à chaque seconde.</p>
+<div class="figure">
+<img src="figures/top.png" alt="Fig 06. Liste des processus organisés par %CPU par top" /><p class="caption">Fig 06. Liste des processus organisés par %CPU par top</p>
+</div>
+<p>Plusieurs autres programmes se sont inspirés de top et visent à le remplacer en proposant une interface utilisateur plus moderne. Pour n'en citer que deux exemples, <em><a href="http://hisham.hm/htop/">htop</a></em> tente de se démarquer par la couleur, et <em><a href="https://parall.ax/vtop">vtop</a></em> lui propose un graphique sur lequel il est plus facile de voir l'évolution dans le temps.</p>
+<div class="figure">
+<img src="figures/htop.png" alt="Fig 07. % d&#39;utilisation par CPU et liste des processus par htop" /><p class="caption">Fig 07. % d'utilisation par CPU et liste des processus par htop</p>
+</div>
+<div class="figure">
+<img src="figures/vtop.png" alt="Fig 08. Graphiques de l&#39;activité système de vtop" /><p class="caption">Fig 08. Graphiques de l'activité système de vtop</p>
+</div>
+<p>Bien que la plupart des outils sont exécutés directement par l'usager, d'autres outils tels que <em>sar</em> fonctionne en permanence en tant que daemon sur le système, et visent plutôt à conserver un historique à long terme de l'activité du système. Pour mettre en place le service sur certains systèmes des paquets (<em>packages</em>) supplémentaires doivent être installés, tel que <em>sysstat</em> sur Ubuntu, mais une fois le service établi il est possible d'accéder l'historique avec sar :</p>
+<div class="figure">
+<img src="figures/sar.png" alt="Fig 09. Historique de l&#39;activité du système, enregistré par sar" /><p class="caption">Fig 09. Historique de l'activité du système, enregistré par sar</p>
+</div>
+<h4 id="disques-et-réseau"><a href="#disques-et-réseau">2.5.2 Disques et réseau</a></h4>
+<p>top et les autres outils précédents mettent davantage l'accent sur l'utilisation CPU et de la mémoire, or il existe plusieurs autres outils qui les complémentent en permettant de voir l'activité des autres ressources du système, tel que les cartes réseaux et les disques.</p>
+<p>Plusieurs outils de la famille *stat peuvent être utilisés à cet effet. <em>mpstat</em> et <em>vmstat</em> affichent des statistiques similaires à top, mais <em>iostat</em> quand à lui affiche des statistiques sur l'activité des disques durs du système.</p>
+<div class="figure">
+<img src="figures/mpstat_vmstat_iostat.png" alt="Fig 10 mpstat - vmstat - iostat" /><p class="caption">Fig 10 mpstat - vmstat - iostat</p>
+</div>
+<p><em>netstat</em> quant à lui affiche les connexions réseau établies par les processus, très similaire à ps par le fait qu'il n'affiche que peu de statistiques sur les connexions, mais c'est souvent la première étape pour déterminer l'état actuel.</p>
+<div class="figure">
+<img src="figures/netstat.png" alt="Fig 11.Liste des connexions ouvertes, par netstat" /><p class="caption">Fig 11.Liste des connexions ouvertes, par netstat</p>
+</div>
+<p><em><a href="http://www.roland-riegel.de/nload/">nload</a></em> est un autre outil dédié à l'activité réseau, similaire à vtop du fait qu'il affiche un historique qui est mis à jour à un intervalle régulier.</p>
+<div class="figure">
+<img src="figures/nload.png" alt="Fig 12. Diagramme de la charge réseau avec nload" /><p class="caption">Fig 12. Diagramme de la charge réseau avec nload</p>
+</div>
+<p><em><a href="http://guichaz.free.fr/iotop/">iotop</a></em> est l'équivalent de top pour les disques durs. Il affiche l'activité de lecture et écriture sur les disques pour chaque processus et présente une liste des processus avec le plus d'activité.</p>
+<div class="figure">
+<img src="figures/iotop.png" alt="Fig 13. iotop affiche que la commande du -h / lit le disque à 19MB/sec" /><p class="caption">Fig 13. iotop affiche que la commande <code>du -h /</code> lit le disque à 19MB/sec</p>
+</div>
+<p>Un autre logiciel qui mérite d'être mentionné est <em><a href="http://collectl.sourceforge.net/index.html">Collectl</a></em>, qui est similaire aux autres outils *stat du fait qu'il affiche les données à un intervalle régulier, mais il se démarque par la quantité de données qu'il peut accéder, Collectl permet de mesurer l'activité d'une quantité impressionnante de sous-systèmes différents, que ce soit la mémoire, les disques, le réseau, et même certaines cartes graphiques.</p>
+<div class="figure">
+<img src="figures/collectl.png" alt="Fig 14. Aperçu des nombreuses métriques collectées par collectl" /><p class="caption">Fig 14. Aperçu des nombreuses métriques collectées par collectl</p>
+</div>
+<h4 id="capture-dévénements"><a href="#capture-dévénements">2.5.3 Capture d'événements</a></h4>
+<p>Les outils présentés jusqu'à présent permettent de mesurer l'activité de différentes parties d'un système donné, et d'identifier avec différents niveaux de succès la source de cette activité, du moins le processus responsable. Or, lorsqu'un problème survient sur un processus critique du système, et qu'il faut identifier ce que fait ce processus et la source du problème, il faut parfois plus de données. Une façon d'obtenir ces données est par l'utilisation de logiciel de traçage ou <em>tracing</em>, qui eux peuvent capturer les événements en temps réel et afficher ceux-ci.</p>
+<p>La définition d'un événement peut varier selon l'outil, mais typiquement il s'agit d'une interaction entre un processus et le système d'exploitation à un instant précis. Cette interaction prend souvent la forme d'un appel système, et dans ce cas il s'agit alors d'une requête par le processus suivie d'une réponse par le système quelques instants après. Par exemple un processus peut envoyer une requête de lecture <em>read</em> pour accéder aux derniers octets du fichier /var/log/syslog, et le système va répondre en envoyant les quelques octets demandés peu de temps après.</p>
+<p>Juste le fait de pouvoir observer en temps réel les différentes requêtes d'accès au système de fichiers ou au réseau permet d'en apprendre beaucoup sur l'état du processus et d'analyser son comportement pour voir s'il réagit comme il le devrait. <em>strace</em> est un outil disponible par défaut sur presque tous les systèmes Linux et qui permet de faire exactement cela, il suffit de lui indiquer le pid du processus à analyser, et il va afficher les appels systèmes de ce processus au fur et à mesure que ceux-ci surviennent.</p>
+<div class="figure">
+<img src="figures/strace.png" alt="Fig 15. Quelques appels système interceptés avec strace" /><p class="caption">Fig 15. Quelques appels système interceptés avec strace</p>
+</div>
+<p>Il existe toutefois plusieurs autres outils similaires à strace qui ajoutent d'autres fonctionnalités plus avancées, tel que la possibilité d'injecter des sondes ou <em>probes</em> ( des fonctions personnalisées qui sont exécutées lorsque qu'un certain événement arrive) directement dans le kernel, afin de capturer des données plus spécifiques à certaines conditions. <em><a href="http://dtrace.org/blogs/about/">Dtrace</a></em> est probablement l'un des outils les plus avancés de cette catégorie, mais comme il à été initialement développé pour Solaris son support Linux n'est pas aussi stable. Plusieurs outils similaires ont été développés pour Linux, tel <em><a href="https://sourceware.org/systemtap/">SystemTap</a></em>, <em><a href="https://perf.wiki.kernel.org/index.php/Main_Page">perf</a></em>, <em><a href="https://lttng.org/">LTTng</a></em> et <em><a href="http://www.sysdig.org/">Sysdig</a></em>.</p>
+<p>Sysdig est intéressant puisqu'il est relativement simple d'utilisation, et donne accès à une grande variété de fonctions déjà écrites (appelées <em><a href="https://github.com/draios/sysdig/wiki/Chisels-User-Guide">Chisels</a></em>) pour afficher les données capturées. Par défaut, lorsqu'il est exécuté, il affiche tous les événements du système (voir figure suivante) et de tous les processus, mais il offre une grande variété de filtres pour raffiner l'information affichée. En raison de ces fonctionnalités, c'est l'outil qui sera utilisé dans ce projet pour la capture des données.</p>
+<div class="figure">
+<img src="figures/sysdig.png" alt="Fig 16. Capture d&#39;événements avec sysdig" /><p class="caption">Fig 16. Capture d'événements avec sysdig</p>
+</div>
+<h4 id="diagramme-des-outils-disponibles"><a href="#diagramme-des-outils-disponibles">2.5.4 Diagramme des outils disponibles</a></h4>
+<p>Pour résumer cette section sur les différents outils de capture de données disponibles sous Linux, cette carte réalisée par Brendan Gregg s'avère très utile pour énumérer bon nombre d'outils et leurs spécialités. Il s'agit d'un diagramme de l'architecture de Linux, sur lequel des flèches identifient quels outils peuvent être utilisés pour analyser cette section du système. Voir <a href="http://www.brendangregg.com/linuxperf.html">brendangregg.com/linuxperf.html</a> pour plus de détails<a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a>.</p>
+<div class="figure">
+<img src="figures/linux_observability_tools.png" alt="Fig 17. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg" /><p class="caption">Fig 17. Carte des outils d’instrumentation de la performance sous Linux – Bredan Gregg</p>
+</div>
+<h3 id="approches-graphiques"><a href="#approches-graphiques">2.6 Approches graphiques</a></h3>
+<p>Une grande majorité des outils disponibles pour l'analyse et la capture de données reliées à la performance de système Linux sont des outils en ligne de commande. Ceux-ci présentent l'information directement sous forme de texte, ou utilisent certaines techniques avec des caractères spéciaux pour afficher des diagrammes à barres, ou des histogrammes directement dans le terminal.</p>
+<p>Les outils avec des interfaces graphiques complètes sont moins communs. Souvent une combinaison d'outils en ligne de commande pour la capture de données et un autre système tel que <em><a href="http://oss.oetiker.ch/rrdtool/">RRDtool</a></em> ou <em><a href="http://graphite.wikidot.com/">Graphite</a></em> pour le stockage et l'affichage de graphiques est la solution retenue pour sa flexibilité. Cette flexibilité s'avère utile lorsqu'il faut analyser la performance de plusieurs machines et pouvoir visualiser les données dans un contexte qui permet de les comparer.</p>
+<p>Cette section présente donc quelques-uns des outils existants pour visualiser des données reliées à la performance.</p>
+<h4 id="logiciels-intégrés"><a href="#logiciels-intégrés">2.6.1 Logiciels intégrés</a></h4>
+<p>Les logiciels avec interfaces graphiques dédiées à la performance les plus courants sont probablement les outils embarqués par défaut sur plusieurs systèmes d'exploitation. Ces outils sont généralement moins orientés serveurs, et ceux-ci permettent typiquement de voir la liste des processus de façon similaire à top, mais avec une interface graphique. À titre d'exemple voici à quoi ressemblent le <em>Activity Monitor</em> de OSX et le <em>System Monitor</em> de Ubuntu.</p>
+<div class="figure">
+<img src="figures/activity_monitor.png" alt="Fig 18. OSX Activity Monitor" /><p class="caption">Fig 18. OSX Activity Monitor</p>
+</div>
+<div class="figure">
+<img src="figures/system_monitor.png" alt="Fig 19. Ubuntu System Monitor" /><p class="caption">Fig 19. Ubuntu System Monitor</p>
+</div>
+<h4 id="interfaces-graphiques-aux-outils-de-traçage"><a href="#interfaces-graphiques-aux-outils-de-traçage">2.6.2 Interfaces graphiques aux outils de traçage</a></h4>
+<p>Il existe également quelques interfaces graphiques à certains outils mentionnés précédemment, tels les programmes de traçage comme Dtrace et System Tap. Ces interfaces graphiques sont intéressantes puisqu'elles peuvent aider à réduire la courbe d'apprentissage reliée à ces outils avancés. L'interface graphique peut offrir des raccourcis pour les analyses courantes et ainsi éviter à l'usager d'avoir à écrire lui-même ses fonctions (probes) pour arriver au résultat désiré. Apple offre notamment une interface graphique à Dtrace, nommée Instruments, qui permet d'instrumenter des applications sur OSX et d'afficher graphiquement le résultat. SystemTap GUI est un autre projet similaire pour SystemTap, et propose un environnement de développement intégré pour l'écriture de scripts et fonctions stap.</p>
+<div class="figure">
+<img src="figures/instruments.png" alt="Fig 20. Aperçu de Apple Instruments sur OSX" /><p class="caption">Fig 20. Aperçu de Apple Instruments sur OSX</p>
+</div>
+<div class="figure">
+<img src="figures/stapgui.png" alt="Fig 21. IDE intégré de SystemTap-GUI, source : http://stapgui.sourceforge.net" /><p class="caption">Fig 21. IDE intégré de SystemTap-GUI, source : http://stapgui.sourceforge.net</p>
+</div>
+<h4 id="autres-visualisations"><a href="#autres-visualisations">2.6.3 Autres visualisations</a></h4>
+<p>Outre les interfaces graphiques aux outils existants, plusieurs autres façons de visualiser l'information collectée ont été imaginées, cette section présente quelques-unes de ces approches différentes, mais très intéressantes.</p>
+<h5 id="flame-graphs"><a href="#flame-graphs">2.6.3.1 Flame Graphs</a></h5>
+<p>Une façon différente de représenter l'historique de la pile d'exécution d'un processus à un instant donné, collecté par les outils de traçage comme Dtrace à été développée par Bredan Gregg<a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a>, il s'agit des <em><a href="http://www.brendangregg.com/flamegraphs.html">Flame Graphs</a></em>. Il s'agit d'une visualisation qui vise à mettre en évidence les chemins les plus couramment visités dans le code d'une application. Un script en prend argument un fichier contenant des données captures par Dtrace ou SystemTap, et produit en sortie le diagramme sous la forme d'un fichier svg, qui ressemble typiquement à ceci :</p>
+<div class="figure">
+<img src="figures/flame_graphs.png" alt="Fig 22. Exemple d&#39;un Flame Graph, source : brendangregg.com/FlameGraphs" /><p class="caption">Fig 22. Exemple d'un Flame Graph, source : brendangregg.com/FlameGraphs</p>
+</div>
+<p>Voici comment interpréter un Flame Graph :</p>
+<blockquote>
+<p>The x-axis shows the stack profile population, sorted alphabetically (it is not the passage of time), and the y-axis shows stack depth. Each rectangle represents a stack frame. The wider a frame is is, the more often it was present in the stacks. The top edge shows what is on-CPU, and beneath it is its ancestry. The colors are usually not significant, picked randomly to differentiate frames.<br />-- Bredan Cregg<a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a></p>
+</blockquote>
+<h5 id="vistrace"><a href="#vistrace">2.6.3.2 vistrace</a></h5>
+<p><em><a href="http://home.in.tum.de/~xiaoh/vistrace.html">vistrace</a></em> est un autre type de visualisation relié cette fois-ci aux appels systèmes interceptés par strace, réalisée par Han Xiao<a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a>. vistrace affiche les différents appels systèmes capturés sur un graphe circulaire, puis met en évidence l'ordre des appels et le délai entre la requête d'un appel système ainsi que la réponse retournée par le système - en reliant ces deux événements par une ligne.</p>
+<div class="figure">
+<img src="figures/vistrace.png" alt="Fig 23. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html" /><p class="caption">Fig 23. Aperçu de vistrace, source : home.in.tum.de/~xiaoh/vistrace.html</p>
+</div>
+<p>Voici la description de la visualisation par Han Xiao :</p>
+<blockquote>
+<p>vistrace visualizes the output produced by strace -ttt cmd as a circular graph.<br />Each system call has a unique color (there are in total 380 UNIX system calls);<br /> System calls were plotted in clockwise (i.e. starts and ends at the 12 clock position);<br /> A line is plotted between two functions if the return value of the first function was used as an argument of the second function;<br />Functions that returned -1 (error) were omitted;<br />Maximum 2000 system calls were plotted.<br />-- Han Xiao<a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a></p>
+</blockquote>
+<h3 id="description-de-lapproche-de-collecte-de-données-choisie"><a href="#description-de-lapproche-de-collecte-de-données-choisie">2.7 Description de l'approche de collecte de données choisie</a></h3>
+<p>Comme l'objectif de ce projet est de permettre d'interpréter plus facilement les données liées à la performance d'un ou plusieurs systèmes, il faut évidemment collecter ces données. Or compte tenu du fait qu'il existe plusieurs outils très avancés pour la collecte des données, il a été choisi de réutiliser un des outils existants pour cette phase, quitte à bâtir un pont entre ce système et le reste de l'application - qui servira alors uniquement à interpréter et visualiser les données.</p>
+<p>La question suivante se pose alors : quels types de données (de performance) faudrait-il collecter et avec quel outil ? Comme il faudra présenter un aperçu complet du système instrumenté, il faudrait en premier lieu un outil capable de mesurer tous les processus simultanément. De plus, il faudrait permettre à l'utilisateur de pouvoir 'raffiner' la visualisation sur un processus précis, ce qui implique que l'outil devrait être capable de filtrer les données collectées. Or les données collectées devraient être suffisamment précises pour pouvoir analyser le comportement d'un processus, c'est-à-dire qu'une approche où tous les événements, tels les appels systèmes, sont collectés serait à privilégier à l'opposé d'un simple enregistrement du pourcentage d'activité d'un processus. L'outil qui à été retenu pour satisfaire ces conditions est Sysdig.</p>
+<p>L'avantage des appels systèmes est que l'analyse de ceux-ci est très instructive sur les activités d'un processus, mais comment peut-on utiliser les appels systèmes pour effectuer des comparaisons ? Ou déterminer une amélioration ou régression de la performance d'un processus, outre regarder la quantité d'appels systèmes envoyés ?</p>
+<p>Une solution potentielle serait d'examiner le temps de latence des appels systèmes. En effet, la différence de temps entre la requête et la réponse est nommée temps de latence, car le programme peut être obligé d'attendre la réponse avant de poursuivre ces opérations, ce qui le ralentit. Évidemment le système tente de minimiser le temps de latence des opérations, mais cela peut varier fortement dépendamment de plusieurs facteurs, telle la charge globale - la quantité de requêtes que le système reçoit à chaque seconde, la priorité variable des différentes requêtes, etc.</p>
+<p>La latence varie également selon le matériel employé, un disque dur ordinaire va certainement prendre plus de temps à récupérer les données qu'un disque de type SSD. Malgré cela, la latence pour une requête typique est tout de même très petite, vu qu'elle est souvent mesurée en nanosecondes. Le ralentissement d'un programme dépend beaucoup de la quantité de requêtes qu'il effectue, et bien entendu du temps de latence de chaque de ces requêtes.</p>
+<p>Une des fonctionnalités de sysdig, les scripts personnalisés par l'usager nommé <em>Chisels</em>, permet justement d'écrire une fonction capable d'enregistrer les données d'intérêt, tel que le temps de latence pour chaque événement, et ces données pourront ensuite être envoyées vers le reste du système pour être analysée. Or c'est là que la visualisation des données va s'avérer très utile, car Sysdig et les outils de traçage produisent une très grande quantité de données en très peu de temps.</p>
+<p>À titre d'exemple, exécuter Sysdig sans arguments sur un système ordinaire Ubuntu Desktop pendant approximativement 1 minute à produit un fichier texte de <strong>384 Mégaoctets</strong>, soit <strong>4 383 538 lignes de texte</strong> (1 appel système par ligne). Analyser cette quantité de données directement demande un investissement considérable de temps par l'usager, et en pratique on n'a souvent pas le choix de mettre des filtres pour réduire cette quantité d'information à potentiellement ce qu'on recherche. On perd alors la vision globale de l'état du système. Or c'est des objectifs du projet, soit de proposer une alternative qui va permettre d'analyser ces données plus rapidement, par la visualisation de données.</p>
+<h2 id="chapitre-3-visualisation-de-données"><a href="#chapitre-3-visualisation-de-données">Chapitre 3 : Visualisation de données</a></h2>
+<h3 id="objectif-1"><a href="#objectif-1">3.1 Objectif</a></h3>
+<p>La visualisation de données comporte de nombreux aspects, qui sont éloquemment représentés par cet infographique réalisé par la firme FFunction<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a> :</p>
+<div class="figure">
+<img src="figures/data_visualization.jpg" alt="Fig 24. What is Data Visualisation? Infographique par FFunction" /><p class="caption">Fig 24. What is Data Visualisation? Infographique par FFunction</p>
+</div>
+<p>Or l'objectif de l'utilisation de la visualisation de données dans le contexte de ce projet est principalement d'aider l'utilisateur à analyser les données sur les systèmes analysés, afin de mieux comprendre l'état de ceux-ci. Si possible, il faudrait également permettre l'identification de problèmes potentiels de performance, et de pouvoir cibler la source de ces problèmes. Si en utilisant l'application l'usager peut augmenter ses connaissances du fonctionnement de Linux et des applications d'intérêt alors une grande partie de l'objectif sera tout de même atteint.</p>
+<h3 id="bonnes-pratiques"><a href="#bonnes-pratiques">3.2 Bonnes pratiques</a></h3>
+<p>La visualisation de données, bien qu'elle aide généralement à l'analyse et la compréhension, n'est pas infaillible. Des erreurs liées à la représentation peuvent confondre l'usager sur le phénomène observé, et mener à des fausses conclusions. La référence probablement la plus reconnue sur le sujet est le livre de Edward Tufte, <em>The Visual Display of Quantitative Information</em>. Dans ce livre Tufte présente plusieurs bonnes pratiques à suivre lors de la création d'une représentation graphique de données. En voici quelques-unes énumérées dans le premier chapitre<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a>, et une interprétation de celles-ci :</p>
+<ul>
+<li><p>Montrer les données : le graphique doit avant tout illustrer les données, dans un contexte qui facilite la compréhension de celles-ci.</p></li>
+<li><p>Inciter le sujet à réfléchir sur le sujet : mettre l'emphase sur le contenu et non sur la forme, éviter les éléments qui détournent l'attention des données elles-mêmes.</p></li>
+<li><p>Éviter de distorsionner les données : celles-ci doivent être représentées de manière précise.</p></li>
+<li><p>Présenter beaucoup de chiffres (d'information) dans un espace restreint : maximiser l'information dans l'espace alloué (data-ink ratio).</p></li>
+<li><p>Encourager la comparaison des données : possiblement en offrant une visualisation interactive, ou l'usager peut choisir les données à comparer.</p></li>
+<li><p>Représenter les données avec différents niveaux de détails : afin que l'utilisateur puisse avoir une vue d'ensemble de la situation, et permettre à l'usager de mettre l'emphase sur une section pour avoir plus de détails.</p></li>
+</ul>
+<p>L'approche choisie pour ce projet, détaillée plus bas, tente de respecter le plus possible ces bonnes pratiques.</p>
+<h3 id="description-des-défis-reliés-à-la-visualisation"><a href="#description-des-défis-reliés-à-la-visualisation">3.3 Description des défis reliés à la visualisation</a></h3>
+<p>Suite à l'analyse précédente des différentes métriques disponibles, il a été établi que les données à collecter et à visualiser dans le cas présent seraient principalement le temps de latence des appels systèmes du ou des machines à analyser. Or, une fois ces données collectées, la visualisation de celles-ci propose plusieurs défis :</p>
+<ul>
+<li><p>La quantité de données est considérable. Lors du test réalisé précédemment, Sysdig a collecté environ 4 300 000 événements en une minute, soit ­~70 000 événements par seconde . On calcule le temps de latence comme la différence entre l'appel système (l'événement) d'entrée et de sortie, alors on divise ce nombre par 2 et on obtient alors 35 000 'points' ou 'mesures' à afficher à chaque seconde. La solution devra proposer une façon qui permettra à l'utilisateur de suivre autant d'activité sans être accablé par celle-ci.</p></li>
+<li><p>Les données présentent plusieurs dimensions. Dans le cas où la solution sera utilisée pour surveillée plusieurs machines, chaque événement va être attaché à une machine, un usager local, un processus, un type d'appel système. Il devrait être possible de filtrer l'information selon ces dimensions.</p></li>
+<li><p>Chaque dimension comporte plusieurs catégories, voire un très grand nombre de catégories. Le nombre de systèmes surveillés dépendra des choix de l'utilisateur, toutefois le nombre de processus sur la machine analysée peut varier considérablement, typiquement entre 10 et 100 processus, mais peut être beaucoup plus élevé. Le nombre d'appels systèmes est fixe, mais il y a environ 300 catégories de différents appels systèmes. Il sera difficile de représenter visuellement autant de catégories, si on prend des couleurs à titre d'exemple, il est typiquement difficile de les distinguer passé 6-8 couleurs.</p></li>
+</ul>
+<p>Différents approches peuvent être envisagées pour contourner le problème de la grande quantité de dimensions et de catégories, du fait que certaines propriétés visuelles de la représentation (telles la position, la taille, la couleur, etc.) peuvent représenter fidèlement plus de valeurs de que d'autre. Autrement dit, certaines propriétés visuelles d'un graphique peuvent être plus facilement distinguées par l'utilisateur, elles peuvent donc représenter plus de valeurs. Le diagramme suivant par Noahg Iliinsky<a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a> liste ces différentes propriétés et une estimation du nombre de valeurs différentes qu'elles peuvent représenter :</p>
+<div class="figure">
+<img src="figures/visual_encoding.png" alt="Fig 25. Différentes propriétés visuelles et leur caractéristiques" /><p class="caption">Fig 25. Différentes propriétés visuelles et leur caractéristiques</p>
+</div>
+<p>La solution devra prendre en considération ces différentes propriétés pour arriver à représenter les données de la façon la plus efficace possible, en respectant les bonnes pratiques d'énoncées à la section 3.2.</p>
+<h3 id="revue-des-approches-courantes"><a href="#revue-des-approches-courantes">3.4 Revue des approches courantes</a></h3>
+<p>Si on simplifie le problème un instant et qu'on imagine le cas le plus simple, une visualisation du temps de latence d'un seul type d'appel système (ex: read), par un seul processus (ex: apache) par un seul usager sur une seule machine. Comment représenter graphiquement ce temps de latence, qui varie dans le temps puisque chaque seconde ce processus effectue plusieurs requêtes au système d'exploitation ? Le moyen le plus simple est un diagramme à ligne, sur lequel l'axe des X représente la latence et l'axe des Y le temps. Comme ceci (données aléatoires pour l'exemple) :</p>
+<div class="figure">
+<img src="figures/line_chart.png" alt="Fig 26. Simple diagramme à ligne - données aléatoires" /><p class="caption">Fig 26. Simple diagramme à ligne - données aléatoires</p>
+</div>
+<p>Ce diagramme fait le travail, puisqu'il permet de comparer la variation de la latence dans le temps, lorsqu'on n'a qu'une seule dimension - un seul appel système et un seul processus. Toutefois il y a déjà quelques inconvénients à l'utilisation de ce graphique en ligne, qui vont apparaitre avec une bonne quantité de données.</p>
+<p>Premièrement avec grand nombre de points à chaque tranche de temps (axe des X), s'il y a des variations considérables dans les données (si par exemple la moitié des appels systèmes ont une latence aux alentours de 100ns et l'autre moitié aux alentours de 400 ns), la ligne risque de tellement bouger qu'il sera impossible de la suivre. Le même phénomène survient si la majorité des données est homogène, mais présente quelques importantes variations. Ce qui peut arriver lorsque les temps des appels systèmes sont mesurés avec une très grande précision, tel que des nanosecondes. Pour remédier à cela, on peut soit utiliser des percentiles pour filtrer les variations trop importantes, ou alors oublier les lignes et simplement tracer les points :</p>
+<div class="figure">
+<img src="figures/scatterplot.png" alt="Fig 27. Diagramme à nuage de points - mêmes données aléatoires" /><p class="caption">Fig 27. Diagramme à nuage de points - mêmes données aléatoires</p>
+</div>
+<p>Le diagramme à nuage de points risque d'être plus facile à lire dans ce cas, et il permettra de voir rapidement les groupes et concentrations de points. Toutefois ce n'est pas certain que le graphique va rester lisible si on dessine les 35 000 points par intervalle de temps, si les points sont très rapprochés, voire superposés, on perd alors une partie de la qualité de la visualisation, car on n'est plus en mesure d'évaluer facilement la quantité relative de points à des positions différentes. De plus, cela demande beaucoup de ressources pour afficher autant de points, ce qui est moins intéressant si on veut avoir une visualisation en temps réel.</p>
+<p>Une possible alternative serait alors de considérer un diagramme de type <em>heat map</em>, qui est très similaire aux nuages de points, sauf que l'espace du graphique est divisé en rectangles, et les points dans le même rectangle (dans le même intervalle de valeurs) sont regroupés, et ce rectangle prend alors une couleur qui représente la quantité de points présents dans cette zone. L'avantage principal des heat maps est que ceux-ci restent faciles à lire peut importe la quantité de points représentés et demandent également beaucoup moins de ressources lors de l'affichage. Brendan Gregg à notamment développé plusieurs outils pour réaliser des heat maps à partir de captures d'outils de traçage, voici un exemple tiré de son site web<a href="#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a> :</p>
+<div class="figure">
+<img src="figures/latency_heatmap.png" alt="Fig 28. Exemple de heat map, realisée par Bredan Gregg" /><p class="caption">Fig 28. Exemple de heat map, realisée par Bredan Gregg</p>
+</div>
+<p>Toutefois, un des requis de la solution est de permettre la comparaison des données. Les heat maps sont très intéressants lorsque l'on à une seule dimension à visualiser, mais dans notre il faudrait pouvoir être en mesure de comparer et explorer les différentes dimensions des données, ce qui n'est pas possible avec une seule heat map. C'est possible avec les diagrammes à ligne et les diagrammes à nuages de points, car on peut ajouter d'autres lignes ou points de différentes couleurs pour la comparaison des catégories, alors que l'attribut de la couleur est déjà employé dans un heat map.</p>
+<p>Par contre, il est certain qu'avec un grand nombre de catégories, placer tout cela sur le même diagramme va résulter également avec quelque chose de peu lisible, peu importe que ce soit des points ou des lignes. Il faut alors considérer de répartir les données sur plusieurs diagrammes, chaque diagramme représentant une dimension ou un aspect des données différent. Cette technique n'est pas mauvaise en soi, cela va donner un tableau de bord ou <em>dashboard</em>, ce qui est de plus en plus utilisé. Cela reste tout de même un compromis entre représenter moins d'information pour que celle-ci soit claire, et perdre une partie de la vue complète du système.</p>
+<p>Il n'y a pas de solution idéale à ce problème de représentation des données, étant donné la quantité de données, le nombre de catégories et de dimension, c'est effectivement un problème difficile à résoudre sans faire de compromis. Peu importe le type de visualisation, il faut considérer le contexte de celle-ci, c'est-à-dire la question qu'on cherche à répondre, et trouver la technique de représentation qui convient le mieux. Sur le sujet, le diagramme réalisé par Andrew Abela<a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a> est fort intéressant Pisqu'il indique quels sont les différents types de graphiques qui sont le plus approprié selon l'objectif de la visualisation :</p>
+<div class="figure">
+<img src="figures/data_chart_type.png" alt="Fig 29. Différents types de diagrammes organisés par objectif, par Andrew Abela" /><p class="caption">Fig 29. Différents types de diagrammes organisés par objectif, par Andrew Abela</p>
+</div>
+<h3 id="description-de-lapproche-de-visualisation-des-données-choisie"><a href="#description-de-lapproche-de-visualisation-des-données-choisie">3.4 Description de l'approche de visualisation des données choisie</a></h3>
+<p>Après avoir exploré les différents techniques de visualisation de données possibles, cette section présente la méthode qui a été choisie pour interpréter les données collectées. Dès le début du projet, plusieurs prototypes ont été explorés pour représenter l'information souhaitée, en premier lieu avec plusieurs esquisses sur papier. Voici quelques artéfacts de ces premières explorations.</p>
+<div class="figure">
+<img src="figures/sketch1.jpeg" alt="Fig 30. Première esquisse de l&#39;interface" /><p class="caption">Fig 30. Première esquisse de l'interface</p>
+</div>
+<p>Comme on peut le constater sur la figure 30, dès le début les différentes dimensions ont été identifiées et quelques idées ont été émises sur les attributs visuels qui pourraient les représenter, telles la couleur, la position, etc. Comme il s'agit de représenter l'activité d'une section de l'architecture du Kernel Linux, l'idée de se servir d'un cercle pour illustrer le Kernel a été reprise de nombreux diagrammes qui documentent cette architecture.</p>
+<p>Toutefois comme la visualisation vise à afficher l'activité en temps réel, ce cercle ne sera pas statique, mais va plutôt s'animer de façon à représenter les événements qui traversent le Kernel. Considérant la quantité d'événements à afficher, une des façons les plus courantes d'aborder le problème est de représenter chaque événement comme une simple forme tel un point, couramment appelée <em>particule</em>, pour former un <em>système de particules</em>. Le livre <a href="http://natureofcode.com/"><em>The Nature of Code</em></a> de Daniel Shiffman a d'ailleurs un très bon chapitre<a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a> sur le sujet.</p>
+<div class="figure">
+<img src="figures/sketch2.jpeg" alt="Fig 31. Exploration de l&#39;interactivité et interface de filtrage" /><p class="caption">Fig 31. Exploration de l'interactivité et interface de filtrage</p>
+</div>
+<p>L'avantage d'un système de particule est que celui-ci peut offrir une vision complète de l'état du système, et on peut ajouter à cette vue la possibilité de zoomer sur une zone spécifique, en ajoutant un mécanisme d'interaction à l'usager. L'idée de pouvoir diviser le cercle en section en utilisant la position pour représenter une catégorie comme un diagramme à pointe de tarte ou <em>pie chart</em> est également considérée pour mettre en évidence certains aspects des données, telle la répartition de l'ensemble des événements par catégories, comme le nom du processus ou le type d'appel système.</p>
+<div class="figure">
+<img src="figures/sketch3.jpeg" alt="Fig 32. Division de l&#39;espace pour afficher plusieurs systèmes" /><p class="caption">Fig 32. Division de l'espace pour afficher plusieurs systèmes</p>
+</div>
+<p>Un des avantages des diagrammes circulaires de type <em>pie chart</em> est que ceux-ci sont relativement compacts, or cet aspect peut être utilisé pour représenter plusieurs systèmes d'exploitation différents en même temps. Ce qui permettrait d'avoir une vue complète d'un groupe de serveurs, voire d'un centre de données au complet.</p>
+<div class="figure">
+<img src="figures/sketch4.jpeg" alt="Fig 33. Esquisse de l&#39;interface utilisateur" /><p class="caption">Fig 33. Esquisse de l'interface utilisateur</p>
+</div>
+<p>Avant de pouvoir traiter et afficher les données de différents serveurs, il faut que le logiciel soit en mesure de se connecter à ceux-ci pour récupérer l'information. Or cette esquisse présente un aperçu de l'interface utilisateur qui sera développée pour permettre à l'utilisateur d'établir des connexions vers les serveurs à instrumenter, et ensuite régler le nombre de systèmes de particules en conséquence.</p>
+<p>Autre possibilité qui vient du fait de pouvoir afficher plusieurs systèmes de particules, ceux-ci peuvent également être utilisés pour représenter différemment l'information du même système, afficher par exemple la répartition des appels systèmes par processus dans un premier cercle, et la répartition des appels systèmes par type (read, write, etc.) dans un second cercle.</p>
+<div class="figure">
+<img src="figures/sketch5.jpeg" alt="Fig 34. Exploration de différents modes de représentation du temps" /><p class="caption">Fig 34. Exploration de différents modes de représentation du temps</p>
+</div>
+<h3 id="attributs-de-la-visualisation-des-données-choisie"><a href="#attributs-de-la-visualisation-des-données-choisie">3.5 Attributs de la visualisation des données choisie</a></h3>
+<p>En résumé, voici les choix qui ont été faits pour représenter visuellement les différentes dimensions des données. Une fois qu'il a été déterminé que les événements sont représentés avec une particule (simple forme 2D, point ou cercle), les différentes propriétés des événements sont transmises aux particules via les attributs suivants :</p>
+<ul>
+<li><p>Position des particules : Les particules apparaissent au centre du cercle au fur et à mesure que des nouveaux événements sont reçus du serveur. Celles-ci ne sont pas statiques toutefois, elles se déplacent vers l'extérieur du cercle, et leur direction (l'angle) est déterminée en fonction de la distribution des événements. Plus précisément, le cercle est divisé en sections, de tailles relatives au nombre d'événements de chaque catégorie, puis les nouvelles particules sont réparties dans l'espace correspondant à leurs catégories respectives.</p></li>
+<li><p>Mouvement des particules : Les particules se déplacent donc avec une direction déterminée par la distribution des événements, toutefois la vitesse de celles-ci correspond à une autre dimension des données, soit le temps de latence des événements. En effet, la vitesse des particules est inversement proportionnelle au temps de latence des événements représentés. Plus la latence est élevée, moins la vitesse de la particule sera grande. Ou plutôt plus la latence est basse (l'opération s'est déroulée rapidement), plus la vitesse est élevée. L'idée derrière ce lien est que les événements avec une plus grande latence vont être affichés plus longtemps à l'écran, ce qui va permettre à l'utilisateur de les identifier plus facilement, et comme ce sont ces événements qui ralentissent le système, c'est en théorie ceux là que l'usager voudra trouver pour savoir où concentrer les efforts d'optimisation.</p></li>
+<li><p>Taille des particules : La taille des particules représente le nombre d'événements similaires regroupés. Cela dépend toutefois du choix de l'usager quant au paramètre de la précision de la latence. Avec ce réglage il est possible de spécifier avec quelle précision les événements de même type mais avec des temps de latence différents peuvent être regroupés, par exemple regrouper toutes les latences à la milliseconde près, la microseconde près ou alors aux 100 nanosecondes. La latence de ces événements est alors arrondie et ces événements sont représentés avec une seule particule, mais dont la taille est agrandie en fonction du nombre d'événements regroupés. Il est certainement possible de désactiver cette représentation, en spécifiant un arrondissement de 1 nanoseconde, le maximum de précision, ce qui aura pour effet qu'aucun regroupement ne sera fait, toutes les particules vont représenter 1 événement. Toutefois cela va demander significativement plus de ressources lors de l'exécution de l'application cliente.</p></li>
+<li><p>Couleur des particules : La couleur dans la visualisation est utilisée pour distinguer les différentes catégories. Les catégories peuvent être soit les noms des processus, des usagers ou alors des appels systèmes, mais toutes les catégories ne peuvent appartenir qu'à un de ces trois types à un instant donné, présentement si le type catégorie est changé la visualisation est redémarrée et les couleurs sont réinitialisées. Une couleur représente donc une catégorie donnée, l'étiquette de cette catégorie sera donc écrite avec cette couleur, les particules vont être dessinées avec cette couleur, et les informations supplémentaires sur les particules, affichées si l'usager sélectionne une particule avec sa souris, vont également être affichées avec cette couleur.</p></li>
+</ul>
+<p>Tous ces différents attributs encodés dans la visualisation de données peuvent s'avérer complexes pour un nouvel utilisateur qui commence tout juste à utiliser l'application. C'est pourquoi un menu d'aide est affiché dès l'ouverture de l'application, et ce menu explique en détail les différents aspects de la visualisation présentés ci-haut. L'usager peut cacher ou afficher le menu d'aide en tout temps lors de l'utilisation de l'application. Voici à quoi ce menu ressemble :</p>
+<div class="figure">
+<img src="figures/help_menu_slide2.png" alt="Fig 35. Explication des attributs avec le menu d&#39;aide" /><p class="caption">Fig 35. Explication des attributs avec le menu d'aide</p>
+</div>
+<div class="figure">
+<img src="figures/help_menu_slide3.png" alt="Fig 36. Explication des attributs avec le menu d&#39;aide 2" /><p class="caption">Fig 36. Explication des attributs avec le menu d'aide 2</p>
+</div>
+<div class="figure">
+<img src="figures/help_menu_slide4.png" alt="Fig 37. Explication des attributs avec le menu d&#39;aide 3" /><p class="caption">Fig 37. Explication des attributs avec le menu d'aide 3</p>
+</div>
+<h3 id="avantages-et-inconvénients"><a href="#avantages-et-inconvénients">3.6 Avantages et inconvénients</a></h3>
+<p>La visualisation de données choisie présente plusieurs avantages par rapport aux outils existants. Premièrement il est possible d'avoir une vue d'ensemble de l'activité d'un système au complet, ou même de plusieurs machines différentes. L'organisation de l'espace vise à garder la visualisation compacte, et d'être en mesure d'afficher plusieurs sources de données simultanément, pour être en mesure d'effectuer visuellement des comparaisons. La visualisation est en temps réel, alors cela permet de voir ce qui se passe dans l'immédiat.</p>
+<p>Toutefois, le fait que la visualisation est en temps réel limite certains types d'analyse, et il est difficile de comparer l'activité par rapport à un temps antérieur. Différentes méthodes ont été essayées pour combler cette lacune, mais les outils et méthodes de visualisation de données plus traditionnelles conviennent mieux dans ces cas-là.</p>
+<h3 id="alternatives-possibles"><a href="#alternatives-possibles">3.7 Alternatives possibles</a></h3>
+<p>Idéalement l'application doit être le plus modulaire possible, afin de permettre aux usagers de changer les paramètres par défaut et d'avoir la possibilité de personnaliser l'interface et la visualisation pour répondre à leurs besoins. Ceci dit, il est fort possible que certains aspects de la visualisation ne conviennent pas pour certaines analyses. Un des points soulevés à ce sujet est que la perception du temps de latence dans la vitesse des particules peut être difficile à interpréter par les usagers, et peut donner de fausses impressions quant à la représentation du temps.</p>
+<p>Une alternative à cette représentation de la latence qui a été envisagée et qui pourrait être implémentée dans les versions futures serait de changer les particules pour des lignes, dont la longueur serait correspondante au temps de latence. Ainsi, il serait également facile de repérer les événements qui ont pris plus de temps au système à traiter, et la perception du temps serait plus intuitive.</p>
+<h2 id="chapitre-4-conception-du-logiciel"><a href="#chapitre-4-conception-du-logiciel">Chapitre 4 : Conception du logiciel</a></h2>
+<h3 id="défis-rencontrés"><a href="#défis-rencontrés">4.1 Défis rencontrés</a></h3>
+<p>La solution souhaitée présente plusieurs défis qui devront être résolus par l'architecture élaborée. La qualité du logiciel, sa flexibilité et capacité d'adaptation aux changements futurs vont en effet dépendre de l'architecture choisie.</p>
+<p>L'architecture du logiciel peut être divisée en deux principaux modules, un module serveur - responsable de la collecte des données, et un module client qui devra interpréter les données et afficher celles-ci. Or ces deux modules présentent des défis différents. Du point de vue serveur, le principal défi est de concevoir une méthode d'acheminer les données collectées au module client, un protocole qui sera idéalement assez flexible pour supporter des connexions de N clients à N serveurs, c'est-à-dire que l'application cliente doit pouvoir se connecter à plusieurs serveurs simultanément pour recevoir leurs données, et inversement un serveur doit pouvoir supporter plusieurs connexions clientes simultanément. De plus une certaine robustesse doit être présente dans le module serveur pour que les données soient idéalement disponibles sur demande, peut importe quand.</p>
+<p>Du côté client, le problème consiste plutôt à concevoir une architecture flexible pour que si des besoins additionnels sont manifestés par les usagers dans le futur, il soit possible d'ajouter des fonctionnalités avec un minimum d'impact sur le code. Ces ajouts de fonctionnalités risquent fortement d'être au niveau de l'interface utilisateur ou de la visualisation de données, mais il peut s'agir également de changement au niveau du traitement des données, tel l'ajout du support pour d'autres sources de données.</p>
+<h3 id="architecture-choisie"><a href="#architecture-choisie">4.2 Architecture choisie</a></h3>
+<p>Cette section décrit en détail l'architecture choisie pour répondre aux exigences.</p>
+<h3 id="vue-densemble"><a href="#vue-densemble">4.2.1 Vue d'ensemble</a></h3>
+<p>Pour illustrer cette intéraction entre la partie serveur et la partie cliente de l'application, le diagramme suivant montre les principales étapes de l'établissement des connexions :</p>
+<div class="figure">
+<img src="figures/arch1.png" alt="Fig 38. Vue d&#39;ensemble du système" /><p class="caption">Fig 38. Vue d'ensemble du système</p>
+</div>
+<p>Tel que mentionné précédemment, le serveur doit être en mesure d'accepter de nouvelles connexions en tout temps, et transmettre les données aux clients aussi longtemps que ceux-ci restent connectés. Les connexions seront de durées variables, cela peut varier de quelques minutes dans le cas d'un usager souhaitant simplement avoir aperçu du système à une très longue durée dans le cas d'un dashboard affichant l'information d'un ou plusieurs systèmes en permanence.</p>
+<h3 id="architecture-module-serveur"><a href="#architecture-module-serveur">4.2.2 Architecture module serveur</a></h3>
+<p>La technique choisie pour gérer ces connexions est le patron de conception publish-subscribe :</p>
+<blockquote>
+<p>In software architecture, publish–subscribe is a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers.<br />-- Wikipedia<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a>.</p>
+</blockquote>
+<p>Ce patron de conception convient parfaitement au problème courant puisqu'il offre la flexibilité nécessaire pour permettre des connexions dynamiques entre les clients et serveur. Différentes implémentations de ce patron sont disponibles, mais après quelques recherches il s'est avéré qu'une façon simple d'ajouter la fonctionnalité au module serveur serait de recourir à un service dont le protocole serait supporté par presque tous les langages de programmation, l'idéal pour bâtir un pont entre la collecte de données de Sysdig et le reste de l'application.</p>
+<p>Ce service (ou plus précisément, serveur de données) avec la fonctionnalité pusblish-subscribe est <a href="http://redis.io/">Redis</a>, qui offre un mécanisme nommé PUBSUB avec quelques commandes pour utiliser ce système d'envoi de message. Redis va donc s'occuper de gérer les connexions client et Sysdig lui de la collecte des données. Pour connecter les deux, c'est-à-dire envoyer les données collectées à Redis pour qu'elles soient consommées par les clients, il est possible de tirer avantage d'une fonctionnalité de Sysdig, qui permet d'écrire des scripts en Lua (nommés chisels) pour traiter les données - ou l'envoi de celles-ci à Redis. L'architecture du module serveur va donc ressembler à la figure suivante :</p>
+<div class="figure">
+<img src="figures/arch2.png" alt="Fig 39. Architecture du module serveur" /><p class="caption">Fig 39. Architecture du module serveur</p>
+</div>
+<p>De cette façon les données sont encodées ou sérialisées à la source par le script lscv-chisel, et sont transportées sur le réseau par le protocole natif de communication de Redis. L'avantage de cette approche est que celle-ci reste flexible, les données peuvent être consommées facilement par à peu près n'importe quelle application cliente, suffit que celle-ci utilise un libraire pour accéder à Redis, et que les données soient encodées dans un format bien supporté, tel que JSON ou XML.</p>
+<p>Le processus de Redis est géré (démarrage automatique et statuts avec /etc/init.d/) par défaut avec les scripts fournis, alors il ne va rester qu'à écrire le script d'envoi des données (lscv-chisel) ainsi que du code pour encadrer le fonctionnement de Sysdig et le chargement du script.</p>
+<p>La performance est un enjeu important du projet, du fait qu'une grande quantité d'événements peut être reçue en peu temps. Or le choix de Redis dans ce scénario est également confirmé par sa réputation, Redis est généralement considéré comme étant très performant. Selon la documentation officielle de Redis, la complexité de l'opération d'envoi de message est O(N+M)<a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a> où N est le nombre de clients connectés au canal et M le nombre de clients connectés au total. Il reste à voir si cela va suffire pour traiter toutes les données, ou si un autre module va agir comme goulot d'étranglement.</p>
+<h3 id="architecture-module-client"><a href="#architecture-module-client">4.2.3 Architecture module client</a></h3>
+<p>L'architecture du côté du client est plus complexe que le serveur à cause notamment de la gestion de l'intéraction avec l'utilisateur. Pour gérer cette complexité, et aider à séparer les différentes fonctionnalités de l'application, son architecture est principalement basée sur le modèle MVC, Modèle-Vue-Contrôlleur. L'idée est de regrouper tout le code relié au traitement des données dans le modèle, le code de l'interface utilisateur dans les vues et l'interaction entre les deux est géré par les contrôleurs. Un existe plusieurs variantes de cette architecture, mais l'idée générale est de segmenter le code pour éviter d'avoir à tout modifier lors de changements liés à l'interface utilisateur.</p>
+<p>Le schéma suivant montre la conception initiale de l'application. D'autres classes ont été ajoutées au cours de l'implémentation pour répondre à différents besoins, mais la structure est restée la même.</p>
+<div class="figure">
+<img src="figures/arch3.png" alt="Fig 40. Architecture du module client" /><p class="caption">Fig 40. Architecture du module client</p>
+</div>
+<p>Initialement beaucoup d'effort a été mis sur la conception de la section Modèle de l'application, où les données sont reçues et traitées puisque c'est la partie la plus évidente pour commencer à développer et tester le tout. Différents patrons de conceptions ont été utilisés dans cette section, afin notamment de supporter différentes sources de données, et de manière générale d'être plus flexible.</p>
+<p>Comme les données reçues sont en réalité une série d'événements, une fois traitées c'est une liste d'objets de type Event qui sont envoyés du modèle au reste de l'application. En pratique, c'est une classe qui implémente l'interface DataSource (patron Stratégie pour supporter différentes sources de données) qui va établir le canal avec Redis et recevoir les données. Comme la réception des données est asynchrone, le patron Observateur est utilisé pour que la DataSource notifie le DataAggregator quand des nouvelles données sont reçues. Chaque DataSource se doit d'être indépendant, soit d'être exécutée dans un thread différent pour que la gestion d'événements concurrents soit possible. C'est la classe DataAggregator qui regroupe les données de différentes sources et qui envoie ces données aux vues.</p>
+<p>Le coeur de l'application, l'objet MainLoop qui contient la classe Main, est celui qui va initialiser toutes les composantes de l'application. Celle-ci agit donc en tant que contrôleur pour les vues. À noter que les variables d'état partagées globalement sont conservées dans un objet nommé Params, qui utilise le parton Singleton pour s'assurer qu'une seule instance existe en tout temps. Parmi ces variables se retrouvent les paramètres de l'interface utilisateur, qui sont utilisés à différents endroits et qui doivent être gardés synchronisés. Du fait que toutes ces variables d'état sont regroupées, cela devrait faciliter l'ajout de fonctionnalités dans le futur tels la sauvegarde et le chargement des paramètres courants, ou l'ajout d'une autre interface tel un API pour les modifier directement.</p>
+<p>Ce n'est pas évident dans ce diagramme mais une très grande partie de l'effort de développement sera consacrée uniquement aux vues, soit sur l'aspect de l'affichage et la représentation des données. C'est sûr que le but premier de cette application est de permettre la visualisation des données, mais comme cette section va évoluer considérablement au fil du développement et de l'expérimentation il est difficile de prévoir d'avance la structure que vont prendre les vues.</p>
+<p>De plus, par leur nature les vues seront difficiles à réutiliser dans d'autres contextes, du fait que le code sera spécifique à situation présente, contrairement au code du modèle voire des contrôleurs. Tout de même il est certain que le code des vues sera organisé en différentes classes comme le reste du programme, et d'emblée il semble correct que les principaux concepts de la visualisation de données aient chacun une classe différente pour séparer le code. Ainsi comme les événements sont représentés sous forme de particules, une classe Particle est liée à un Event, un groupe de particules provenant d'une même source sont conservées dans la classe Emitter, et puisque plusieurs sources de données peuvent être affichées en même temps, les Emitters sont regroupés dans la classe Hud.</p>
+<h2 id="chapitre-5-implémentation-du-logiciel"><a href="#chapitre-5-implémentation-du-logiciel">Chapitre 5 : Implémentation du logiciel</a></h2>
+<h3 id="outils-utilisés"><a href="#outils-utilisés">5.1 Outils utilisés</a></h3>
+<p>Différents outils ont été utilisés au cours de la réalisation de ce projet, les principaux sont les suivants :</p>
+<p>Outils liés au développement</p>
+<ul>
+<li><a href="https://eclipse.org/">Eclipse</a> - développement Java</li>
+<li><a href="http://www.sublimetext.com/">Sublime Text</a> - développement Lua et autres scripts</li>
+<li><a href="http://git-scm.com/">Git</a> - gestion du code source</li>
+<li><a href="https://www.virtualbox.org/">VirtualBox</a> - création de machines virtuelles</li>
+<li><a href="https://www.vagrantup.com/">Vagrant</a> - gestion de machines virtuelles</li>
+</ul>
+<p>Écriture du rapport et de la documentation</p>
+<ul>
+<li><a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> - syntaxe simplifiée pour le formatage</li>
+<li><a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> - outil de conversion de différents formats</li>
+</ul>
+<p>Autre</p>
+<ul>
+<li><a href="https://www.dropbox.com/">Dropbox</a> - partage des fichiers entre différentes machines</li>
+</ul>
+<h3 id="méthodologie-de-travail"><a href="#méthodologie-de-travail">5.2 Méthodologie de travail</a></h3>
+<p>Voici la liste des activités à réaliser dans le cadre de ce projet, telle qu'énumérée dans le document de proposition du projet :</p>
+<p>Analyse et spécification des besoins</p>
+<ul>
+<li>Recueil des données</li>
+<li>Rédaction du document de vision</li>
+<li>Rédaction du SRS</li>
+</ul>
+<p>Conception et développement</p>
+<ul>
+<li>Conception de l’architecture</li>
+<li>Conception de l’interface utilisateur</li>
+<li>Création de prototypes et maquettes de l’interface utilisateur</li>
+<li>Implémentation du module de collecte de données</li>
+<li>Implémentation du module d’interprétation des données</li>
+<li>Implémentation de l’interface utilisateur</li>
+</ul>
+<p>Tests et validation</p>
+<ul>
+<li>Validation des données collectées</li>
+<li>Validation des données affichées</li>
+<li>Essai de l’interface par plusieurs utilisateurs potentiels</li>
+</ul>
+<p>Documentation</p>
+<ul>
+<li>Création de diagrammes UML de l’architecture</li>
+<li>Rédaction du manuel de référence</li>
+<li>Rédaction du manuel de l’utilisateur</li>
+</ul>
+<p>L’approche utilisée pour le développement est similaire à la méthodologie Agile, principalement au niveau des itérations successives, surtout au niveau de la conception et de l’implémentation de l’interface utilisateur. Après qu'une nouvelle fonctionnalité ait été ajoutée à l'interface utilisateur, l'application a été testée à nouveau par un des utilisateurs cible afin d'avoir ses impressions et suggestions sur l'interface.</p>
+<h3 id="problèmes-rencontrés"><a href="#problèmes-rencontrés">5.3 Problèmes rencontrés</a></h3>
+<p>Différents problèmes ont été rencontrés au cours de l'implémentation de l'application. Cette section en explique quelques-uns de ces problèmes de nature technique et les solutions trouvées.</p>
+<h4 id="gestion-des-dépendances"><a href="#gestion-des-dépendances">5.3.1 Gestion des dépendances</a></h4>
+<p>Le premier problème rencontré au cours du projet a été la gestion des dépendances. En effet, comme l'application cliente utilise plusieurs libraires et frameworks externes, garder ces libraires organisées et disponibles peu importe la machine utilisée pour le développement, s'est avéré initialement problématique. Ajouter manuellement les fichiers jars sur les différents systèmes à fonctionné initialement mais au fur et à mesure que le projet à avancé et que d'autres libraires se sont ajouté ce processus s'est avéré inutilement long.</p>
+<p>Or la solution qui a été utilisée pour résoudre ce problème des dépendances logicielles a été d'utiliser le système de gestion des dépendances nommé <a href="http://maven.apache.org/">Apache Maven</a>. Une fois quelques plug-ins installés dans Eclipse, les différentes librairies sont désormais gérées par Maven et téléchargées automatiquement sur un nouveau système.</p>
+<h4 id="transfert-des-données-sur-le-réseau"><a href="#transfert-des-données-sur-le-réseau">5.3.2 Transfert des données sur le réseau</a></h4>
+<p>En anticipation à la quantité de données à transférer entre le module serveur et le module client, il fut établi dès le début que les données devraient être encodées le plus efficacement possible lors de leur transfert sur le réseau. Ainsi divers protocoles de sérialisation de données ont été considéré, et <a href="http://msgpack.org/">MessagePack</a> semblait le plus intéressant en raison de sa taille compacte. Précédemment utilisés dans d'autres projets avec des langages dynamiques comme Ruby et Python, les libraires MessagePack de ces langages ont fonctionné sans problème et sont simples d'utilisation. Dans le cas présent toutefois, comme le script responsable de sérialiser les données est en Lua et que l'application cliente est en Java, l'utilisation des librairies MessagePack dans ces langages a été problématique, principalement en raison des types forts en Java, qui contrairement à Ruby ou Python, doivent impérativement être spécifiés à l'avance. Le fait que MesssagePack est un format binaire est avantageux pour la performance, mais dans le cas présent cela n'a pas aidé au débogage de l'application.</p>
+<p>Comme cette embûche technique ralentissait la progression du premier prototype de l'application, il a été décidé de changer le format de sérialisation pour un format moins performant, mais plus facile à déboguer, soit le JSON. Plusieurs librairies existent pour le JSON en Lua et Java, et pour tester plus rapidement l'application celle qui a été initialement utilisée était écrite entièrement en Lua, et une fois que les transferts de données ont fonctionné avec succès, cette librairie Lua à été remplacée par une option plus performante, du fait qu'elle est écrite en C avec des liens Lua, <a href="http://www.kyne.com.au/~mark/software/lua-cjson-manual.html">Lua CJSON</a>. Du côté client, la libraire Java <a href="http://code.google.com/p/google-gson/">google-gson</a> a fonctionné sans problèmes.</p>
+<h4 id="génération-dune-palette-de-couleurs"><a href="#génération-dune-palette-de-couleurs">5.3.3 Génération d'une palette de couleurs</a></h4>
+<p>Un autre des défis de la visualisation était de trouver une méthode pour générer algorithmiquement des couleurs sur demande. Comme les couleurs sont utilisées pour identifier différentes catégories des données dans la visualisation, il faut que celles-ci soient facilement distinguables entre elles. Or différentes approches à ce problème sont possibles, souvent on peut choisir à l'avance une palette de couleur et coder celle-ci dans l'application. Cela n'était toutefois pas possible dans le contexte présent en raison de la quantité variable de catégories à représenter.</p>
+<p>En effet, comme les couleurs seront utilisées principalement dans l'application pour distinguer les différents processus fonctionnant sur le ou les systèmes analysés, il est impossible de prédire à l'avance le nombre de processus qui sont exécutés, ce nombre peut varier d'une dizaine de processus à plusieurs centaines. C'est donc difficile d'utiliser la couleur pour représenter autant de catégories, il faut faire des compromis et idéalement utiliser un système de couleur qui rend celles-ci faciles à distinguer pour l'usager.</p>
+<p>L'approche choisie pour résoudre ce problème à donc été d'utiliser un algorithme pour générer des couleurs sur demande, en essayant d'espacer les couleurs entre elles le plus possible (dans le modèle de couleur HSV). Quelques algorithmes sont déjà décrits pour arriver à ce résultat, il y a notemment <a href="http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/">un article</a> dans le magazine en ligne Devmag<a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a> qui décrit plusieurs algorithmes à cet effet, et <a href="http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/">cet article</a> de Martin Ankerl<a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> explique aussi quelques uns de ces algorithmes. L'algorithme retenu est inspiré de ces solutions pour choisir des couleurs uniques, différentes les unes des autres en incrémentant la distance dans l'espace de couleurs par le <em>Golden Ratio</em>, un nombre (0.6180339) qui produit des couleurs vibrantes. D'autres optimisations ont été ajoutées pour éviter certaines couleurs, tel que le bleu foncé, qui seraient difficiles à distinguer sur un fond noir comme celui de l'application</p>
+<h4 id="performance---affichage-graphique"><a href="#performance---affichage-graphique">5.3.4 Performance - affichage graphique</a></h4>
+<p>Le plus grand défi de l'application cliente est que l'affichage de celle-ci doit rester fluide, c'est-à-dire avec un nombre de <em>frames per second</em> (fps) aux alentours de 30, malgré la grande quantité d'événements à traiter et afficher. Suivre la position de dizaines voire centaines de milliers de particules, et mettre à jour celles-ci au minimum 30 fois par seconde demande beaucoup de ressources. Une chute du fps de l'application risque de briser l'interactivité de celle-ci avec l'usager, quitte à être complètement inutilisable.</p>
+<p>L'avantage d'utiliser le framework Processing et le langage Java pour l'application est que cela permettre d'expérimenter plus rapidement, mais le prix à payer est que l'affichage graphique est plus lent qu'une application native écrite en C ou C++. La plupart des applications qui sont très demandantes graphiquement sont écrites dans ces languages pour justement avoir un plus grand contrôle sur la pipeline graphique, et avoir une meilleure performance. Différentes techniques ont donc dû être utilisées pour s'assurer que l'application reste la plus fluide possible et garder le fps élevé.</p>
+<p>Premièrement au niveau de la visualisation de données elle-même, en utilisant la technique empruntée des heat maps de regrouper les événements similaires, cela permet d'avoir à afficher moins de particules, du fait qu'une seule particule d'aire plus importante peut en représenter plusieurs. L'échelle qui détermine les seuils auxquels sont regroupé plusieurs événements peut également être ajustée dynamiquement, pour obtenir une plus grande précision, quitte à ce que plus d'événements soient affichés et que cela demande plus de ressources, ou l'inverse pour que cela regroupe plus d'événements et demande moins de ressources.</p>
+<p>Ensuite l'autre méthode utilisée pour s'assurer de la performance a été d'expérimenter avec les différents systèmes de rendus graphique supportés par Processing. En effet, Processing supporte différents moteurs de rendus graphique, le moteur par défaut, P2D, P3D et PDF. Par défault Processing utilise un moteur qui utilise les librairies Java 2D pour supporter l'affichage en deux dimensions, ce qui est suffisant dans le cas présent. Toutefois après quelques essais il s'est avéré que le nombre de frames par secondes est plus stable et plus élevé en utilisant soit P2D ou P3D au lieu du défault. Les deux moteurs sont sensés utiliser l'accélération matérielle via OpenGL lorsque disponible, mais il semble que pour un affichage composé uniquement de formes simples, telles des particules dans notre cas, P2D et P3D supportent mieux la charge que le moteur par défaut.</p>
+<h3 id="architecture-finale"><a href="#architecture-finale">5.5 Architecture finale</a></h3>
+<p>Voici le résultat final de l'implémentation de l'application cliente. La structure ressemble à celle initialement conçue, mais l'architecture est tout de même légèrement différente en raison des choix ont dû être fait lors de l'implémentation, tel l'ajout de classes pour supporter des fonctionnalités qui n'ont pas été prévues initialement.</p>
+<div class="figure">
+<img src="figures/uml.png" alt="Fig 41. Diagramme UML de l&#39;application cliente" /><p class="caption">Fig 41. Diagramme UML de l'application cliente</p>
+</div>
+<p>Parmi ces quelques classes ajoutées, il y a notamment une classe pour gérer le menu d'aide affiché au démarrage de l'application (HelpMenu), une classe pour la génération des couleurs (ColorGenerator) ainsi que deux classes pour gérer la subdivision de l'espace d'affichage, lorsque plusieurs sources de données sont affichées simultanément.</p>
+<h3 id="déploiement-du-logiciel"><a href="#déploiement-du-logiciel">5.6 Déploiement du logiciel</a></h3>
+<p>Tout le code du projet à été déposé sur Github, une plateforme qui permet de partager du code source suivi par Git. <a href="https://francisbonneau.github.io/lscv/">Une page web</a> a également été réalisée pour montrer le projet, et sur ce site sont listés tous les différents répertoires Github qui contiennent le code source de l'application cliente <a href="https://github.com/francisbonneau/lscv-client">https://github.com/francisbonneau/lscv-client</a>, le module serveur <a href="https://github.com/francisbonneau/lscv-server">https://github.com/francisbonneau/lscv-server</a> et le rapport présent <a href="https://github.com/francisbonneau/lscv-doc">https://github.com/francisbonneau/lscv-doc</a>.</p>
+<p>Sur ces pages web se retrouvent non seulement le code source, mais également les instructions à suivre pour installer les applications. Présentement l'application serveur se déploie manuellement, mais il serait possible d'automatiser l'installation (c'est déjà fait pour des machines virtuelles avec Vagrant) pour différents OS ou de fournir des packages natifs .deb ou .rpm. Sinon l'application cliente est présentement distribuée sous forme de .jar exécutable, alors l'usager n'a qu'à télécharger le .jar et l'exécuter et l'application devrait fonctionner sous toutes les plateformes tant que Java est installé.</p>
+<h2 id="chapitre-6-démonstration-de-lapplication-finale"><a href="#chapitre-6-démonstration-de-lapplication-finale">Chapitre 6 : Démonstration de l'application finale</a></h2>
+<p>Ce chapitre présente l'interface utilisateur de la version finale de l'application cliente. Le module serveur ne s'exécute qu'en ligne de commande pour le moment. L'application cliente comporte deux fenêtres, une fenêtre principale où est affichée la visualisation de données, qui peut être en mode plein écran, ainsi qu'une autre fenêtre dédiée aux paramètres de la visualisation. C'est avec cette seconde fenêtre que l'utilisateur peut choisir à quels serveurs se connecter, et ajuster les différents aspects de la visualisation. Les contrôles de cette fenêtre ont été réalisés avec la libraire <a href="http://www.sojamo.de/libraries/controlP5/">ControlP5</a> pour Processing.</p>
+<p>Voici à quoi ressemble la fenêtre principale, qui est ouverte lorsque l'utilisateur démarre l'application :</p>
+<div class="figure">
+<img src="figures/help_menu.png" alt="Fig 42. Fenêtre principale, menu d&#39;aide" /><p class="caption">Fig 42. Fenêtre principale, menu d'aide</p>
+</div>
+<p>Il s'agit en fait d'un menu d'aide pour guider les nouveaux utilisateurs aux principes de la visualisation de données présentée. Ce menu d'aide n'est en réalité qu'une liste d'images, et comme une présentation PowerPoint l'usager peut changer l'image présentée, ou passer à la diapositive suivante, en appuyant sur la touche 'n'. À tout moment il peut cacher le menu d'aider avec la touche 'h', ce qui va révéler la vue principale, soit un simple cercle, car la visualisation n'a pas encore de source de données de sélectionnée.</p>
+<div class="figure">
+<img src="figures/start_data_viz.png" alt="Fig 43. Visualisation en attente de données" /><p class="caption">Fig 43. Visualisation en attente de données</p>
+</div>
+<p>Voici la fenêtre des paramètres de l'application. La navigation est organisée par onglets, le premier onglet étant les paramètres des sources de données. C'est ici que l'usager peut ajouter une nouvelle source de données, et par le fait même, établir une connexion vers un nouveau serveur. C'est également dans cet onglet que des filtres peuvent être appliqués à une source de donnée, il s'agit toutefois de filtres qui sont appliqués du côté serveur, directement à l'instance de Sysdig. Cela permet donc d'éviter le transfert de données inutiles sur le réseau.</p>
+<div class="figure">
+<img src="figures/settings1.png" alt="Fig 44. Onglet sélection sources de données" /><p class="caption">Fig 44. Onglet sélection sources de données</p>
+</div>
+<p>Le second onglet permet de sélectionner comment seront représentées les données reçues, en permettant à l'usager d'associer une source de données à un cercle - où seront représentés les événements en temps réel. Il est possible sur cet onglet de sélectionner le nombre de cercles affichés à l'écran, en glissant le slider du haut pour ajouter d'autres cercles horizontalement, ou avec l'autre slider pour ajouter des cercles verticalement. Une fois le nombre de cercles désirés sélectionné, l'usager doit ensuite utiliser les deux menus de type dropdown pour sélectionner quel cercle doit afficher quelle source de données.</p>
+<div class="figure">
+<img src="figures/settings2.png" alt="Fig 45. Onglet configuration de l&#39;affichage" /><p class="caption">Fig 45. Onglet configuration de l'affichage</p>
+</div>
+<p>Une fois une source de données associée à un cercle, la visualisation des données débute et ce cercle va afficher les événements reçus :</p>
+<div class="figure">
+<img src="figures/viz_started.png" alt="Fig 46. Visualisation démarrée avec quelques événements" /><p class="caption">Fig 46. Visualisation démarrée avec quelques événements</p>
+</div>
+<p>Le 3e onglet permet d'ajuster différents paramètres reliés à l'affichage de la visualisation, que ce soit la couleur du fond, la taille des particules, la vitesse de celles-ci, etc.</p>
+<div class="figure">
+<img src="figures/settings3.png" alt="Fig 47. Onglet avec différents paramètres de l&#39;affichage" /><p class="caption">Fig 47. Onglet avec différents paramètres de l'affichage</p>
+</div>
+<h2 id="chapitre-7-discussion-et-conclusion"><a href="#chapitre-7-discussion-et-conclusion">Chapitre 7 : Discussion et conclusion</a></h2>
+<h3 id="dicussion"><a href="#dicussion">7.1 Dicussion</a></h3>
+<p>Cette section est une réflexion sur les différents choix effectués au cours du projet, ainsi que les hypothèses faites, suite à la complétition du projet.</p>
+<h4 id="décisions-reliées-à-la-visualisation"><a href="#décisions-reliées-à-la-visualisation">7.1.1 Décisions reliées à la visualisation</a></h4>
+<p>Premièrement il s'est avéré que l'implémentation d'un outil de visualisation sur mesure demande beaucoup de travail. C'était à être anticipé, mais la vraie question est : est-ce que la quantité d'effort requise en vaut la peine considérant qu'il existe déjà plusieurs outils de visualisation de données disponibles ? Après avoir complété ce projet, je dirais que cela dépend des cas; dans la majorité des projets lorsqu'il s'agit de visualisation standard c'est certain que plusieurs outils sont disponibles et ceux-ci fonctionnent généralement bien.</p>
+<p>Toutefois lorsqu'on veut réaliser quelque chose de différent, alors construire ses propres outils en vaut définitivement la peine, puisque c'est le seul moyen d'avoir un contrôle total et absolu sur tous les aspects de la visualisation, de l'analyse des données à la représentation graphique, pixel par pixel. Alors cela dépend de la situation, mais dans certains cas décider d'implémenter sa propre solution peut s'avérer un très bon choix malgré l'effort supplémentaire requis.</p>
+<p>Plusieurs décisions ont été prises quant à la représentation des données, or bien que ces décisions ont été prises en essayant de répondre le mieux possible aux objectifs du projet, il se peut fort bien que la façon présente de représenter les données ne soit pas idéale pour certains utilisateurs, pour différentes raisons. Conscient de cette réalité, c'est pourquoi l'interface utilisateur comporte différents onglets, qui permettent d'ajuster une variété de paramètres reliés à l'affichage des données. C'est certain qu'il est impossible de répondre à tous les besoins, mais l'idée est tout de même de donner le plus possible le contrôle à l'utilisateur final de l'application sur la façon qu'il désire représenter ces données.</p>
+<h4 id="processing-versus-cc"><a href="#processing-versus-cc">7.1.2 Processing versus C/C++</a></h4>
+<p>Comme la performance était un enjeu important pour l'application cliente, quelques recherches ont été effectuées pour déterminer quels sont les langages et outils utilisés dans de telles situations. Or typiquement de telles applications sont écrites en C ou C++ pour s'exécuter le plus rapidement possible, et être proche du matériel. Toutefois, écrire du C/C++ peut s'avérer plus demandant en temps que certains langages plus modernes comme Java, qui possède différents outils pour réutiliser le code ou accélérer le développement. Alors de crainte que l'écriture de prototype initiale prenne trop de temps, et que cela rende l'expérimentation plus difficile le choix à été fait de rester avec le langage Java pour le prototype, quitte à s'exposer à des problèmes de performance plus tard, en considérant que d'autres stratégies pourraient être considérées pour améliorer la performance le cas échant.</p>
+<p>Après avoir complété le prototype, il s'est avéré que la performance de Java était très satisfaisante, même dans des cas demandant beaucoup de calcul graphique. Une des mesures principales utilisées pour juger de la performance, était le nombre d'images affichées par seconde (FPS), et pour la plupart du temps le FPS de l'application était suffisant que l'application soit considérée comme étant fluide par l'usager. Ce n'est que lorsqu'un très grand nombre d'événements que la performance peut s'avérer problématique, mais certaines stratégies comme l'accélération par OpenGL ont pu aider à améliorer la performance globale de l'application. Alors il semble que cette hypothèse de départ ait été bonne, puisque le développement a pu s'effectuer plus rapidement.</p>
+<h4 id="interface-utilisateur"><a href="#interface-utilisateur">7.1.3 Interface utilisateur</a></h4>
+<p>Tel que mentionné précédemment, l'interface utilisateur de l'application cliente comporte deux fenêtres, une pour la visualisation et l'autre pour les réglages de l'application, comme les sources de données, et autres paramètres. Les éléments de cette interface ont été réalisés avec la libraire ControlP5, ce qui donne une certaine flexibilité sur le contrôle de ceux-ci. Par contre, il serait bien de pouvoir se passer carrément de cette fenêtre de réglages.</p>
+<p>En effet, dans certaines situations comme l'utilisation de l'application comme tableau de bord sur un écran dédié, il peut s'avérer peu pratique devoir se connecter à distance sur la machine pour accéder à ces réglages. Idéalement dans le futur il faudrait implémenter une interface ou API qui permettrait d'avoir accès aux réglages sans avoir à utiliser l'interface actuelle. Cela donnerait une flexibilité totale aux usagers de créer par la suite d'autres interfaces par-dessus l'API, comme une application mobile ou une interface web, qui permettrait de changer les paramètres de la visualisation à distance.</p>
+<h4 id="améliorations-futures"><a href="#améliorations-futures">7.1.4 Améliorations futures</a></h4>
+<p>Bien que l'application actuelle réponde à la plupart des objectifs du projet, celle-ci est loin d'être parfaite et pourrait être améliorée de plusieurs façons. Voici quelques suggestions :</p>
+<ul>
+<li>Expérimenter avec d'autres formes pour représenter les événements, tel que des lignes dont la longueur pourrait être proportionnelle au temps de latence</li>
+<li>Calculer plus de statistiques sur les données collectées, telles que des pourcentiles</li>
+<li>Explorer différentes façons d'afficher les statistiques, superposées aux catégories</li>
+<li>Supporter différentes méthodes pour naviguer dans le temps</li>
+<li>Implémentation d'un mécanisme de sauvegarde et chargement des paramètres</li>
+<li>Implémentation d'un API pour contrôler l'application à distance</li>
+<li>Support pour projeter la visualisation sur plusieurs écrans</li>
+</ul>
+<h3 id="conclusion"><a href="#conclusion">7.2 Conclusion</a></h3>
+<p>L'objectif ce de projet était d'explorer différentes façons de représenter des données collectées sur l'activité de processus ou systèmes d'exploitation en temps réel. Du fait que la grande majorité des outils existants sont en ligne de commande, le but était d'explorer une alternative graphique qui faciliterait l'analyse et la comparaison des données. L'architecture de la solution présentée se résume à un module serveur qui s'occupe de la collecte des données, et d'une application cliente qui analyse et affiche celles-ci.</p>
+<p>Une fois le module client développé et que les données étaient prêtes à être représentées graphiquement, différentes interfaces graphiques ont été explorées sur papier pour trouver une méthode qui répondrait aux objectifs. Après différents essais, la méthode retenue a été implémentée en Java à l'aide du framework Processing. L'avantage de la solution comparée aux outils traditionnels est que celle-ci permet d'obtenir une vue d'ensemble de l'activité d'un ou plusieurs systèmes très rapidement.</p>
+<p>En conclusion, la solution implémentée dans le cadre du projet permet d'analyser rapidement beaucoup de données, mais en même temps son approche temps réel limite l'utilité de l'outil dans plusieurs scénarios d'analyse. Différentes techniques pourraient être envisagées dans le futur pour améliorer le contrôle du temps dans l'interface utilisateur.</p>
+<h2 id="bibliographie"><a href="#bibliographie">Bibliographie</a></h2>
+<p>Organisée selon l'ordre de référence :</p>
+<p>[Ref 01] CONTRIBUTEURS DE WIKIPÉDIA. « Linux ». Dans <em>Wikipedia</em>. [En ligne], http://fr.wikipedia.org/w/index.php?title=Linux. Consulté le 20 septembre 2014.</p>
+<p>[Ref 02] CONTRIBUTEURS DE WIKIPÉDIA. « Appel système ». Dans <em>Wikipedia</em>. [En ligne], https://fr.wikipedia.org/wiki/Appel_syst%C3%A8me. Consulté le 20 septembre 2014.</p>
+<p>[Ref 03] CONTRIBUTEURS DE WIKIPÉDIA. « Temps réel ». Dans <em>Wikipedia</em>. [En ligne], https://fr.wikipedia.org/wiki/Temps_r%C3%A9el. Consulté le 22 septembre 2014.</p>
+<p>[Ref 04] CONTRIBUTEURS DE STACKOVERFLOW. « What is the definition of realtime, near realtime and batch? ». Dans <em>stackoverflow</em>. [En ligne], http://stackoverflow.com/a/5286985/4152113. Consulté le 22 septembre 2014.</p>
+<p>[Ref 05] CONTRIBUTEURS DE WIKIPÉDIA. « Visualisation d'informations ». Dans <em>Wikipedia</em>. [En ligne], https://fr.wikipedia.org/wiki/Visualisation_d'informations. Consulté le 18 novembre 2014.</p>
+<p>[Ref 06] SPINELLIS, Diomidis. Another level of indirection. Dans Andy Oram; Wilson, Greg; Andrew Oram (2007). <em>Beautiful code</em>. Sebastopol, CA: O'Reilly.</p>
+<p>[Ref 07] GREGG, Brendan (2013). <em>Systems performance enterprise and the cloud</em>, [En ligne], http://proquest.safaribooksonline.com/?fpi=9780133390124.</p>
+<p>[Ref 08] CILIENDO, Eduardo; Kunimasa, Takechika (2007). <em>Linux Performance and Tuning Guidelines</em>, IBM: IBM, Coll. « Redpaper ».</p>
+<p>[Ref 09] GREGG, Bredan (2014). « Linux Performance ». [En ligne], http://www.brendangregg.com/linuxperf.html. Consulté le 5 novembre 2014.</p>
+<p>[Ref 10] GREGG, Bredan (2014). « Flame Graphs ». [En ligne], http://www.brendangregg.com/flamegraphs.html. Consulté le 5 novembre 2014.</p>
+<p>[Ref 11] XIAO, Han (2013). « vistrace: a visualization of strace ». [En ligne], http://home.in.tum.de/~xiaoh/vistrace.html. Consulté le 5 novembre 2014.</p>
+<p>[Ref 12] WILLIAMS, Alex (2010). « What is Data Visualization? [Infographic] ». Dans <em>readwrite</em>. [En ligne], http://readwrite.com/2010/11/27/what-is-data-visualization-inf. Consulté le 18 novembre 2014.</p>
+<p>[Ref 13] TUFTE, Edward R. (1983). <em>The visual display of quantitative information</em>, Cheshire, Conn. (Box 430, Cheshire 06410): Graphics Press.</p>
+<p>[Ref 14] ILIINSKY, Noah. « Properties and Best Uses of Visual Encodings». Dans <em>Complex Diagrams</em>. [En ligne], http://complexdiagrams.com/wp-content/2012/01/VisualPropertiesTable.pdf. Consulté le 8 octobre 2014.</p>
+<p>[Ref 15] GREGG, Bredan (2014). « Latency Heat Maps ». [En ligne], http://www.brendangregg.com/HeatMaps/latency.html#HeatMap. Consulté le 10 octobre 2014.</p>
+<p>[Ref 16] ABELA, Andrew (2013). <em>Advanced Presentations by Design: Creating Communication that Drives Action</em>, San Francisco : Pfeiffer, a Wiley brand.</p>
+<p>[Ref 17] SHIFFMAN, Daniel. « Chapter 4. Particle Systems ». Dans <em>The Nature of Code</em>. [En ligne], http://natureofcode.com/book/chapter-4-particle-systems/. Consulté le 10 octobre 2014.</p>
+<p>[Ref 18] CONTRIBUTEURS DE WIKIPÉDIA. « Publish–subscribe pattern ». Dans <em>Wikipedia</em>. [En ligne], http://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern. Consulté le 7 octobre 2014.</p>
+<p>[Ref 19] « PUBSUB subcommand ». Dans <em>Redis Documentation</em>, [En ligne], http://redis.io/commands/pubsub. Consulté le 7 octobre 2014.</p>
+<p>[Ref 20] TULLEKEN, Herman (2012). « How to Choose Colours Procedurally (Algorithms) ». Dans <em>DEVMAG</em>. [En ligne]. http://devmag.org.za/2012/07/29/how-to-choose-colours-procedurally-algorithms/. Consulté le 5 octobre 2014.</p>
+<p>[Ref 21] ANKERL, Matrin (2009). « How to generate random colors programmatically ». Dans <em>Martin Ankerl Blog</em>. [En ligne], http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/. Consulté le 5 octobre 2014.</p>
+<p><strong>Autres ouvrages consultés</strong></p>
+<p>[Ref 22] FRY, Ben (2008). <em>Visualizing data</em>, Beijing; Cambridge: O'Reilly Media, Inc.</p>
+<p>[Ref 23] GREENBERG, Ira (2007). <em>Processing creative coding and computational art</em>, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=371864.</p>
+<p>[Ref 24] KIRK, Andy (2012). <em>Data Visualization a successful design process</em>, [En ligne], http://public.eblib.com/choice/publicfullrecord.aspx?p=1108349.</p>
+<p>[Ref 25] REAS, Casey et Ben FRY (2007). <em>Processing : a programming handbook for visual designers and artists</em>, Cambridge, Mass.: MIT Press.</p>
+<p>[Ref 26] SHIFFMAN, Daniel (2008). <em>Learning Processing : a beginner's guide to programming images, animation, and interaction</em>, Amsterdam; Boston: Morgan Kaufmann/Elsevier.</p>
+<p>[Ref 27] TUFTE, Edward R. (2006). <em>Beautiful evidence</em>, Cheshire, Conn.: Graphics Press.</p>
+<h2 id="annexe"><a href="#annexe">Annexe</a></h2>
+<h3 id="description-des-métriques"><a href="#description-des-métriques">Description des métriques</a></h3>
+<p>Définitions tirées du Redpaper d'IBM <a href="http://www.redbooks.ibm.com/redpapers/pdfs/redp4285.pdf">Linux Performance and Tuning Guidelines</a> par Eduardo Ciliendo et Takechika Kunimasa.<a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a></p>
+<h6 id="cpu-utilization"><a href="#cpu-utilization">CPU utilization</a></h6>
+<blockquote>
+<p>This is probably the most straightforward metric. It describes the overall utilization per processor. On IBM System x architectures, if the CPU utilization exceeds 80% for a sustained period of time, a processor bottleneck is likely.</p>
+</blockquote>
+<h6 id="user-time"><a href="#user-time">User time</a></h6>
+<blockquote>
+<p>Depicts the CPU percentage spent on user processes, including nice time. High values in user time are generally desirable because, in this case, the system performs actual work.</p>
+</blockquote>
+<h6 id="system-time"><a href="#system-time">System time</a></h6>
+<blockquote>
+<p>Depicts the CPU percentage spent on kernel operations including IRQ and softirq time. High and sustained system time values can point you to bottlenecks in the network and driver stack. A system should generally spend as little time as possible in kernel time.</p>
+</blockquote>
+<h6 id="waiting-time"><a href="#waiting-time">Waiting time</a></h6>
+<blockquote>
+<p>Total amount of CPU time spent waiting for an I/O operation to occur. Like the blocked value, a system should not spend too much time waiting for I/O operations; otherwise you should investigate the performance of the respective I/O subsystem.</p>
+</blockquote>
+<h6 id="idle-time"><a href="#idle-time">Idle time</a></h6>
+<blockquote>
+<p>Depicts the CPU percentage the system was idle waiting for tasks.</p>
+</blockquote>
+<h6 id="nice-time"><a href="#nice-time">Nice time</a></h6>
+<blockquote>
+<p>Depicts the CPU percentage spent on re-nicing processes that change the execution order and priority of processes.</p>
+</blockquote>
+<h6 id="load-average"><a href="#load-average">Load average</a></h6>
+<blockquote>
+<p>The load average is not a percentage, but the rolling average of the sum of the following:</p>
+<p>– The number of processes in queue waiting to be processed</p>
+<p>– The number of processes waiting for uninterruptable task to be completed</p>
+<p>That is, the average of the sum of TASK_RUNNING and TASK_UNINTERRUPTIBLE processes. If processes that request CPU time are blocked (which means that the CPU has no time to process them), the load average will increase. On the other hand, if each process gets immediate access to CPU time and there are no CPU cycles lost, the load will decrease.</p>
+</blockquote>
+<h6 id="runable-processes"><a href="#runable-processes">Runable processes</a></h6>
+<blockquote>
+<p>This value depicts the processes that are ready to be executed. This value should not exceed 10 times the amount of physical processors for a sustained period of time; otherwise a processor bottleneck is likely.</p>
+</blockquote>
+<h6 id="blocked-processes"><a href="#blocked-processes">Blocked processes</a></h6>
+<blockquote>
+<p>Processes that cannot execute while they are waiting for an I/O operation to finish. Blocked processes can point you toward an I/O bottleneck.</p>
+</blockquote>
+<h6 id="context-switches"><a href="#context-switches">Context switches</a></h6>
+<blockquote>
+<p>Amount of switches between threads that occur on the system. High numbers of context switches in connection with a large number of interrupts can signal driver or application issues. Context switches generally are not desirable because the CPU cache is flushed with each one, but some context switching is necessary. Refer to 1.1.5, “Context switching” on page 5.</p>
+</blockquote>
+<h6 id="interrupts"><a href="#interrupts">Interrupts</a></h6>
+<blockquote>
+<p>The interrupt value contains hard interrupts and soft interrupts. Hard interrupts have a more adverse effect on system performance. High interrupt values are an indication of a software bottleneck, either in the kernel or a driver. Remember that the interrupt value includes the interrupts caused by the CPU clock. Refer to 1.1.6, “Interrupt handling” on page 6.</p>
+</blockquote>
+<h6 id="free-memory"><a href="#free-memory">Free memory</a></h6>
+<blockquote>
+<p>Compared to most other operating systems, the free memory value in Linux should not be a cause for concern. As explained in 1.2.2, “Virtual memory manager” on page 12, the Linux kernel allocates most unused memory as file system cache, so subtract the amount of buffers and cache from the used memory to determine (effectively) free memory.</p>
+</blockquote>
+<h6 id="swap-usage"><a href="#swap-usage">Swap usage</a></h6>
+<blockquote>
+<p>This value depicts the amount of swap space used. As described in 1.2.2, “Virtual memory manager” on page 12, swap usage only tells you that Linux manages memory really efficiently. Swap In/Out is a reliable means of identifying a memory bottleneck. Values above 200 to 300 pages per second for a sustained period of time express a likely memory bottleneck.</p>
+</blockquote>
+<h6 id="buffer-and-cache"><a href="#buffer-and-cache">Buffer and cache</a></h6>
+<blockquote>
+<p>Cache allocated as file system and block device cache.</p>
+</blockquote>
+<h6 id="slabs"><a href="#slabs">Slabs</a></h6>
+<blockquote>
+<p>Depicts the kernel usage of memory. Note that kernel pages cannot be paged out to disk.</p>
+</blockquote>
+<h6 id="active-vs-inactive-memory"><a href="#active-vs-inactive-memory">Active vs inactive memory</a></h6>
+<blockquote>
+<p>Provides you with information about the active use of the system memory. Inactive memory is a likely candidate to be swapped out to disk by the kswapd daemon. Refer to “Page frame reclaiming” on page 14.</p>
+</blockquote>
+<h6 id="packets-received-and-sent"><a href="#packets-received-and-sent">Packets received and sent</a></h6>
+<blockquote>
+<p>This metric informs you of the quantity of packets received and sent by a given network interface.</p>
+</blockquote>
+<h6 id="bytes-received-and-sent"><a href="#bytes-received-and-sent">Bytes received and sent</a></h6>
+<blockquote>
+<p>This value depicts the number of bytes received and sent by a given network interface.</p>
+</blockquote>
+<h6 id="collisions-per-second"><a href="#collisions-per-second">Collisions per second</a></h6>
+<blockquote>
+<p>This value provides an indication of the number of collisions that occur on the network that the respective interface is connected to. Sustained values of collisions often concern a bottleneck in the network infrastructure, not the server. On most properly configured networks, collisions are very rare unless the network infrastructure consists of hubs.</p>
+</blockquote>
+<h6 id="packets-dropped"><a href="#packets-dropped">Packets dropped</a></h6>
+<blockquote>
+<p>This is a count of packets that have been dropped by the kernel, either due to a firewall configuration or due to a lack of network buffers.</p>
+</blockquote>
+<h6 id="overruns"><a href="#overruns">Overruns</a></h6>
+<blockquote>
+<p>Overruns represent the number of times that the network interface ran out of buffer space. This metric should be used in conjunction with the packets dropped value to identify a possible bottleneck in network buffers or the network queue length.</p>
+</blockquote>
+<h6 id="errors"><a href="#errors">Errors</a></h6>
+<blockquote>
+<p>The number of frames marked as faulty. This is often caused by a network mismatch or a partially broken network cable. Partially broken network cables can be a significant performance issue for copper-based gigabit networks.</p>
+</blockquote>
+<h6 id="iowait"><a href="#iowait">IOwait</a></h6>
+<blockquote>
+<p>Time the CPU spends waiting for an I/O operation to occur. High and sustained values most likely indicate an I/O bottleneck.</p>
+</blockquote>
+<h6 id="average-queue-length"><a href="#average-queue-length">Average queue length</a></h6>
+<blockquote>
+<p>Amount of outstanding I/O requests. In general, a disk queue of 2 to 3 is optimal; higher values might point toward a disk I/O bottleneck.</p>
+</blockquote>
+<h6 id="average-wait"><a href="#average-wait">Average wait</a></h6>
+<blockquote>
+<p>A measurement of the average time in ms it takes for an I/O request to be serviced. The wait time consists of the actual I/O operation and the time it waited in the I/O queue.</p>
+</blockquote>
+<h6 id="transfers-per-second"><a href="#transfers-per-second">Transfers per second</a></h6>
+<blockquote>
+<p>Depicts how many I/O operations per second are performed (reads and writes). The transfers per second metric in conjunction with the kBytes per second value helps you to identify the average transfer size of the system. The average transfer size generally should match with the stripe size used by your disk subsystem.</p>
+</blockquote>
+<h6 id="blocks-readwrite-per-second"><a href="#blocks-readwrite-per-second">Blocks read/write per second</a></h6>
+<blockquote>
+<p>This metric depicts the reads and writes per second expressed in blocks of 1024 bytes as of kernel 2.6. Earlier kernels may report different block sizes, from 512 bytes to 4 KB.</p>
+</blockquote>
+<h6 id="kilobytes-per-second-readwrite"><a href="#kilobytes-per-second-readwrite">Kilobytes per second read/write</a></h6>
+<blockquote>
+<p>Reads and writes from/to the block device in kilobytes represent the amount of actual data transferred to and from the block device.</p>
+</blockquote>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Ref 01<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Ref 02<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Ref 03<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Ref 04<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>Ref 05<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>Ref 06<a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>Ref 07<a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p>Ref 08<a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p>Ref 09<a href="#fnref9">↩</a></p></li>
+<li id="fn10"><p>Ref 10<a href="#fnref10">↩</a></p></li>
+<li id="fn11"><p>Ref 10<a href="#fnref11">↩</a></p></li>
+<li id="fn12"><p>Ref 11<a href="#fnref12">↩</a></p></li>
+<li id="fn13"><p>Ref 11<a href="#fnref13">↩</a></p></li>
+<li id="fn14"><p>Ref 12<a href="#fnref14">↩</a></p></li>
+<li id="fn15"><p>Ref 13<a href="#fnref15">↩</a></p></li>
+<li id="fn16"><p>Ref 14<a href="#fnref16">↩</a></p></li>
+<li id="fn17"><p>Ref 15<a href="#fnref17">↩</a></p></li>
+<li id="fn18"><p>Ref 16<a href="#fnref18">↩</a></p></li>
+<li id="fn19"><p>Ref 17<a href="#fnref19">↩</a></p></li>
+<li id="fn20"><p>Ref 18<a href="#fnref20">↩</a></p></li>
+<li id="fn21"><p>Ref 19<a href="#fnref21">↩</a></p></li>
+<li id="fn22"><p>Ref 20<a href="#fnref22">↩</a></p></li>
+<li id="fn23"><p>Ref 21<a href="#fnref23">↩</a></p></li>
+<li id="fn24"><p>Ref 10<a href="#fnref24">↩</a></p></li>
+</ol>
+</div>
+</body>
+</html>
