@@ -443,7 +443,7 @@ En résumé, voici les choix qui ont été fait pour représenter visuellement l
 
 * Couleur des particules : La couleur dans la visualisation est utilisée pour distinguer les différentes catégories. Les catégories peuvent être  soit les noms des processus, des usagers ou alors des appels systèmes, mais toutes les catégories ne peuvent appartenir qu'à un de ces trois types à un instant donné, présenement si le type catégorie est changé la visualisation est redémarrée et les couleurs sont réinitialisées. Une couleur représente donc une catégorie donnée, l'étiquette de cette catégorie sera donc écrite avec cette couleur, les particules vont être dessinées avec cette couleur, et les informations supplémentaires sur les particules, affichés si l'usager sélectionne une particule avec sa souris, vont également être affichés avec cette couleur. 
 
-Tous ces différents attributs encodés dans la visualisation de données peuvent s'avérer complexes pour un nouvel utilisateur qui commence tout juste à utiliser l'application. C'est pourquoi un menu d'aide est affiché dès l'ouverture de l'application, et ce menu explique en détails les différents aspects de la visualisation présentés ci-haut. L'usager peut cacher ou afficher le menu d'aide en tout temps lors de l'utilisation de l'applicaiton, et voici à quoi ce menu ressemble : 
+Tous ces différents attributs encodés dans la visualisation de données peuvent s'avérer complexes pour un nouvel utilisateur qui commence tout juste à utiliser l'application. C'est pourquoi un menu d'aide est affiché dès l'ouverture de l'application, et ce menu explique en détails les différents aspects de la visualisation présentés ci-haut. L'usager peut cacher ou afficher le menu d'aide en tout temps lors de l'utilisation de l'application. Voici à quoi ce menu ressemble : 
 
 ![Fig 35. Explication des attributs avec le menu d'aide](figures/help_menu_slide2.png)
 
@@ -451,12 +451,17 @@ Tous ces différents attributs encodés dans la visualisation de données peuven
 
 ![Fig 37. Explication des attributs avec le menu d'aide 3](figures/help_menu_slide4.png)
 
-
 ### 3.6 Avantages et inconvénients
 
+La visualisation de données choisie présente plusieurs avantages par rapport aux outils existants. Premièrement il est possible d'avoir une vue d'ensemble de l'activité d'un système au complet, ou même de plusieurs machines différentes. L'organisation de l'espace vise à garder la visualisation compacte, et d'être en mesure d'afficher plusieurs sources de données simultanément, pour être en mesure d'effectuer visuellement des comparaisons. La visualisation est en temps réel, alors cela permet de voir ce qui se passe dans l'immédiat. 
+
+Toutefois, le fait que la visualisation est en temps réel limite certains types d'analyse, et il est difficile de comparer l'activité par rapport à un temps antérieur. Différents méthodes ont été essayés pour combler cette lacune, mais les outils et méthode de visualisation de données plus traditionnelles conviennent mieux dans ces cas-là.
 
 ### 3.7 Alternatives possibles
 
+Idéalement l'application doit être le plus modulaire possible, afin de permettre aux usagers de changer les paramètres par défaut et d'avoir la possibilité de personnaliser l'interface et la visualisation pour répondre à leur besoins. Ceci dit, il est fort possible que certains aspects de la visualisation ne conviennent pas pour certaines analyses. Un des points soulevés à ce sujet, est que la perception du temps de latence dans la vitesse des particules peut être difficile à interpréter par les usagers, et peut donner de fausses impressions quant à la représentation du temps. 
+
+Une alternative à cette représentation de la latence qui à été envisagée et qui pourrait être implémentée dans les versions futures serait de changer les particules pour des lignes, dont la longueur serait correspondante au temps de latence. Ainsi, il serait également facile de reprérer les évenements qui ont pris plus de temps au système à traiter, et la perception du temps serait plus intuitive. 
 
 ## Chapitre 4 : Conception du logiciel
 
