@@ -441,7 +441,15 @@ En résumé, voici les choix qui ont été fait pour représenter visuellement l
 
 * Taille des particules : La taille des particule représente le nombre d'événements similaires regroupés. Cela dépend toutefois du choix de l'usager quant au paramètre de la précision de la latence. Avec ce réglage il est possible de spécifier avec quelle précision les événements de même type mais avec des temps de latence différent peuvent être regroupés, par exemple regrouper toutes la latences à la miliseconde près, la microseconde près ou alors aux 100 nanosecondes. La latence de ces événements est alors arrondie et ces événements sont représentés avec une seule particule, mais dont la taille est agrandie en fonction du nombre d'événements regroupés. Il est certainement possible de désactiver cette représentation, en spécifiant un arrondissement de 1 nanoseconde, le maximum de précision, ce qui aura pour effet qu'un aucun regrouprement sera fait, toutes les particules vont représenter 1 événement. Toutefois cela va demander significativement plus de ressources lors de l'exécution de l'application cliente. 
 
-* Couleur des particules : 
+* Couleur des particules : La couleur dans la visualisation est utilisée pour distinguer les différentes catégories. Les catégories peuvent être  soit les noms des processus, des usagers ou alors des appels systèmes, mais toutes les catégories ne peuvent appartenir qu'à un de ces trois types à un instant donné, présenement si le type catégorie est changé la visualisation est redémarrée et les couleurs sont réinitialisées. Une couleur représente donc une catégorie donnée, l'étiquette de cette catégorie sera donc écrite avec cette couleur, les particules vont être dessinées avec cette couleur, et les informations supplémentaires sur les particules, affichés si l'usager sélectionne une particule avec sa souris, vont également être affichés avec cette couleur. 
+
+Tous ces différents attributs encodés dans la visualisation de données peuvent s'avérer complexes pour un nouvel utilisateur qui commence tout juste à utiliser l'application. C'est pourquoi un menu d'aide est affiché dès l'ouverture de l'application, et ce menu explique en détails les différents aspects de la visualisation présentés ci-haut. L'usager peut cacher ou afficher le menu d'aide en tout temps lors de l'utilisation de l'applicaiton, et voici à quoi ce menu ressemble : 
+
+![Fig 35. Explication des attributs avec le menu d'aide](figures/help_menu_slide2.png)
+
+![Fig 36. Explication des attributs avec le menu d'aide 2](figures/help_menu_slide3.png)
+
+![Fig 37. Explication des attributs avec le menu d'aide 3](figures/help_menu_slide4.png)
 
 
 ### 3.6 Avantages et inconvénients
@@ -468,7 +476,7 @@ Cette section décrit en détail l'architecture choisie pour répondre aux exige
 
 Pour illustrer cette intéraction entre la partie serveur et la partie cliente de l'application, le diagramme suivant montre les principales étapes de l'établissement des connexions :
 
-![Fig 35. Vue d'ensemble du système](figures/arch1.png)
+![Fig 38. Vue d'ensemble du système](figures/arch1.png)
 
 Tel que mentionné précédemment, le serveur doit être en mesure d'accepter de nouvelles connexions en tout temps, et transmettre les données aux clients aussi longtemps que ceux-ci restent connectés. Les connexions seront de durées variables, cela peut varier de quelques minutes dans le cas d'un usager souhaitant simplement avoir aperçu du système à une très longue durée dans le cas d'un dashboard affichant l'information d'un ou plusieurs systèmes en permanence.
 
@@ -483,7 +491,7 @@ Ce patron de conception convient parfaitement au problème courant puisqu'il off
 
 Ce service (ou plus précisément, serveur de données) avec la fonctionnalité pusblish-subscribe est [Redis](http://redis.io/), qui offre un mécanisme nommé PUBSUB avec quelques commandes pour utiliser ce système d'envoi de message. Redis va donc s'occuper de gérer les connexions client et Sysdig lui de la collecte des données. Pour connecter les deux, c'est-à-dire envoyer les données collectées à Redis pour qu'elles soient consommées par les clients, il est possible de tirer avantage d'une fonctionnalité de Sysdig, qui permet d'écrire des scripts en Lua (nommés chisels) pour traiter les données - ou l'envoi de celles-ci à Redis. L'architecture du module serveur va donc ressembler à la figure suivante :
 
-![Fig 36. Architecture du module serveur](figures/arch2.png)
+![Fig 39. Architecture du module serveur](figures/arch2.png)
 
 De cette façon les données sont encodées ou sérialisées à la source par le script lscv-chisel, et sont transportées sur le réseau par le protocole natif de communication de Redis. L'avantage de cette approche est que celle-ci reste flexible, les données peuvent être consommées facilement par à peu près n'importe quelle application cliente, suffit que celle-ci utilise un libraire pour accéder à Redis, et que les données soient encodées dans un format bien supporté, tel JSON ou XML.
 
@@ -497,7 +505,7 @@ L'architecture du côté du client est plus complexe que le serveur à cause not
 
 Le schéma suivant montre la conception initiale de l'application. D'autres classes ont été ajoutées au cours de l'implémentation pour répondre à différents besoins, mais la structure est restée la même. 
 
-![Fig 37. Architecture du module client](figures/arch3.png)
+![Fig 40. Architecture du module client](figures/arch3.png)
 
 Initialement beaucoup d'effort a été mis sur la conception de la section Modèle de l'application, où les données sont reçues et traitées puisque c'est la partie la plus évidente pour commencer à développer et tester le tout. Différents patrons de conceptions ont été utilisés dans cette section, afin notamment de supporter différentes sources de données, et de manière générale d'être plus flexible. 
 
@@ -603,7 +611,7 @@ Ensuite l'autre méthode utilisée pour s'assurer de la performance a été d'ex
 
 Voici le résultat final de l'implémentation de l'application cliente. La structure ressemble à celle initialement conçue, mais l'architecture est tout de même légèrement différente en raison des choix ont dû être fait lors de l'implémentation, tel l'ajout de classes pour supporter des fonctionnalités qui n'ont pas été prévues initialement. 
 
-![Fig 38. Diagramme UML de l'application cliente](figures/uml.png)
+![Fig 41. Diagramme UML de l'application cliente](figures/uml.png)
 
 Parmi ces quelques classes ajoutées, il y a notamment une classe pour gérer le menu d'aide affiché au démarrage de l'application (HelpMenu), une classe pour la génération des couleurs (ColorGenerator) ainsi que deux classes pour gérer la subdivision de l'espace d'affichage, lorsque plusieurs sources de données sont affichées simultanément.
 
@@ -620,27 +628,27 @@ Ce chapitre présente l'interface utilisateur de la version finale de l'applicat
 
 Voici à quoi ressemble la fenêtre principale, qui est ouverte lorsque l'utilisateur démarre l'application : 
 
-![Fig 39. Fenêtre principale, menu d'aide](figures/help_menu.png)
+![Fig 42. Fenêtre principale, menu d'aide](figures/help_menu.png)
 
 Il s'agit en fait d'un menu d'aide pour guider les nouveaux utilisateurs aux principes de la visualisation de données présentée. Ce menu d'aide n'est en réalité qu'une liste d'images, et comme une présentation PowerPoint l'usager peut changer l'image présentée, ou passer à la diapositive suivante, en appuyant sur la touche 'n'. À tout moment il peut cacher le menu d'aider avec la touche 'h', ce qui va révéler la vue principale, soit un simple cercle, car la visualisation n'a pas encore de source de données de sélectionnée.
 
-![Fig 40. Visualisation en attente de données](figures/start_data_viz.png)
+![Fig 43. Visualisation en attente de données](figures/start_data_viz.png)
 
 Voici la fenêtre des paramètres de l'application. La navigation est organisée par onglets, le premier onglet étant les paramètres des sources de données. C'est ici que l'usager peut ajouter une nouvelle source de données, et par le fait même, établir une connexion vers un nouveau serveur. C'est également dans cet onglet que des filtres peuvent être appliqués à une source de donnée, il s'agit toutefois de filtres qui sont appliqués du côté serveur, directement à l'instance de Sysdig. Cela permet donc d'éviter le transfert de données inutiles sur le réseau. 
 
-![Fig 41. Onglet sélection sources de données](figures/settings1.png)
+![Fig 44. Onglet sélection sources de données](figures/settings1.png)
 
 Le second onglet permet de sélectionner comment seront représentées les données reçues, en permettant à l'usager d'associer une source de données à un cercle - où seront représentés les événements en temps réel. Il est possible sur cet onglet de sélectionner le nombre de cercles affichés à l'écran, en glissant le slider du haut pour ajouter d'autres cercles horizontalement, ou avec l'autre slider pour ajouter des cercles verticalement. Une fois le nombre de cercles désirés sélectionné, l'usager doit ensuite utiliser les deux menus de type dropdown pour sélectionner quel cercle doit afficher quelle source de données.
 
-![Fig 42. Onglet configuration de l'affichage](figures/settings2.png)
+![Fig 45. Onglet configuration de l'affichage](figures/settings2.png)
 
 Une fois une source de données associée à un cercle, la visualisation des données débute et ce cercle va afficher les événements reçus :
 
-![Fig 43. Visualisation démarrée avec quelques événements](figures/viz_started.png)
+![Fig 46. Visualisation démarrée avec quelques événements](figures/viz_started.png)
 
 Le 3e onglet permet d'ajuster différents paramètres reliés à l'affichage de la visualisation, que ce soit la couleur du fond, la taille des particules, la vitesse de celles-ci, etc.
 
-![Fig 44. Onglet avec différents paramètres de l'affichage](figures/settings3.png)
+![Fig 47. Onglet avec différents paramètres de l'affichage](figures/settings3.png)
 
 
 ## Chapitre 7 : Discussion et conclusion
