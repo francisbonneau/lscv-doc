@@ -391,7 +391,7 @@ Premièrement avec grand nombre de points à chaque tranche de temps (axe des X)
 
 ![Fig 27. Diagramme à nuage de points - mêmes données aléatoires](figures/scatterplot.png)
 
-Le diagramme à nuage de points risque d'être plus facile à lire dans ce cas, et il permettra de voir rapidement les groupes et concentrations de points. Toutefois ce n'est pas garanti que le graphique va rester lisible si on dessine les 35 000 points par intervalle de temps, si les points sont très rapprochés, voir superposés, on perd alors une partie de la qualité de la visualisation car on n'est plus en mesure d'évaluer facilement la quantité relative de points à des positions différentes. De plus, cela demande beaucoup de ressources pour afficher autant de points, ce qui est moins intéressant si on veut avoir une visualisation en temps réel. 
+Le diagramme à nuage de points risque d'être plus facile à lire dans ce cas, et il permettra de voir rapidement les groupes et concentrations de points. Toutefois ce n'est pas certain que le graphique va rester lisible si on dessine les 35 000 points par intervalle de temps, si les points sont très rapprochés, voir superposés, on perd alors une partie de la qualité de la visualisation car on n'est plus en mesure d'évaluer facilement la quantité relative de points à des positions différentes. De plus, cela demande beaucoup de ressources pour afficher autant de points, ce qui est moins intéressant si on veut avoir une visualisation en temps réel. 
 
 Une possible alternative serait alors de considérer un diagramme de type *heat map*, qui est très similaire aux nuages de points, sauf que l'espace du graphique est divisé en rectangles, et les points dans le même rectangle (dans le même intervalle de valeurs) sont regroupés, et ce rectangle prend alors une couleur qui représente la quantité de points présents dans cette zone. L'avantage principal des heat maps est que ceux-ci restent faciles à lire peut importe la quantité de points représentés et demandent également beaucoup moins de ressources lors de l'affichage. Brendan Gregg à notamment développé plusieurs outils pour réaliser des heat maps à partir de captures d'outils de traçage, voici un exemple tiré de son site web^[Ref 15] : 
 
@@ -417,7 +417,7 @@ Toutefois comme la visualisation vise à afficher l'activité en temps réel, ce
 
 ![Fig 31. Exploration de l'interactivité et interface de filtrage ](figures/sketch2.jpeg)
 
-L'avantage d'un système de particule est que celui-ci peut offrir une vision complète de l'état du système, et on peut ajouter à cette vue la possibilité de zoomer sur une zone spécifique, en ajoutant un mécanisme d'intéraction à l'usager. L'idée de pouvoir diviser le cercle en section en utilisant la position pour représenter une catégorie comme un diagramme à pointe de tarte ou *pie chart* est également considérée pour mettre en évidence certains faits des données, telle la répartition de l'ensemble des événements par catégories, comme le nom du processus ou le type d'appel système. 
+L'avantage d'un système de particule est que celui-ci peut offrir une vision complète de l'état du système, et on peut ajouter à cette vue la possibilité de zoomer sur une zone spécifique, en ajoutant un mécanisme d'intéraction à l'usager. L'idée de pouvoir diviser le cercle en section en utilisant la position pour représenter une catégorie comme un diagramme à pointe de tarte ou *pie chart* est également considérée pour mettre en évidence certains aspects des données, telle la répartition de l'ensemble des événements par catégories, comme le nom du processus ou le type d'appel système. 
 
 ![Fig 32. Division de l'espace pour afficher plusieurs systèmes](figures/sketch3.jpeg)
 
@@ -429,15 +429,25 @@ Avant de pouvoir traiter et afficher les données de différents serveurs, il fa
 
 Autre possibilité qui vient du fait de pouvoir afficher plusieurs systèmes de particules, ceux-ci peuvent également être utilisés pour représenter différemment l'information du même système, afficher par exemple la répartition des appels systèmes par processus dans un premier cercle, et la répartition des appels systèmes par type (read, write, etc.) dans un second cercle.
   
+![Fig 34. Exploration de différents modes de représentation du temps](figures/sketch5.jpeg)
 
-![Fig 34. ](figures/sketch5.jpeg)
+### 3.5 Attributs de la visualisation des données choisie
+
+En résumé, voici les choix qui ont été fait pour représenter visuellement les différentes dimensions des données. Une fois qu'il à été déterminé que les événements sont représenté avec une particule (simple forme 2D, point ou cercle), les différentes propriétées des événements sont transmises aux particules via les attributs suivants : 
+
+* Position des particules : Les particules apparaissent au centre du cercle au fur et à mesure que des nouveaux événements sont reçus du serveur. Celles-ci ne sont pas statiques toutefois, elle se déplacent vers l'extérieur du cercle, et leur direction (l'angle) est déterminée en fonction de la distribution des événements. Plus précisement, le cercle est divisé en sections, de tailles relatives au nombre d'événements de chaque catégorie, puis les nouvelles particules sont réparties dans l'espace correspondant à leur catégories respectives.
+
+* Mouvement des particules : Les particules se déplacent donc avec une direction déterminée par la distribution des événements, toutefois la vitesse de celles-ci correspond à une autre dimension des données, soit le temps de latence des événements. En effet, la vitesse des particules est inversement proportionnelle au temps de latence des événements représentés. Plus la latence est élevée, moins la vitesse de la particule sera grande. Ou plutôt plus la latence est basse (l'opération c'est déroulée rapidement), plus la vitesse est élevée. L'idée derrière ce lien est que les événements avec un plus grande latence vont être affichés plus longtemps à l'écran, ce qui va permettre à l'utilisateur de les identifier plus facilement, et comme ce sont ces événements qui ralentissent le système, c'est en théorie ceux là que l'usager voudra trouver pour savoir où concentrer les efforts d'optimisation. 
+
+* Taille des particules : La taille des particule représente le nombre d'événements similaires regroupés. Cela dépend toutefois du choix de l'usager quant au paramètre de la précision de la latence. Avec ce réglage il est possible de spécifier avec quelle précision les événements de même type mais avec des temps de latence différent peuvent être regroupés, par exemple regrouper toutes la latences à la miliseconde près, la microseconde près ou alors aux 100 nanosecondes. La latence de ces événements est alors arrondie et ces événements sont représentés avec une seule particule, mais dont la taille est agrandie en fonction du nombre d'événements regroupés. Il est certainement possible de désactiver cette représentation, en spécifiant un arrondissement de 1 nanoseconde, le maximum de précision, ce qui aura pour effet qu'un aucun regrouprement sera fait, toutes les particules vont représenter 1 événement. Toutefois cela va demander significativement plus de ressources lors de l'exécution de l'application cliente. 
+
+* Couleur des particules : 
 
 
-### 3.5 Avantages et inconvénients
+### 3.6 Avantages et inconvénients
 
 
-
-### 3.6 Alternatives possibles
+### 3.7 Alternatives possibles
 
 
 ## Chapitre 4 : Conception du logiciel
